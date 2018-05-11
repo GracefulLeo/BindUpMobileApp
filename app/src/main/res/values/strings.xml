@@ -1,0 +1,121 @@
+<resources>
+    <string name="app_name">VCardApp</string>
+    <string name="search_title">Search</string>
+
+
+    <string name="first_time_user_message">
+        We noticed this is your first login. Before start to work with app , and exchange VCards,
+        please, create your first VCard by pressing +.
+    </string>
+
+    <!--Navigation Drawer Titles -->
+    <string name="menu_item_MyVcards">My VCards</string>
+    <string name="menu_item_Contacts">Contacts</string>
+    <string name="menu_item_Groups">Groups</string>
+    <string name="menu_item_History">History</string>
+    <string name="menu_item_LogOut">LogOut</string>
+
+    <string name="view_navigation_open">Open</string>
+    <string name="view_navigation_close">Close</string>
+
+    <string name="name_surname">Name , surname</string>
+    <string name="android_studio_android_com">android.studio@android.com</string>
+    <string name="myvcard_first_appearance">Create your first VCard by tapping plus</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="vert_more_myvcards">Settings</string>
+    <string name="settings">settings</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+
+    <!--Tags!!!-->
+
+
+    <string name="tag_MyVcards">My VCards</string>
+    <string name="tag_contacts">Contacts </string>
+
+
+    <string name="search_hint">Start typing a name...</string>
+
+    <!-- Navigation Drawer -->
+    <string name="home">Home</string>
+    <string name="agreement">Agreement</string>
+
+    <!-- Fragment Tags -->
+    <string name="tag_fragment_home">Home</string>
+    <string name="tag_fragment_saved_connections">Saved Connections</string>
+    <string name="tag_fragment_messages">Messages</string>
+    <string name="tag_fragment_settings">Settings</string>
+    <string name="tag_fragment_gallery">Gallery</string>
+    <string name="tag_fragment_photo">Photo</string>
+    <string name="tag_fragment_preview_my_vcard">My VCard</string>
+    <string name="tag_fragment_contacts_preview">Contacts</string>
+    <string name="tag_fragment_agreement">Agreement</string>
+
+    <!-- Intent and Bundle Extras -->
+    <string name="intent_new_camera_photo">intent_new_camera_photo</string>
+    <string name="intent_new_gallery_photo">intent_new_gallery_photo</string>
+    <string name="intent_user">intent_user</string>
+    <string name="intent_message">intent_message</string>
+
+    <!-- Spinner Options -->
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Do Not Identify</item>
+    </string-array>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_none">Do Not Identify</string>
+    <string name="gender_prompt">Choose your gender</string>
+
+    <string-array name="interested_in_array">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Anyone</item>
+    </string-array>
+    <string name="interested_in_male">Male</string>
+    <string name="interested_in_female">Female</string>
+    <string name="interested_in_anyone">Anyone</string>
+    <string name="interested_in_prompt">What are you looking for?</string>
+
+    <string-array name="relationship_status_array">
+        <item>Looking</item>
+        <item>Not Looking</item>
+    </string-array>
+    <string name="status_looking">Looking</string>
+    <string name="status_not_looking">Not Looking</string>
+    <string name="relationship_prompt">You you looking?</string>
+
+
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+        irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
+        anim id est laborum.
+</string>
+    <string name="edit">edit</string>
+    <string name="delete_message" > Are you sure you want delete this VCard? This action can not be undone</string>
+
+   <!--BUTTONS-->
+    <string name="delete_confirmation_button">YES</string>
+    <string name="delete_declining_button">NO</string>
+    <string name="groups_first_appearance">Create your first group by tapping plus</string>
+    <string name="tag_groups_fragment">Groups</string>
+
+</resources>

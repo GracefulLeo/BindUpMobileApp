@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:background="@color/mainBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--<include android:id="@+id/toolbar"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_width="wrap_content" />-->
+
+
+
+    </RelativeLayout>
+
+
+   *
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/preview_logo"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_card"
+        android:layout_marginTop="20dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/preview_logo">
+
+        <EditText
+            android:id="@+id/email_enter_for_register"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="enter valid email"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
+            />
+
+        <EditText
+            android:id="@+id/password_enter_for_register"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="enter password"
+            android:inputType="textPassword"
+            android:textAlignment="center"
+            android:layout_below="@+id/email_enter_for_register"
+            android:layout_centerHorizontal="true"/>
+
+        <EditText
+            android:id="@+id/password_repeat_enter_for_registration"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="repeat your password"
+            android:inputType="textPassword"
+            android:textAlignment="center"
+            android:layout_below="@+id/password_enter_for_register"
+            android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/blue_onclick_grey"
+        android:layout_below="@+id/password_repeat_enter_for_registration"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:id="@+id/btn_register_for_registration"
+        />
+    </RelativeLayout>
+
+</RelativeLayout>

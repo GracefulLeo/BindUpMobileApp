@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/MyVCardItem"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:orderInCategory="1"
+        android:title="@string/menu_item_MyVcards" />
+    <item
+        android:id="@+id/contactsItem"
+        android:icon="@drawable/ic_contacts_black_24dp"
+        android:orderInCategory="1"
+        android:title="@string/menu_item_Contacts" />
+
+    <item
+        android:id="@+id/groups_item"
+        android:icon="@drawable/ic_group_black_24dp"
+        android:orderInCategory="1"
+        android:title="@string/menu_item_Groups" />
+    <item
+        android:id="@+id/share_item"
+        android:title="Share"
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_share"/>
+
+    <item
+        android:title=""
+        android:orderInCategory="1"/>
+
+    <item
+        android:id="@+id/settings_item"
+        android:icon="@drawable/ic_settings"
+        android:title="Settings"
+        android:orderInCategory="1"/>
+
+    <item
+        android:id="@+id/log_out_item"
+        android:icon="@drawable/ic_exit_to_app_black_24dp"
+        android:orderInCategory="1"
+        android:title="@string/menu_item_LogOut" />
+
+
+</menu>
