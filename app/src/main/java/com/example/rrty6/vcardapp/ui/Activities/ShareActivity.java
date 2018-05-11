@@ -59,7 +59,7 @@ public class ShareActivity extends MainActivity {
         }
         cardSelector();
     }
-
+///sadasdasdasdsad
     public void cardSelector() {
         //@TODO make here a negative button
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
