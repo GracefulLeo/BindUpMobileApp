@@ -1,6 +1,8 @@
 package com.example.rrty6.vcardapp.ui.Activities;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -9,15 +11,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.rrty6.vcardapp.R;
 import com.example.rrty6.vcardapp.data.MainOperations;
 import com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange.WifiOperations;
 import com.example.rrty6.vcardapp.data.storage.model.Card;
+import com.example.rrty6.vcardapp.data.storage.model.Logo;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,21 +34,17 @@ public class ShareActivity extends MainActivity {
     private static final String TAG = "Share activity";
     private static final int NUM_COLUMNS = 1;
 
-    private DrawerLayout mDrawerLayout;
-    private Toolbar toolbar;
     private List<Card> cards;
     private WifiOperations wifiOperations;
     private Card mMyVcard;
     private ListView listViewPeers;
     private ArrayAdapter arrayAdapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppDefault);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
-//        initNavigationView();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         listViewPeers = findViewById(R.id.share_list_view);
         try {
@@ -59,9 +62,8 @@ public class ShareActivity extends MainActivity {
         }
         cardSelector();
     }
-///sadasdasdasdsad
+
     public void cardSelector() {
-        //@TODO make here a negative button
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select VCard you want to share");
 
@@ -71,11 +73,20 @@ public class ShareActivity extends MainActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        ArrayAdapter<Card> modeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, cards);
-        modeList.setAdapter(modeAdapter);
+
+        modeList.setAdapter(new MyAdapter());
 
         builder.setView(modeList);
-        builder.setNegativeButton("Cancel", null);
+        //@TODO Check, is there anything else we can add to this button...
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(ShareActivity.this , MainActivity.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                finish();
+            }
+        });
         final Dialog dialog = builder.create();
         dialog.show();
         modeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -119,6 +130,53 @@ public class ShareActivity extends MainActivity {
     protected void onDestroy() {
         wifiOperations.onDestroy();
         super.onDestroy();
+    }
+
+
+    // Adapter for alert dialog, to work properly with collection representing
+    private class MyAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return cards.size();
+        }
+
+        @Override
+        public String getItem(int position) {
+            return cards.get(position).getName();
+        }
+        //custom method
+        public Logo getLogo (int position) {
+            return cards.get(position).getLogo();
+        }
+        //custom method
+        public String getSurname (int position){
+            return cards.get(position).getSurname();
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return cards.get(position).hashCode();
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return super.getViewTypeCount();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup container) {
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.layout_share_list_item, container, false);
+            }
+            // Can add anything we want...
+            ((TextView) convertView.findViewById(R.id.share_contact_name))
+                    .setText(getItem(position));
+            ((TextView) convertView.findViewById(R.id.share_contact_surname))
+                    .setText(getSurname(position));
+            ((ImageView) convertView.findViewById(R.id.share_contact_image))
+                  .setImageBitmap(getLogo(position).getLogoBitmap());
+            return convertView;
+        }
     }
 
 }
