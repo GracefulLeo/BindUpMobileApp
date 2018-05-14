@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                        if (cards.size() == 0) {
+                        if (cards != null && cards.size() == 0) {
                             MyVcardFirstLoginFragment myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_MyVcards));

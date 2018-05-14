@@ -29,7 +29,7 @@ import com.example.rrty6.vcardapp.data.storage.model.Logo;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ShareActivity extends MainActivity {
+public class ShareActivity extends AppCompatActivity {
 
     private static final String TAG = "Share activity";
     private static final int NUM_COLUMNS = 1;
@@ -78,15 +78,7 @@ public class ShareActivity extends MainActivity {
 
         builder.setView(modeList);
         //@TODO Check, is there anything else we can add to this button...
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(ShareActivity.this , MainActivity.class);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                finish();
-            }
-        });
+        builder.setNegativeButton("Cancel", null);
         final Dialog dialog = builder.create();
         dialog.show();
         modeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -173,8 +165,10 @@ public class ShareActivity extends MainActivity {
                     .setText(getItem(position));
             ((TextView) convertView.findViewById(R.id.share_contact_surname))
                     .setText(getSurname(position));
+            if (cards.get(position).getLogo() != null){
             ((ImageView) convertView.findViewById(R.id.share_contact_image))
                   .setImageBitmap(getLogo(position).getLogoBitmap());
+            }
             return convertView;
         }
     }
