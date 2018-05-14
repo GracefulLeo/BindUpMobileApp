@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Toolbar toolbar;
 
     public static FloatingActionButton mFab;
-
+//@TODO check, is there necessary to have android:hardwareAccelerated="false"android:largeHeap="true" , in androidmanifest xml file
     private List<Card> cards;
     private List<Group> groups;
     private MyVCardPreviewFragment mMyVcardPreviewFragment;

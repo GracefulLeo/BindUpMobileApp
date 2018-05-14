@@ -3,3 +3,10 @@
 .DS_Store
 /captures
 .externalNativeBuild
+.gradle/4.4/fileHashes/fileHashes.bin
+.gradle/4.4/fileHashes/fileHashes.lock
+.gradle/4.4/javaCompile/javaCompile.lock
+.gradle/4.4/javaCompile/taskJars.bin
+.gradle/4.4/taskHistory/taskHistory.bin
+.gradle/
+
