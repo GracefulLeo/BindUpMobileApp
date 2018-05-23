@@ -23,10 +23,12 @@ public class PeerAdapter extends ArrayAdapter<WifiP2pDevice> implements WifiP2pM
     private static PeerAdapter instance;
     private static Object lock = new Object();
     private int res;
+    private ShareFragment fragment;
 
-    public PeerAdapter(Context context, int res) throws Exception {
-        super(context, res);
+    public PeerAdapter(ShareFragment shareFragment, int res) throws Exception {
+        super(shareFragment.getActivity(), res);
         if (instance == null) {
+            this.fragment = shareFragment;
             this.res = res;
             instance = this;
         } else {
@@ -83,6 +85,6 @@ public class PeerAdapter extends ArrayAdapter<WifiP2pDevice> implements WifiP2pM
         config.deviceAddress = this.getItem(position).deviceAddress;
         config.wps.setup = WpsInfo.PBC;
 //        WifiOperations.getInstance().connect(config);
-        ShareFragment.connect(config);
+        fragment.connect(config);
     }
 }

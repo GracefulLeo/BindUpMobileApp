@@ -1,5 +1,6 @@
 package com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange;
 
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +14,13 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
+    private ShareFragment fragment;
 
-    public WiFiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel) {
+    public WiFiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, ShareFragment shareFragment) {
         super();
         this.manager = manager;
         this.channel = channel;
+        this.fragment = shareFragment;
     }
 
     @Override
@@ -47,19 +50,14 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                 NetworkInfo networkInfo = (NetworkInfo) intent
                         .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
                 if (networkInfo.isConnected()) {
-                    // we are connected with the other device, request connection
-                    // info to find group owner
-                    if (manager != null) {
-                        manager.requestConnectionInfo(channel, WifiOperations.getInstance());
-                    }
-
+                    fragment.requestConnectionInfo();
                 } else {
                     // It's a disconnect
                 }
                 break;
             case WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION:
                 WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-                ShareFragment.setDeviceName(device.deviceName);
+                fragment.setDeviceName(device.deviceName);
 //                WifiOperations.getInstance().setDeviceName(device.deviceName);
                 break;
         }

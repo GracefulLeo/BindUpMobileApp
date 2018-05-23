@@ -40,6 +40,7 @@ public class ClientThread implements Runnable {
                     if (socket == null) {
                         socket = new Socket(mHostAddress, mPort);
                     }
+                    System.out.println("Start sending Client thread");
                     OutputStream mOutputStream = socket.getOutputStream();
                     InputStream mInputStream = socket.getInputStream();
 

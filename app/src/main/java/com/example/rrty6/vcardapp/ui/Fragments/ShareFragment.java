@@ -49,7 +49,7 @@ import java.util.List;
 
 public class ShareFragment extends Fragment implements WifiP2pManager.ConnectionInfoListener {
 
-    private static final String TAG = "Share activity";
+    private static final String TAG = "Share fragment";
     private static final int NUM_COLUMNS = 1;
 
     private List<Card> cards;
@@ -59,9 +59,9 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     private ArrayAdapter arrayAdapter;
 
 
-    private static WifiP2pManager manager;
-    private static WifiP2pManager.Channel channel;
-    private static String deviceName;
+    private WifiP2pManager manager;
+    private WifiP2pManager.Channel channel;
+    private String deviceName;
     private static boolean wasWifiEnabled = true;
     private final IntentFilter intentFilter = new IntentFilter();
     private final IntentFilter blockIntentFilter = new IntentFilter();
@@ -139,7 +139,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         listViewPeers = getActivity().findViewById(R.id.share_list_view);
 //        arrayAdapter = wifiOperations.getAdapter();
         try {
-            arrayAdapter = new PeerAdapter(App.getContext(), android.R.layout.simple_list_item_1);
+            arrayAdapter = new PeerAdapter(this, android.R.layout.simple_list_item_1);
         } catch (Exception e) {
             arrayAdapter = PeerAdapter.getInstance();
         }
@@ -167,7 +167,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         });
     }
 
-    public static void connect(WifiP2pConfig config) {
+    public void connect(WifiP2pConfig config) {
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {}
@@ -175,6 +175,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
             @Override
             public void onFailure(int reason) {}
         });
+        Log.i(TAG, "connect");
     }
 
     public void setName(String name) {
@@ -209,7 +210,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         getActivity().registerReceiver(stopReceiver, blockIntentFilter);
     }
 
-    public static void setDeviceName(String newDeviceName) {
+    public void setDeviceName(String newDeviceName) {
         if (deviceName == null || deviceName.isEmpty()) {
             deviceName = newDeviceName;
         }
@@ -234,7 +235,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     @Override
     public void onResume() {
         super.onResume();
-        receiver = new WiFiDirectBroadcastReceiver(manager, channel);
+        receiver = new WiFiDirectBroadcastReceiver(manager, channel,this);
         getActivity().registerReceiver(receiver, intentFilter);
     }
 
@@ -282,10 +283,10 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
                 socialLink.setCard(receivedData);
             }
             MainOperations.createContact(receivedData);
-            kill();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        kill();
     }
 
     private void send() {
@@ -322,10 +323,10 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
                 socialLink.setCard(receivedData);
             }
             MainOperations.createContact(receivedData);
-            kill();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        kill();
     }
 
     private void kill() {
@@ -359,6 +360,14 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
 
     private void returnName() {
         setNewDeviceName(deviceName);
+    }
+
+    public void requestConnectionInfo() {
+        // we are connected with the other device, request connection
+        // info to find group owner
+        if (manager != null) {
+            manager.requestConnectionInfo(channel, this);
+        }
     }
 
 

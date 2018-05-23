@@ -52,7 +52,7 @@ public class WifiOperations implements WifiP2pManager.ConnectionInfoListener {
             instance = this;
 
             try {
-                adapter = new PeerAdapter(App.getContext(), android.R.layout.simple_list_item_1);
+//                adapter = new PeerAdapter(App.getContext(), android.R.layout.simple_list_item_1);
             } catch (Exception e) {
                 adapter = PeerAdapter.getInstance();
             }
