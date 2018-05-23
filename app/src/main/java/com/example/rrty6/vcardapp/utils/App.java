@@ -17,6 +17,7 @@ import com.example.rrty6.vcardapp.data.storage.model.Logo;
 import com.example.rrty6.vcardapp.data.storage.model.Phone;
 import com.example.rrty6.vcardapp.data.storage.model.SocialLink;
 import com.j256.ormlite.dao.Dao;
+import com.squareup.leakcanary.LeakCanary;
 
 //Mainly used for DataManager
 public class App extends Application {
@@ -38,6 +39,10 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (LeakCanary.isInAnalyzerProcess(this)){
+            return;
+        }
+        LeakCanary.install(this);
         sSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sContext = this;
 

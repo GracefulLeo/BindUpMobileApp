@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.rrty6.vcardapp.ui.Fragments.ShareFragment;
+
 import java.util.Collection;
 
 public class PeerAdapter extends ArrayAdapter<WifiP2pDevice> implements WifiP2pManager.PeerListListener, AdapterView.OnItemClickListener {
@@ -80,6 +82,7 @@ public class PeerAdapter extends ArrayAdapter<WifiP2pDevice> implements WifiP2pM
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = this.getItem(position).deviceAddress;
         config.wps.setup = WpsInfo.PBC;
-        WifiOperations.getInstance().connect(config);
+//        WifiOperations.getInstance().connect(config);
+        ShareFragment.connect(config);
     }
 }

@@ -3,68 +3,67 @@ package com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.support.v4.app.FragmentTransaction;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.example.rrty6.vcardapp.R;
 import com.example.rrty6.vcardapp.data.MainOperations;
 import com.example.rrty6.vcardapp.data.storage.model.Card;
 import com.example.rrty6.vcardapp.data.storage.model.Email;
 import com.example.rrty6.vcardapp.data.storage.model.Phone;
 import com.example.rrty6.vcardapp.data.storage.model.SocialLink;
-import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
-import com.example.rrty6.vcardapp.ui.Activities.ShareActivity;
-import com.example.rrty6.vcardapp.ui.Fragments.ContactsFragment;
+import com.example.rrty6.vcardapp.utils.App;
 
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.util.logging.Handler;
 
 public class WifiOperations implements WifiP2pManager.ConnectionInfoListener {
     private static WifiOperations instance;
     private String deviceName;
     private ArrayAdapter<WifiP2pDevice> adapter;
 
-    private WifiP2pManager manager;
+
     private static boolean wasWifiEnabled = true;
     private int port = 8448;
 
-    private final IntentFilter intentFilter = new IntentFilter();
-    private final IntentFilter blockIntentFilter = new IntentFilter();
+//    private final IntentFilter intentFilter = new IntentFilter();
+//    private final IntentFilter blockIntentFilter = new IntentFilter();
+    private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
-    private BroadcastReceiver receiver = null;
-    private Activity activity = null;
+//    private BroadcastReceiver receiver = null;
+//    private Activity activity = null;
     private Card receivedData = null;
     private Card toSendData = null;
     private boolean success = false;
     private BroadcastReceiver stopReceiver = new StopNetworking();
+    android.os.Handler handler;
 
-    public WifiOperations(Activity activity, Card data) throws Exception {
+    public WifiOperations(android.os.Handler handler, Card data) throws Exception {
         if (instance == null) {
-            this.activity = activity;
+//            this.activity = activity;
+            this.handler = handler;
             toSendData = data;
             instance = this;
 
             try {
-                adapter = new PeerAdapter(activity, android.R.layout.simple_list_item_1);
+                adapter = new PeerAdapter(App.getContext(), android.R.layout.simple_list_item_1);
             } catch (Exception e) {
                 adapter = PeerAdapter.getInstance();
             }
 
-            manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
-            channel = manager.initialize(activity, activity.getMainLooper(), null);
+            manager = (WifiP2pManager) App.getContext().getSystemService(Context.WIFI_P2P_SERVICE);
+            channel = manager.initialize(App.getContext(), App.getContext().getMainLooper(), null);
 
-            intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-            intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-            intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-            intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+//            intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+//            intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+//            intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+//            intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         } else {
             throw new Exception("Instance of WifiOperations is already exist");
@@ -82,16 +81,15 @@ public class WifiOperations implements WifiP2pManager.ConnectionInfoListener {
     public ArrayAdapter<WifiP2pDevice> getAdapter() {
         return adapter;
     }
-
-    public void onPause() {
-        activity.unregisterReceiver(receiver);
-    }
-
-    public void onResume() {
-        receiver = new WiFiDirectBroadcastReceiver(manager, channel);
-        activity.registerReceiver(receiver, intentFilter);
-//        initDiscover();
-    }
+//
+//    public void onPause() {
+//        activity.unregisterReceiver(receiver);
+//    }
+//
+//    public void onResume() {
+//        receiver = new WiFiDirectBroadcastReceiver(manager, channel);
+//        activity.registerReceiver(receiver, intentFilter);
+//    }
 
     public void onDestroy() {
         manager.stopPeerDiscovery(channel, new WifiP2pManager.ActionListener() {
@@ -135,7 +133,8 @@ public class WifiOperations implements WifiP2pManager.ConnectionInfoListener {
     public void initDiscover() {
         startWifi();
         if (!wasWifiEnabled) {
-            initBlock();
+            handler.sendEmptyMessage(2);
+//            initBlock();
         }
         setName(toSendData.getName());
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
@@ -148,68 +147,30 @@ public class WifiOperations implements WifiP2pManager.ConnectionInfoListener {
         });
     }
 
-    public Card getReceivedData() {
-        return receivedData;
-    }
+//    public Card getReceivedData() {
+//        return receivedData;
+//    }
 
-    public void setActivity(Activity activity) {
-        this.activity = activity;
-    }
+//    public void setToSendData(Card toSendData) {
+//        this.toSendData = toSendData;
+//    }
 
-    public void setToSendData(Card toSendData) {
-        this.toSendData = toSendData;
-    }
-
-    public void destroyWifiOperation(Activity activity) {
-        if (this.activity == activity) {
-            manager.stopPeerDiscovery(channel, new WifiP2pManager.ActionListener() {
-                @Override
-                public void onSuccess() {
-
-                }
-
-                @Override
-                public void onFailure(int reason) {
-
-                }
-            });
-            manager.cancelConnect(channel, new WifiP2pManager.ActionListener() {
-                @Override
-                public void onSuccess() {
-
-                }
-
-                @Override
-                public void onFailure(int reason) {
-
-                }
-            });
-            this.activity.unregisterReceiver(receiver);
-            receiver = null;
-            channel = null;
-            manager = null;
-            adapter = null;
-            PeerAdapter.getInstance().destroy();
-            instance = null;
-        }
-    }
-
-    public void onCancelDiscover() {
-        manager.stopPeerDiscovery(channel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onFailure(int reason) {
-
-            }
-        });
-    }
+//    public void onCancelDiscover() {
+//        manager.stopPeerDiscovery(channel, new WifiP2pManager.ActionListener() {
+//            @Override
+//            public void onSuccess() {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(int reason) {
+//
+//            }
+//        });
+//    }
 
     private void startWifi() {
-        WifiManager wManager = (WifiManager) activity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wManager = (WifiManager) App.getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (!wManager.isWifiEnabled()) {
             wManager.setWifiEnabled(true);
             while (!wManager.isWifiEnabled()) {
@@ -232,7 +193,7 @@ public class WifiOperations implements WifiP2pManager.ConnectionInfoListener {
             }
         });
         if (!wasWifiEnabled) {
-            WifiManager wManager = (WifiManager) activity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiManager wManager = (WifiManager) App.getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             wManager.setWifiEnabled(false);
             wasWifiEnabled = true;
         }
@@ -262,7 +223,8 @@ public class WifiOperations implements WifiP2pManager.ConnectionInfoListener {
 
     private void send(InetAddress address) {
         if (!wasWifiEnabled) {
-            activity.unregisterReceiver(stopReceiver);
+            handler.sendEmptyMessage(3);
+//            activity.unregisterReceiver(stopReceiver);
         }
         ClientThread clientThread = new ClientThread(address, port, toSendData);
         Thread thread = new Thread(clientThread);
@@ -286,7 +248,8 @@ public class WifiOperations implements WifiP2pManager.ConnectionInfoListener {
             }
             MainOperations.createContact(receivedData);
             success=true;
-            kill();
+            handler.sendEmptyMessage(1);
+//            kill();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -298,7 +261,8 @@ public class WifiOperations implements WifiP2pManager.ConnectionInfoListener {
 
     private void send() {
         if (!wasWifiEnabled) {
-            activity.unregisterReceiver(stopReceiver);
+            handler.sendEmptyMessage(3);
+//            activity.unregisterReceiver(stopReceiver);
         }
         ServerThread serverThread = new ServerThread(port, toSendData);
         Thread thread = new Thread(serverThread);
@@ -330,29 +294,30 @@ public class WifiOperations implements WifiP2pManager.ConnectionInfoListener {
             }
             MainOperations.createContact(receivedData);
             success=true;
-            kill();
+            handler.sendEmptyMessage(1);
+//            kill();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void kill() {
-        Intent intent = new Intent(activity, MainActivity.class);
-        intent.putExtra("key", "To contacts");
-        Toast toast = Toast.makeText(activity, "Card is successfully shared", Toast.LENGTH_LONG);
-        toast.show();
-        activity.startActivity(intent);
-        activity.finish();
-    }
+//    private void kill() {
+//        Toast toast = Toast.makeText(activity, "Card is successfully shared", Toast.LENGTH_LONG);
+//        toast.show();
+//    }
 
     public void setName(String name) {
         setNewDeviceName(name);
     }
 
+    public void setHandler(android.os.Handler handler) {
+        this.handler = handler;
+    }
+
     private void setNewDeviceName(final String name) {
         try {
-            WifiP2pManager manager1 = (WifiP2pManager) activity.getApplicationContext().getSystemService(Context.WIFI_P2P_SERVICE);
-            WifiP2pManager.Channel channel1 = manager1.initialize(activity.getApplicationContext(), activity.getApplicationContext().getMainLooper(), null);
+            WifiP2pManager manager1 = (WifiP2pManager) App.getContext().getApplicationContext().getSystemService(Context.WIFI_P2P_SERVICE);
+            WifiP2pManager.Channel channel1 = manager1.initialize(App.getContext().getApplicationContext(), App.getContext().getApplicationContext().getMainLooper(), null);
             Method method = manager1.getClass().getMethod("setDeviceName",WifiP2pManager.Channel.class, String.class, WifiP2pManager.ActionListener.class);
             method.invoke(manager1, channel1, name, new WifiP2pManager.ActionListener() {
                 public void onSuccess() {
@@ -376,11 +341,11 @@ public class WifiOperations implements WifiP2pManager.ConnectionInfoListener {
         }
     }
 
-    private void initBlock() {
-        blockIntentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        blockIntentFilter.addAction(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION);
-        blockIntentFilter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
-
-        activity.registerReceiver(stopReceiver, blockIntentFilter);
-    }
+//    private void initBlock() {
+//        blockIntentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+//        blockIntentFilter.addAction(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION);
+//        blockIntentFilter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
+//
+//        activity.registerReceiver(stopReceiver, blockIntentFilter);
+//    }
 }

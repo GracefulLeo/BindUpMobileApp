@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.rrty6.vcardapp.R;
 import com.example.rrty6.vcardapp.data.MainOperations;
+import com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange.WifiOperations;
 import com.example.rrty6.vcardapp.data.storage.model.Card;
 import com.example.rrty6.vcardapp.data.storage.model.Group;
 import com.example.rrty6.vcardapp.ui.Fragments.ContactsFragment;
@@ -34,6 +35,7 @@ import com.example.rrty6.vcardapp.ui.Fragments.MyVCardPreviewFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.MyVcardCreateCardFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.MyVcardFirstLoginFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.MyVcardFragment;
+import com.example.rrty6.vcardapp.ui.Fragments.ShareFragment;
 import com.example.rrty6.vcardapp.ui.adapter.MyVCardsFragmentAdapter;
 import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 import com.example.rrty6.vcardapp.utils.App;
@@ -45,20 +47,33 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, IMainActivity {
 
+    //Constants
     private static final String TAG = "MainActivity";
 
-    private MyVCardsFragmentAdapter mMyVcardFragmentAdapter;
+    //@TODO check, is there necessary to have android:hardwareAccelerated="false"android:largeHeap="true" , in androidmanifest xml file
+    //Graphical elements
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
-
     public static FloatingActionButton mFab;
-//@TODO check, is there necessary to have android:hardwareAccelerated="false"android:largeHeap="true" , in androidmanifest xml file
+
+    //vars
     private List<Card> cards;
     private List<Group> groups;
+    private Bundle args = new Bundle();
+
+    //Fragments
+
+    private ShareFragment shareFragment;
+    private MyVcardCreateCardFragment myVcardCreateCardFragment;
+    private GroupsFragment groupsFragment;
+    private GroupsNoGroupsFragment groupsNoGroupsFragment;
+    private MyVCardEditFragment mMyVcardEditFragment;
+    private MyVcardFragment mMyVcardFragment;
+    private MyVcardFirstLoginFragment myVcardFirstLoginFragment;
+    private ContactsFragment mContactsFragment;
+    private GroupsPreviewFragment groupsPreviewFragment;
     private MyVCardPreviewFragment mMyVcardPreviewFragment;
     private ContactsPreviewFragment contactsPreviewFragment;
-    private Bundle args = new Bundle();
-    private GroupsPreviewFragment groupsPreviewFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,16 +82,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mFab = findViewById(R.id.fab);
         mFab.setOnClickListener(this);
+        Bundle bundle = new Bundle();
 
 
         init();
         initToolbar();
         initNavigationView();
         isFirstLogin();
-        if (getIntent().getStringExtra("key") != null && getIntent().getStringExtra("key").equals("To contacts")) {
-            ContactsFragment mContactsFragment = new ContactsFragment();
+        if (bundle.getString("key") != null && getIntent().getStringExtra("key").equals("To contacts")) {
+            mContactsFragment = new ContactsFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.main_content_frame, mContactsFragment, getString(R.string.tag_contacts));
+            transaction.add(R.id.main_content_frame, mContactsFragment, getString(R.string.tag_contacts));
             transaction.addToBackStack(getString(R.string.tag_contacts));
             transaction.commit();
         }
@@ -96,9 +112,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (cards != null) {
             if (cards.size() == 0) {
-                MyVcardFirstLoginFragment myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
+                myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_MyVcards));
+                transaction.add(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_MyVcards));
                 transaction.addToBackStack("MyVcard");
                 transaction.commit();
             }
@@ -107,9 +123,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void init() {
 
-        MyVcardFragment mMyVcardFragment = new MyVcardFragment();
+        mMyVcardFragment = new MyVcardFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_MyVcards));
+        transaction.add(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_MyVcards));
         transaction.addToBackStack(getString(R.string.tag_MyVcards));
         transaction.commit();
         Log.d(TAG, "init: fragment transaction...");
@@ -125,10 +141,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (item.getItemId()) {
                     case R.id.edit_button_in_preview_fragment:
 //@TODO Make that Bundle here is work properly, test more...
-                        MyVCardEditFragment mMyVcardEditFragment = new MyVCardEditFragment();
+                        mMyVcardEditFragment = new MyVCardEditFragment();
                         mMyVcardEditFragment.setArguments(args);
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.main_content_frame, mMyVcardEditFragment, getString(R.string.tag_MyVcards));
+                        transaction.add(R.id.main_content_frame, mMyVcardEditFragment, getString(R.string.tag_MyVcards));
                         transaction.addToBackStack(getString(R.string.tag_MyVcards));
                         transaction.commit();
                         Log.d(TAG, "init: MyVCards fragment transaction...");
@@ -155,15 +171,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-//                                MyVcardFirstLoginFragment mMyVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
-//                                FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
-//                                transaction1.replace(R.id.main_content_frame, mMyVcardFirstLoginFragment, getString(R.string.tag_MyVcards));
-//                                transaction1.addToBackStack(getString(R.string.tag_MyVcards));
-//                                transaction1.commit();
-//                                Log.d(TAG, "init: MyVCards fragment transaction...");
-                                MyVcardFragment mMyVcardFragment = new MyVcardFragment();
+
+                                mMyVcardFragment = new MyVcardFragment();
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_MyVcards));
+                                transaction.add(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_MyVcards));
                                 transaction.addToBackStack(getString(R.string.tag_MyVcards));
                                 transaction.commit();
                                 dialog.dismiss();
@@ -214,18 +225,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             e.printStackTrace();
                         }
                         if (cards != null && cards.size() == 0) {
-                            MyVcardFirstLoginFragment myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
+                            myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            transaction.replace(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_MyVcards));
+                            transaction.add(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_MyVcards));
                             transaction.addToBackStack("MyVcard");
                             transaction.commit();
                             break;
 
                         }
                         Log.d(TAG, "onNavigationItemSelected: MyVCard item selected...");
-                        MyVcardFragment mMyVcardFragment = new MyVcardFragment();
+                        mMyVcardFragment = new MyVcardFragment();
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_MyVcards));
+                        transaction.add(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_MyVcards));
                         transaction.addToBackStack(getString(R.string.tag_MyVcards));
                         transaction.commit();
                         Log.d(TAG, "init: MyVCards fragment transaction...");
@@ -233,9 +244,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     case R.id.contactsItem: {
                         Log.d(TAG, "onNavigationItemSelected: Contacts item selected...");
-                        ContactsFragment mContactsFragment = new ContactsFragment();
+                        mContactsFragment = new ContactsFragment();
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.main_content_frame, mContactsFragment, getString(R.string.tag_contacts));
+                        transaction.add(R.id.main_content_frame, mContactsFragment, getString(R.string.tag_contacts));
                         transaction.addToBackStack(getString(R.string.tag_contacts));
                         transaction.commit();
                         Log.d(TAG, "init:Contact fragment transaction...");
@@ -250,9 +261,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         if (groups != null) {
                             if (groups.size() == 0) {
-                                GroupsNoGroupsFragment groupsNoGroupsFragment = new GroupsNoGroupsFragment();
+                                groupsNoGroupsFragment = new GroupsNoGroupsFragment();
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.main_content_frame, groupsNoGroupsFragment, "Groups");
+                                transaction.add(R.id.main_content_frame, groupsNoGroupsFragment, "Groups");
                                 transaction.addToBackStack("Groups");
                                 transaction.commit();
                                 break;
@@ -260,15 +271,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         if (groups.size() != 0) {
                             Log.d(TAG, "onNavigationItemSelected: Groups item selected...");
-                            GroupsFragment groupsFragment = new GroupsFragment();
+                            groupsFragment = new GroupsFragment();
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            transaction.replace(R.id.main_content_frame, groupsFragment, "Groups");
+                            transaction.add(R.id.main_content_frame, groupsFragment, "Groups");
                             transaction.addToBackStack("Groups");
                             transaction.commit();
                             Log.d(TAG, "onNavigationItemSelected: Group fragment transaction");
                             break;
                         }
-
                     }
                     case R.id.share_item:
                         Log.d(TAG, "onNavigationItemSelected: share item clicked...");
@@ -278,17 +288,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                        if (cards.isEmpty()){
+                        if (cards.isEmpty()) {
 
                         }
-                        Intent intent = new Intent(MainActivity.this, ShareActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                        finish();
+                        shareFragment = new ShareFragment();
+                        FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
+                        transaction.add(R.id.main_content_frame,shareFragment, "Share");
+                        transaction.addToBackStack("Share");
+                        transaction.commit();
                         break;
                     case R.id.log_out_item:
                         Log.d(TAG, "onNavigationItemSelected: log out item clicked...");
-                        intent = new Intent(MainActivity.this, LoginActivity.class);
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                         intent.putExtra("logout", false);
                         startActivity(intent);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -312,9 +323,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final SharedPreferences preferences = App.getSharedPreferences();
         boolean isFirstLogin = preferences.getBoolean(PreferenceKeys.FIRST_TIME_LOGIN, true);
         if (isFirstLogin) {
-            MyVcardFirstLoginFragment fragment = new MyVcardFirstLoginFragment();
+            myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.main_content_frame, fragment, getString(R.string.tag_fragment_preview_my_vcard));
+            transaction.add(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_fragment_preview_my_vcard));
             transaction.addToBackStack(getString(R.string.tag_fragment_preview_my_vcard));
             transaction.commit();
             Log.d(TAG, "isFirstLogin: launching alert dialog...");
@@ -337,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
-        if (isFirstLogin == false) {
+        if (!isFirstLogin) {
             firstCheck();
         }
     }
@@ -353,9 +364,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.fab:
                 Log.d(TAG, "onNavigationItemSelected: Fab pressed...");
-                MyVcardCreateCardFragment mVCardViewFragment = new MyVcardCreateCardFragment();
+                myVcardCreateCardFragment = new MyVcardCreateCardFragment();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.main_content_frame, mVCardViewFragment, "Groups");
+                transaction.add(R.id.main_content_frame, myVcardCreateCardFragment, "Groups");
                 transaction.addToBackStack("Groups");
                 transaction.commit();
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

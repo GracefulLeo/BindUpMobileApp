@@ -7,7 +7,9 @@ import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 
-class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
+import com.example.rrty6.vcardapp.ui.Fragments.ShareFragment;
+
+public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
@@ -57,7 +59,8 @@ class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                 break;
             case WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION:
                 WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-                WifiOperations.getInstance().setDeviceName(device.deviceName);
+                ShareFragment.setDeviceName(device.deviceName);
+//                WifiOperations.getInstance().setDeviceName(device.deviceName);
                 break;
         }
     }
