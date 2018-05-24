@@ -55,6 +55,9 @@ public class GetUserRes {
     @SerializedName("field_groups")
     @Expose
     public Object fieldGroups;
+    @SerializedName("field_history")
+    @Expose
+    public Object fieldHistory;
     @SerializedName("field_my_vcards")
     @Expose
     public Object fieldMyVcards;
@@ -66,6 +69,10 @@ public class GetUserRes {
 
     public Object getFieldGroups() {
         return fieldGroups;
+    }
+
+    public Object getFieldHistory() {
+        return fieldHistory;
     }
 
     public Object getFieldMyVcards() {

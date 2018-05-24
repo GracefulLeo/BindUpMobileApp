@@ -11,12 +11,12 @@ public class CreateGroupReq {
     @SerializedName("type")
     @Expose
     public String type;
-    @SerializedName("field_group_name")
+    @SerializedName("group_name")
     @Expose
-    public Field fieldGroupName;
-    @SerializedName("field_description")
+    public String groupName;
+    @SerializedName("description")
     @Expose
-    public Field fieldDescription;
+    public String description;
     @SerializedName("field_logotype")
     @Expose
     public FieldLogo fieldLogotype;
@@ -24,35 +24,15 @@ public class CreateGroupReq {
     @Expose
     public MyContacts fieldMyContacts;
 
-    public CreateGroupReq() {
+    public CreateGroupReq(String name) {
         this.type = "group";
-        this.fieldGroupName = new Field();
-        this.fieldDescription = new Field();
+        this.groupName = name;
         this.fieldLogotype = new FieldLogo();
         this.fieldMyContacts = new MyContacts();
     }
 
-    public class Field {
-
-        @SerializedName("und")
-        @Expose
-        public List<Und> und = new ArrayList<>();
-
-        public void setUnd(String value) {
-            Und und = new Und(value);
-            this.und.add(und);
-        }
-    }
-
-    public class Und {
-
-        @SerializedName("value")
-        @Expose
-        public String value;
-
-        public Und(String value) {
-            this.value = value;
-        }
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public class FieldLogo {
