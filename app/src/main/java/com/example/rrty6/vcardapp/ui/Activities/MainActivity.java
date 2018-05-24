@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.example.rrty6.vcardapp.R;
 import com.example.rrty6.vcardapp.data.MainOperations;
-import com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange.WifiOperations;
 import com.example.rrty6.vcardapp.data.storage.model.Card;
 import com.example.rrty6.vcardapp.data.storage.model.Group;
 import com.example.rrty6.vcardapp.ui.Fragments.ContactsFragment;
@@ -36,7 +35,6 @@ import com.example.rrty6.vcardapp.ui.Fragments.MyVcardCreateCardFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.MyVcardFirstLoginFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.MyVcardFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.ShareFragment;
-import com.example.rrty6.vcardapp.ui.adapter.MyVCardsFragmentAdapter;
 import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 import com.example.rrty6.vcardapp.utils.App;
 import com.example.rrty6.vcardapp.utils.PreferenceKeys;

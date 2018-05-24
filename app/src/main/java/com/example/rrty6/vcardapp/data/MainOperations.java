@@ -1,10 +1,8 @@
 package com.example.rrty6.vcardapp.data;
 
-import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange.WifiOperations;
 import com.example.rrty6.vcardapp.data.managers.DataManager;
 import com.example.rrty6.vcardapp.data.network.NetworkOperations;
 import com.example.rrty6.vcardapp.data.network.model.req.UploadLogoReq.Filepath;

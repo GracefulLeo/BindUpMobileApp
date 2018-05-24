@@ -1,18 +1,17 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -26,6 +25,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rrty6.vcardapp.R;
 import com.example.rrty6.vcardapp.data.MainOperations;
@@ -33,8 +33,6 @@ import com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange.ClientThread;
 import com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange.PeerAdapter;
 import com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange.ServerThread;
 import com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange.StopNetworking;
-import com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange.WiFiDirectBroadcastReceiver;
-import com.example.rrty6.vcardapp.data.exchange.WifiP2pExchange.WifiOperations;
 import com.example.rrty6.vcardapp.data.storage.model.Card;
 import com.example.rrty6.vcardapp.data.storage.model.Email;
 import com.example.rrty6.vcardapp.data.storage.model.Logo;
@@ -50,10 +48,8 @@ import java.util.List;
 public class ShareFragment extends Fragment implements WifiP2pManager.ConnectionInfoListener {
 
     private static final String TAG = "Share fragment";
-    private static final int NUM_COLUMNS = 1;
 
     private List<Card> cards;
-    private WifiOperations wifiOperations;
     private Card mMyVcard;
     private ListView listViewPeers;
     private ArrayAdapter arrayAdapter;
@@ -79,13 +75,6 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         listViewPeers = view.findViewById(R.id.share_list_view);
 
-//        try {
-//            wifiOperations = new WifiOperations(handler, mMyVcard);
-//        } catch (Exception e) {
-//            wifiOperations = WifiOperations.getInstance();
-//            wifiOperations.setHandler(handler);
-//            e.printStackTrace();
-//        }
         try {
             cards = MainOperations.getCardList();
         } catch (SQLException e) {
@@ -135,7 +124,6 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     }
 
     private void startShare() {
-        System.out.println(wifiOperations == null);
         listViewPeers = getActivity().findViewById(R.id.share_list_view);
 //        arrayAdapter = wifiOperations.getAdapter();
         try {
@@ -235,13 +223,48 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     @Override
     public void onResume() {
         super.onResume();
-        receiver = new WiFiDirectBroadcastReceiver(manager, channel,this);
+        receiver = new WiFiDirectBroadcastReceiver(/*manager, channel,this*/);
         getActivity().registerReceiver(receiver, intentFilter);
     }
 
     @Override
     public void onDestroy() {
-        wifiOperations.onDestroy();
+        manager.stopPeerDiscovery(channel, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+
+
+            }
+
+            @Override
+            public void onFailure(int i) {
+
+            }
+        });
+        manager.clearLocalServices(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFailure(int i) {
+
+
+            }
+        });
+        manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFailure(int i) {
+
+            }
+        });
         super.onDestroy();
     }
 
@@ -330,6 +353,8 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     }
 
     private void kill() {
+        Toast toast = Toast.makeText(getActivity(), "Card is successfully shared", Toast.LENGTH_LONG);
+        toast.show();
         ContactsFragment contactsFragment = new ContactsFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity()
                 .getSupportFragmentManager().beginTransaction();
@@ -420,6 +445,59 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
             return convertView;
         }
     }
+    private class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
+
+//        private WifiP2pManager manager;
+//        private WifiP2pManager.Channel channel;
+//        private ShareFragment fragment;
+
+        public WiFiDirectBroadcastReceiver(/*WifiP2pManager manager, WifiP2pManager.Channel channel, ShareFragment shareFragment*/) {
+            super();
+//            this.manager = manager;
+//            this.channel = channel;
+//            this.fragment = shareFragment;
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            switch (action) {
+                case WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION:
+                    int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
+                    if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
+                        //Wifi P2P is enabled
+                    } else {
+                        //Wifi P2P is disabled
+                    }
+                    break;
+                case WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION:
+                    // request available peers from the wifi p2p manager. This is an
+                    // asynchronous call and the calling activity is notified with a
+                    // callback on PeerListListener.onPeersAvailable()
+                    if (manager != null) {
+                        manager.requestPeers(channel, PeerAdapter.getInstance());
+                    }
+                    break;
+                case WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION:
+                    if (manager == null) {
+                        return;
+                    }
+                    NetworkInfo networkInfo = (NetworkInfo) intent
+                            .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+                    if (networkInfo.isConnected()) {
+                        requestConnectionInfo();
+                    } else {
+                        // It's a disconnect
+                    }
+                    break;
+                case WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION:
+                    WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+                    setDeviceName(device.deviceName);
+                    break;
+            }
+        }
+    }
+
 
 }
 

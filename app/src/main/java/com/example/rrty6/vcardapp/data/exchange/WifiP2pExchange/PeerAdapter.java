@@ -84,7 +84,6 @@ public class PeerAdapter extends ArrayAdapter<WifiP2pDevice> implements WifiP2pM
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = this.getItem(position).deviceAddress;
         config.wps.setup = WpsInfo.PBC;
-//        WifiOperations.getInstance().connect(config);
         fragment.connect(config);
     }
 }
