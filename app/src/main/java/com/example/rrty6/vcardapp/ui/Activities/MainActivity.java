@@ -290,8 +290,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         }
                         shareFragment = new ShareFragment();
-                        FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
-                        transaction.add(R.id.main_content_frame,shareFragment, "Share");
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.add(R.id.main_content_frame, shareFragment, "Share");
                         transaction.addToBackStack("Share");
                         transaction.commit();
                         break;

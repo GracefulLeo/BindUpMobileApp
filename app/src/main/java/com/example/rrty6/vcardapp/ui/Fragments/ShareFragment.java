@@ -147,7 +147,9 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         setName(mMyVcard.getName());
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
-            public void onSuccess() {}
+            public void onSuccess() {
+            }
+
             @Override
             public void onFailure(int reasonCode) {
                 initDiscover();
@@ -158,10 +160,12 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     public void connect(WifiP2pConfig config) {
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
             @Override
-            public void onSuccess() {}
+            public void onSuccess() {
+            }
 
             @Override
-            public void onFailure(int reason) {}
+            public void onFailure(int reason) {
+            }
         });
         Log.i(TAG, "connect");
     }
@@ -176,16 +180,17 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
                     .getSystemService(Context.WIFI_P2P_SERVICE);
             WifiP2pManager.Channel channel1 = manager1.initialize(App.getContext().getApplicationContext(),
                     App.getContext().getApplicationContext().getMainLooper(), null);
-            Method method = manager1.getClass().getMethod("setDeviceName",WifiP2pManager.Channel.class,
+            Method method = manager1.getClass().getMethod("setDeviceName", WifiP2pManager.Channel.class,
                     String.class, WifiP2pManager.ActionListener.class);
             method.invoke(manager1, channel1, name, new WifiP2pManager.ActionListener() {
                 public void onSuccess() {
                 }
+
                 public void onFailure(int reason) {
 
                 }
             });
-        } catch (Exception e)   {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -336,7 +341,8 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
             }
             for (SocialLink socialLink : receivedData.getSocialLinks()) {
                 socialLink.setCard(receivedData);
-            }for (Phone phone : receivedData.getPhones()) {
+            }
+            for (Phone phone : receivedData.getPhones()) {
                 phone.setCard(receivedData);
             }
             for (Email email : receivedData.getEmails()) {
@@ -445,6 +451,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
             return convertView;
         }
     }
+
     private class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
 //        private WifiP2pManager manager;
@@ -497,7 +504,5 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
             }
         }
     }
-
-
 }
 
