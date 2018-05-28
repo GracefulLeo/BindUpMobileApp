@@ -1,6 +1,7 @@
 package com.example.rrty6.vcardapp.data.network;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.rrty6.vcardapp.data.MainOperations;
@@ -37,7 +38,6 @@ import com.example.rrty6.vcardapp.data.storage.model.Phone;
 import com.example.rrty6.vcardapp.data.storage.model.SocialLink;
 import com.example.rrty6.vcardapp.data.storage.operation.DatabaseOperation;
 import com.example.rrty6.vcardapp.utils.App;
-import com.example.rrty6.vcardapp.utils.Const;
 import com.example.rrty6.vcardapp.utils.Const.ListRole;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -57,6 +57,7 @@ import retrofit2.Response;
 import static com.example.rrty6.vcardapp.utils.Const.*;
 
 public class NetworkOperations {
+    private static final String TAG = "NetworkOperations";
     private static DataManager mDataManager = DataManager.getInstance();
 
     public static void register(final String email, final String password) throws Exception {
@@ -300,40 +301,20 @@ public class NetworkOperations {
                     if (response != null) {
                         if (response.code() == 200 && response.body() != null) {
                             card[0] = new Card();
+
                             card[0].setRemoteId(cardId);
+
                             card[0].setMy(isMy);
-                            String s = null;
-                            List list = null;
+
                             card[0].setTitle(response.body().getTitle());
 
+                            card[0].setAddress(response.body().getAddress());
+
+                            card[0].setCompany(response.body().getCompany());
+
                             try {
-                                list = (List) ((Map) response.body().getFieldAddress())
-                                        .get(((Map) response.body().getFieldAddress())
-                                                .keySet().iterator().next());
-                                for (int i = 0; i < list.size(); i++) {
-                                    Map o = (Map) list.get(i);
-                                    Set set = o.keySet();
-                                    s = o.get(set.iterator().next()).toString();
-                                }
-                                card[0].setAddress(s);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                list = (List) ((Map) response.body().getFieldCompanyName())
-                                        .get(((Map) response.body().getFieldCompanyName())
-                                                .keySet().iterator().next());
-                                for (int i = 0; i < list.size(); i++) {
-                                    Map o = (Map) list.get(i);
-                                    Set set = o.keySet();
-                                    s = o.get(set.iterator().next()).toString();
-                                }
-                                card[0].setCompany(s);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                list = (List) ((Map) response.body().getFieldLogotype())
+                                String s = null;
+                                List list = (List) ((Map) response.body().getFieldLogotype())
                                         .get(((Map) response.body().getFieldLogotype())
                                                 .keySet().iterator().next());
                                 for (int i = 0; i < list.size(); i++) {
@@ -347,132 +328,53 @@ public class NetworkOperations {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+//                            try {
+//                                Logo logo = getLogo(response.body().getFieldLogotype().getUnd().get(0).getFid());
+//                                DataManager.getInstance().addLogo(logo);
+//                                card[0].setLogo(logo);
+//                            } catch (SQLException e) {
+//                                e.printStackTrace();
+//                            }
+
+                            card[0].setMidlename(response.body().getMiddleName());
+
+                            card[0].setName(response.body().getName());
+
+                            card[0].setPosition(response.body().getPosition());
+
+                            card[0].setSurname(response.body().getSurname());
+
+                            card[0].setSite(response.body().getWebSite());
+
+                            List<SocialLink> links = null;
                             try {
-                                list = (List) ((Map) response.body().getFieldMiddleName())
-                                        .get(((Map) response.body().getFieldMiddleName())
-                                                .keySet().iterator().next());
-                                for (int i = 0; i < list.size(); i++) {
-                                    Map o = (Map) list.get(i);
-                                    Set set = o.keySet();
-                                    s = o.get(set.iterator().next()).toString();
-                                }
-                                card[0].setMidlename(s);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                list = (List) ((Map) response.body().getFieldName())
-                                        .get(((Map) response.body().getFieldName())
-                                                .keySet().iterator().next());
-                                for (int i = 0; i < list.size(); i++) {
-                                    Map o = (Map) list.get(i);
-                                    Set set = o.keySet();
-                                    s = o.get(set.iterator().next()).toString();
-                                }
-                                card[0].setName(s);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                list = (List) ((Map) response.body().getFieldPosition())
-                                        .get(((Map) response.body().getFieldPosition())
-                                                .keySet().iterator().next());
-                                for (int i = 0; i < list.size(); i++) {
-                                    Map o = (Map) list.get(i);
-                                    Set set = o.keySet();
-                                    s = o.get(set.iterator().next()).toString();
-                                }
-                                card[0].setPosition(s);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                list = (List) ((Map) response.body().getFieldSurname())
-                                        .get(((Map) response.body().getFieldSurname())
-                                                .keySet().iterator().next());
-                                for (int i = 0; i < list.size(); i++) {
-                                    Map o = (Map) list.get(i);
-                                    Set set = o.keySet();
-                                    s = o.get(set.iterator().next()).toString();
-                                }
-                                card[0].setSurname(s);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                list = (List) ((Map) response.body().getFieldWebSite())
-                                        .get(((Map) response.body().getFieldWebSite())
-                                                .keySet().iterator().next());
-                                for (int i = 0; i < list.size(); i++) {
-                                    Map o = (Map) list.get(i);
-                                    Set set = o.keySet();
-                                    s = o.get(set.iterator().next()).toString();
-                                }
-                                card[0].setSite(s);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                list = (List) ((Map) response.body().getFieldSocialLinks())
-                                        .get(((Map) response.body().getFieldSocialLinks())
-                                                .keySet().iterator().next());
-                                for (int i = 0; i < list.size(); i++) {
-                                    Map o = (Map) list.get(i);
-                                    Set set = o.keySet();
-                                    s = o.get(set.iterator().next()).toString();
-                                }
                                 GsonBuilder builder = new GsonBuilder();
                                 Gson gson = builder.create();
-                                Object o = gson.fromJson(s, Object.class);
+                                Object o = gson.fromJson(response.body().getSocialLinks(), Object.class);
                                 Map<String, String> map = (Map) o;
                                 Set<String> set = map.keySet();
-                                List<SocialLink> links = new ArrayList<>();
+                                links = new ArrayList<>();
                                 for (String type : set) {
                                     if (map.get(type) != null && !map.get(type).isEmpty()) {
                                         SocialLink link = new SocialLink(LinkType.getType(type), map.get(type));
                                         links.add(link);
                                     }
                                 }
-                                card[0].setSocialLinks(links);
                             } catch (Exception e) {
-                                e.printStackTrace();
+//                                e.printStackTrace();
                             }
-                            try {
-                                list = (List) ((Map) response.body().getFieldBase64Vcard())
-                                        .get(((Map) response.body().getFieldBase64Vcard())
-                                                .keySet().iterator().next());
-                                for (int i = 0; i < list.size(); i++) {
-                                    Map o = (Map) list.get(i);
-                                    Set set = o.keySet();
-                                    s = o.get(set.iterator().next()).toString();
-                                }
-                                card[0].setBase(new Base(s));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                list = (List) ((Map) response.body().getFieldPhone()).get(((Map) response.body().getFieldPhone())
-                                        .keySet().iterator().next());
-                                for (int i = 0; i < list.size(); i++) {
-                                    card[0].addPhone(new Phone(((Map) list.get(i)).get("value").toString()));
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                list = (List) ((Map) response.body().getFieldMail()).get(((Map) response.body().getFieldMail())
-                                        .keySet().iterator().next());
-                                for (int i = 0; i < list.size(); i++) {
-                                    card[0].addEmail(new Email(((Map) list.get(i)).get("value").toString()));
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            card[0].setSocialLinks(links);
+
+                            card[0].setBase(new Base(response.body().getBase64Vcard()));
+
+                            card[0].addPhone(new Phone(response.body().getPhone()));
+
+                            card[0].addEmail(new Email(response.body().getEmail()));
                         } else {
                             System.out.println("Null Call<GetCardRes> response");
                             //TODO: play around null GetCard response
                         }
-
                     } else {
                         //TODO: add error handler
                     }
@@ -519,7 +421,7 @@ public class NetworkOperations {
                                     existedContacts.add(o.get(set.iterator().next()).toString());
                                 }
                             } catch (Exception e) {
-                                e.printStackTrace();
+//                                e.printStackTrace();
                             }
 
                             for (String s : existedContacts) {
@@ -572,7 +474,7 @@ public class NetworkOperations {
                                     existedGroups.add(o.get(set.iterator().next()).toString());
                                 }
                             } catch (Exception e) {
-                                e.printStackTrace();
+//                                e.printStackTrace();
                             }
 
                             for (String s : existedGroups) {
@@ -618,30 +520,10 @@ public class NetworkOperations {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            try {
-                                list = (List) ((Map) response.body().getFieldGroupName())
-                                        .get(((Map) response.body().getFieldGroupName()).keySet().iterator().next());
 
-                                Map o = (Map) list.get(0);
-                                Set set = o.keySet();
+                            group[0].setName(response.body().getGroupName());
+                            group[0].setDescription(response.body().getDescription());
 
-                                group[0].setName(o.get(set.iterator().next()).toString());
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                list = (List) ((Map) response.body().getFieldDescription())
-                                        .get(((Map) response.body().getFieldDescription()).keySet().iterator().next());
-
-                                Map o = (Map) list.get(0);
-                                Set set = o.keySet();
-
-                                group[0].setDescription(o.get(set.iterator().next()).toString());
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                             try {
                                 list = (List) ((Map) response.body().getFieldLogotype())
                                         .get(((Map) response.body().getFieldLogotype()).keySet().iterator().next());
@@ -726,23 +608,18 @@ public class NetworkOperations {
     }
 
     public static void createCard(final Card card) {
-
         if (!card.isMy()) {
             return;
         }
-
         CreateCardReq createCardReq = new CreateCardReq(card);
-
         Call<CreateCardRes> call = mDataManager.sendCard(createCardReq);
-
         if (call != null) {
-
             call.enqueue(new Callback<CreateCardRes>() {
                 @Override
                 public void onResponse(Call<CreateCardRes> call, Response<CreateCardRes> response) {
                     if (response.code() == 200 && response.body() != null) {
-                        addUserGoods(ListRole.card, new SimpleUnd(response.body().getNid()));
-                        card.setRemoteId(response.body().getNid());
+                        addUserGoods(ListRole.card, new SimpleUnd(response.body().getId()));
+                        card.setRemoteId(response.body().getId());
                         try {
                             DataManager.getInstance().updateCard(card);
                         } catch (SQLException e) {
@@ -761,9 +638,9 @@ public class NetworkOperations {
         }
     }
 
+    //TODO: logo update finish
     public static void updateCard(Card card, CardCompare compare) {
         if (card.isMy()) {
-
             UpdateCardReq updateCardReq = new UpdateCardReq(card, compare);
             Call<ResponseBody> call = mDataManager.updateCard(updateCardReq, card.getRemoteId());
             if (call != null) {
@@ -785,6 +662,7 @@ public class NetworkOperations {
     }
 
     public static void deleteCard(final Card card) {
+        Log.i(TAG,"deleteCard start");
         Call<GetUserRes> call = mDataManager.getUser();
 
         if (call != null) {
@@ -903,12 +781,10 @@ public class NetworkOperations {
     public static void createGroup(@NonNull final Group group, List<Card> contacts) {
         if (group != null) {
             if (group.getName() != null && !group.getName().isEmpty()) {
-                CreateGroupReq createGroupReq = new CreateGroupReq();
-
-                createGroupReq.fieldGroupName.setUnd(group.getName());
+                CreateGroupReq createGroupReq = new CreateGroupReq(group.getName());
 
                 if (group.getDescription() != null && !group.getDescription().isEmpty()) {
-                    createGroupReq.fieldDescription.setUnd(group.getDescription());
+                    createGroupReq.setDescription(group.getDescription());
                 }
 
                 if (group.getLogo()!=null) {
@@ -1045,7 +921,7 @@ public class NetworkOperations {
     }
 
     private static void addUserGoods(final ListRole role, final SimpleUnd und) {
-
+        Log.i(TAG,"addUserGoods");
         Call<GetUserRes> call = mDataManager.getUser();
 
         if (call != null) {
@@ -1056,6 +932,7 @@ public class NetworkOperations {
                     if (response.code() == 200 && response.body() != null) {
                         switch (role) {
                             case card:
+                                Log.i(TAG,"addUserGoods role: card");
                                 List<SimpleUnd> existedCards = new ArrayList<>();
 
                                 try {

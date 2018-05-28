@@ -54,7 +54,7 @@ public interface RestService {
     Call<ResponseBody> logOut(@Header("Cookie") String cookie, @Header("X-CSRF-TOKEN") String token);
 
     @Headers("Content-Type: application/json")
-    @POST("node")
+    @POST("entity_vcard")
     Call<CreateCardRes> createCard(@Header("Cookie") String cookie, @Header("X-CSRF-TOKEN") String token, @Body CreateCardReq req);
 
     @Headers("Content-Type: application/json")
@@ -74,7 +74,7 @@ public interface RestService {
     Call<GetGroupRes> downloadGroup(@Header("Cookie") String cookie, @Path("id") String id);
 
     @Headers("Content-Type: application/json")
-    @GET("node/{nid}")
+    @GET("entity_vcard/{nid}")
     Call<GetCardRes> getCard(@Header("Cookie") String cookie, @Path("nid") String cardNumber);
 
     @Headers("Content-Type: application/json")

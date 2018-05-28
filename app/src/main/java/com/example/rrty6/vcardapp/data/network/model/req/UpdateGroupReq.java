@@ -17,12 +17,12 @@ public class UpdateGroupReq {
     @SerializedName("type")
     @Expose
     public String type;
-    @SerializedName("field_group_name")
+    @SerializedName("group_name")
     @Expose
-    public Field fieldGroupName;
-    @SerializedName("field_description")
+    public String groupName;
+    @SerializedName("description")
     @Expose
-    public Field fieldDescription;
+    public String description;
     @SerializedName("field_logotype")
     @Expose
     public FieldLogotype fieldLogotype;
@@ -38,10 +38,10 @@ public class UpdateGroupReq {
                 fieldLogotype = new FieldLogotype(group.getLogo().getFid());
             }
             if (compare.fieldGroupName) {
-                fieldGroupName = new Field(group.getName());
+                groupName = group.getName();
             }
             if (compare.fieldDescription) {
-                fieldDescription = new Field(group.getDescription());
+                description = group.getDescription();
             }
         }
     }
@@ -60,40 +60,6 @@ public class UpdateGroupReq {
 
     public String getId() {
         return id;
-    }
-
-    public class Field {
-
-        @SerializedName("und")
-        @Expose
-        public List<Und> und = null;
-
-
-        Field(String value) {
-            this.und = new ArrayList<>();
-            Und und = new Und(value);
-            this.und.add(und);
-        }
-
-        //Setter for multiple field contacts
-        Field(List<String> values) {
-            this.und = new ArrayList<>();
-            for (String value : values) {
-                Und und = new Und(value);
-                this.und.add(und);
-            }
-        }
-    }
-
-    private class Und {
-
-        @SerializedName("value")
-        @Expose
-        public String value;
-
-        public Und(String value) {
-            this.value = value;
-        }
     }
 
     public class FieldLogotype {

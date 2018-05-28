@@ -9,162 +9,61 @@ import java.util.List;
 //TODO: rebuild und classes
 public class GetCardRes {
 
-    @SerializedName("vid")
+    @SerializedName("id")
     @Expose
-    public String vid;
-    @SerializedName("uid")
-    @Expose
-    public String uid;
-    @SerializedName("title")
-    @Expose
-    public String title;
-    @SerializedName("log")
-    @Expose
-    public String log;
-    @SerializedName("status")
-    @Expose
-    public String status;
-    @SerializedName("comment")
-    @Expose
-    public String comment;
-    @SerializedName("promote")
-    @Expose
-    public String promote;
-    @SerializedName("sticky")
-    @Expose
-    public String sticky;
-    @SerializedName("nid")
-    @Expose
-    public String nid;
+    private String id;
     @SerializedName("type")
     @Expose
-    public String type;
-    @SerializedName("language")
+    private String type;
+    @SerializedName("title")
     @Expose
-    public String language;
+    private String title;
+    @SerializedName("uid")
+    @Expose
+    private String uid;
     @SerializedName("created")
     @Expose
-    public String created;
+    private String created;
     @SerializedName("changed")
     @Expose
-    public String changed;
-    @SerializedName("tnid")
+    private String changed;
+    @SerializedName("surname")
     @Expose
-    public String tnid;
-    @SerializedName("translate")
-    @Expose
-    public String translate;
-    @SerializedName("revision_timestamp")
-    @Expose
-    public String revisionTimestamp;
-    @SerializedName("revision_uid")
-    @Expose
-    public String revisionUid;
-    @SerializedName("field_address")
-    @Expose
-    public Object fieldAddress;
-    @SerializedName("field_company_name")
-    @Expose
-    public Object fieldCompanyName;
-    @SerializedName("field_logotype")
-    @Expose
-    public Object fieldLogotype;
-    @SerializedName("field_mail")
-    @Expose
-    public Object fieldMail;
-    @SerializedName("field_middle_name")
-    @Expose
-    public Object fieldMiddleName;
-    @SerializedName("field_name")
-    @Expose
-    public Object fieldName;
-    @SerializedName("field_phone")
-    @Expose
-    public Object fieldPhone;
-    @SerializedName("field_position")
-    @Expose
-    public Object fieldPosition;
-    @SerializedName("field_surname")
-    @Expose
-    public Object fieldSurname;
-    @SerializedName("field_web_site")
-    @Expose
-    public Object fieldWebSite;
-    @SerializedName("field_social_links")
-    @Expose
-    public Object fieldSocialLinks;
-    @SerializedName("field_base64_vcard")
-    @Expose
-    public Object fieldBase64Vcard;
-
+    private String surname;
     @SerializedName("name")
     @Expose
-    public String name;
-    @SerializedName("picture")
+    private String name;
+    @SerializedName("middle_name")
     @Expose
-    public String picture;
-    @SerializedName("data")
+    private String middleName;
+    @SerializedName("company")
     @Expose
-    public String data;
-    @SerializedName("path")
+    private String company;
+    @SerializedName("address")
     @Expose
-    public String path;
+    private String address;
+    @SerializedName("position")
+    @Expose
+    private String position;
+    @SerializedName("web_site")
+    @Expose
+    private String webSite;
+    @SerializedName("phone")
+    @Expose
+    private String phone;
+    @SerializedName("email")
+    @Expose
+    private String email;
+    @SerializedName("base64_vcard")
+    @Expose
+    private String base64Vcard;
+    @SerializedName("social_links")
+    @Expose
+    private String socialLinks;
+    @SerializedName("field_logotype")
+    @Expose
+    private Object fieldLogotype;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public Object getFieldName() {
-        return fieldName;
-    }
-
-    public Object getFieldSurname() {
-        return fieldSurname;
-    }
-
-    public Object getFieldMiddleName() {
-        return fieldMiddleName;
-    }
-
-    public Object getFieldCompanyName() {
-        return fieldCompanyName;
-    }
-
-    public Object getFieldAddress() {
-        return fieldAddress;
-    }
-
-    public Object getFieldPosition() {
-        return fieldPosition;
-    }
-
-    public Object getFieldWebSite() {
-        return fieldWebSite;
-    }
-
-    public Object getFieldBase64Vcard() {
-        return fieldBase64Vcard;
-    }
-
-    public Object getFieldLogotype() {
-        return fieldLogotype;
-    }
-
-    public String getNid() {
-        return nid;
-    }
-
-    public Object getFieldMail() {
-        return fieldMail;
-    }
-
-    public Object getFieldPhone() {
-        return fieldPhone;
-    }
-
-    public Object getFieldSocialLinks() {
-        return fieldSocialLinks;
-    }
 
     public class FieldLogotype {
 
@@ -221,25 +120,55 @@ public class GetCardRes {
         }
     }
 
-    public class FieldBase64Vcard {
-
-        @SerializedName("und")
-        @Expose
-        public List<Base64> und = null;
-
-        public List<Base64> getUnd() {
-            return und;
-        }
+    public String getTitle() {
+        return title;
     }
 
-    public class Base64 {
+    public String getSurname() {
+        return surname;
+    }
 
-        @SerializedName("value")
-        @Expose
-        public String value;
+    public String getName() {
+        return name;
+    }
 
-        public String getValue() {
-            return value;
-        }
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public String getWebSite() {
+        return webSite;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getBase64Vcard() {
+        return base64Vcard;
+    }
+
+    public String getSocialLinks() {
+        return socialLinks;
+    }
+
+    public Object getFieldLogotype() {
+        return fieldLogotype;
     }
 }

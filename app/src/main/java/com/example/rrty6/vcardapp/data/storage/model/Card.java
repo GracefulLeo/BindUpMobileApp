@@ -162,7 +162,7 @@ public class Card implements Serializable{
     }
 
     public void addPhone(Phone phone) {
-        if (phone != null && !phone.getPhone().isEmpty()) {
+        if (phone != null && phone.getPhone() != null && !phone.getPhone().isEmpty()) {
             if (phones == null) {
                 phones = new ArrayList<>();
             }
@@ -171,7 +171,7 @@ public class Card implements Serializable{
     }
 
     public void addEmail(Email email) {
-        if (email != null && !email.getEmail().isEmpty()) {
+        if (email != null && email.getEmail() != null && !email.getEmail().isEmpty()) {
             if (emails == null) {
                 emails = new ArrayList<>();
             }

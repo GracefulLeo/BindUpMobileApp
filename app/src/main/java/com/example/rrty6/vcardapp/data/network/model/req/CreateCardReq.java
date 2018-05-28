@@ -20,50 +20,48 @@ public class CreateCardReq {
     @SerializedName("title")
     @Expose
     public String title;
-
     @SerializedName("field_logotype")
     @Expose
     public FieldLogotype fieldLogotype = null;
-    @SerializedName("field_name")
+    @SerializedName("name")
     @Expose
-    public Field fieldName = null;
-    @SerializedName("field_surname")
+    public String name = null;
+    @SerializedName("surname")
     @Expose
-    public Field fieldSurname = null;
-    @SerializedName("field_middle_name")
+    public String surname = null;
+    @SerializedName("middle_name")
     @Expose
-    public Field fieldMiddleName = null;
-    @SerializedName("field_company_name")
+    public String middleName = null;
+    @SerializedName("company")
     @Expose
-    public Field fieldCompanyName = null;
-    @SerializedName("field_position")
+    public String company = null;
+    @SerializedName("position")
     @Expose
-    public Field fieldPosition = null;
-    @SerializedName("field_address")
+    public String position = null;
+    @SerializedName("address")
     @Expose
-    public Field fieldAddress = null;
-    @SerializedName("field_phone")
+    public String address = null;
+    @SerializedName("phone")
     @Expose
-    public Field fieldPhone = null;
-    @SerializedName("field_mail")
+    public String phone = null;
+    @SerializedName("email")
     @Expose
-    public Field fieldMail = null;
-    @SerializedName("field_web_site")
+    public String mail = null;
+    @SerializedName("web_site")
     @Expose
-    public Field fieldWebSite = null;
-    @SerializedName("field_social_links")
+    public String webSite = null;
+    @SerializedName("social_links")
     @Expose
-    public Field fieldSocialLinks = null;
-    @SerializedName("field_base64_vcard")
+    public String socialLinks = null;
+    @SerializedName("base64_vcard")
     @Expose
-    public Field fieldBase64Vcard = null;
+    public String base64Vcard = null;
 
     public CreateCardReq(Card card) {
         type = "vcard";
-
         setTitle(card.getTitle());
-        fieldName = new Field(card.getName());
-        fieldSurname = new Field(card.getSurname());
+        name = card.getName();
+        surname = card.getSurname();
         if (card.getLogo() != null && card.getLogo().getFid() != null) {
             fieldLogotype = new FieldLogotype(card.getLogo().getFid());
             try {
@@ -73,72 +71,49 @@ public class CreateCardReq {
             }
         }
         if (card.getMidlename() != null) {
-            fieldMiddleName = new Field(card.getMidlename());
+            middleName = card.getMidlename();
         }
         if (card.getCompany() != null) {
-            fieldCompanyName = new Field(card.getCompany());
+            company = card.getCompany();
         }
         if (card.getPosition() != null) {
-            fieldPosition = new Field(card.getPosition());
+            position = card.getPosition();
         }
         if (card.getAddress() != null) {
-            fieldAddress = new Field(card.getAddress());
+            address = card.getAddress();
         }
         if (card.getPhones() != null && card.getPhones().size() != 0) {
-            List<String> phones = new ArrayList<>();
+            StringBuilder phones = new StringBuilder();
             for (Phone p : card.getPhones()) {
-                phones.add(p.getPhone());
+                if (phones.length() == 0) {
+                    phones.append(p.getPhone());
+                } else {
+                    phones.append(",");
+                    phones.append(p.getPhone());
+                }
             }
-            fieldPhone = new Field(phones);
+            phone = phones.toString();
         }
         if (card.getEmails() != null && card.getEmails().size() != 0) {
-            List<String> mails = new ArrayList<>();
+            StringBuilder mails = new StringBuilder();
             for (Email p : card.getEmails()) {
-                mails.add(p.getEmail());
+                if (mails.length() == 0) {
+                    mails.append(p.getEmail());
+                } else {
+                    mails.append(",");
+                    mails.append(p.getEmail());
+                }
             }
-            fieldMail = new Field(mails);
+            mail = mails.toString();
         }
         if (card.getSite() != null) {
-            fieldWebSite = new Field(card.getSite());
+            webSite = card.getSite();
         }
         if (card.getSocialLinks() != null) {
-            fieldSocialLinks = new Field(card.getSocialLinksString());
-            System.out.println(new Gson().toJson(fieldSocialLinks));
+            socialLinks = card.getSocialLinksString();
         }
         if (card.getBase() != null) {
-            fieldBase64Vcard = new Field("data:image/png;base64," + card.getBase().getBase64());
-        }
-    }
-
-    public class Field {
-
-        @SerializedName("und")
-        @Expose
-        public List<Und> und = new ArrayList<>();
-
-
-        public Field(String value) {
-            Und und = new Und(value);
-            this.und.add(und);
-        }
-
-        //Setter for multiple fields(mail/phone)
-        public Field(List<String> values) {
-            for (String value: values) {
-                Und und = new Und(value);
-                this.und.add(und);
-            }
-        }
-    }
-
-    private class Und {
-
-        @SerializedName("value")
-        @Expose
-        public String value;
-
-        public Und(String value) {
-            this.value = value;
+            base64Vcard = "data:image/png;base64," + card.getBase().getBase64();
         }
     }
 

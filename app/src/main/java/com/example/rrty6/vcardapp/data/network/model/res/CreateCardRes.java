@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class CreateCardRes {
 
-    @SerializedName("nid")
+    @SerializedName("id")
     @Expose
-    private String nid;
+    private String id;
     @SerializedName("uri")
     @Expose
     private String uri;
 
-    public String getNid() {
-        return nid;
+    public String getId() {
+        return id;
     }
 }

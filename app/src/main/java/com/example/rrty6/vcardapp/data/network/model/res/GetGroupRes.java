@@ -6,39 +6,39 @@ import com.google.gson.annotations.SerializedName;
 public class GetGroupRes {
     @SerializedName("id")
     @Expose
-    public String id;
+    private String id;
     @SerializedName("type")
     @Expose
-    public String type;
+    private String type;
     @SerializedName("changed")
     @Expose
-    public String changed;
+    private String changed;
     @SerializedName("uid")
     @Expose
-    public String uid;
-    @SerializedName("field_description")
+    private String uid;
+    @SerializedName("description")
     @Expose
-    public Object fieldDescription;
-    @SerializedName("field_group_name")
+    private String description;
+    @SerializedName("group_name")
     @Expose
-    public Object fieldGroupName;
+    private String groupName;
     @SerializedName("field_logotype")
     @Expose
-    public Object fieldLogotype;
+    private Object fieldLogotype;
     @SerializedName("field_my_contacts")
     @Expose
-    public Object fieldMyContacts;
+    private Object fieldMyContacts;
 
     public String getId() {
         return id;
     }
 
-    public Object getFieldDescription() {
-        return fieldDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public Object getFieldGroupName() {
-        return fieldGroupName;
+    public String getGroupName() {
+        return groupName;
     }
 
     public Object getFieldLogotype() {
