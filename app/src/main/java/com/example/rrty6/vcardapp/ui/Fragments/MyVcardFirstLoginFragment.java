@@ -35,8 +35,8 @@ public class MyVcardFirstLoginFragment extends Fragment {
                         Log.d(TAG, "onNavigationItemSelected: Fab pressed...");
                         MyVcardCreateCardFragment mVCardViewFragment = new MyVcardCreateCardFragment();
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.main_content_frame, mVCardViewFragment, "Groups");
-                        transaction.addToBackStack("Groups");
+                        transaction.replace(R.id.main_content_frame, mVCardViewFragment, getString(R.string.tag_fragment_my_vcard_create_card));
+                        transaction.addToBackStack(getString(R.string.tag_fragment_my_vcard_create_card));
                         transaction.commit();
                         getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         Log.d(TAG, "onNavigationItemSelected:Groups fragment transaction...");

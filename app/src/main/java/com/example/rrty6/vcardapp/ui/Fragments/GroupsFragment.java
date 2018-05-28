@@ -53,8 +53,8 @@ public class GroupsFragment extends Fragment {
                 if (v.getId() == R.id.fab_groups){
                     GroupCreateFragment groupCreateFragmentFragment = new GroupCreateFragment();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.main_content_frame,groupCreateFragmentFragment,getString(R.string.tag_groups_fragment));
-                    transaction.addToBackStack(getString(R.string.tag_groups_fragment));
+                    transaction.replace(R.id.main_content_frame,groupCreateFragmentFragment,getString(R.string.tag_fragment_groups_create));
+                    transaction.addToBackStack(getString(R.string.tag_fragment_groups_create));
                     transaction.commit();
                     Log.d(TAG, "onClick: Groups preview called...");
                 }
@@ -88,8 +88,8 @@ public class GroupsFragment extends Fragment {
         if(mGroups == null){
             GroupsNoGroupsFragment groupsNoGroupsFragment = new GroupsNoGroupsFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.main_content_frame, groupsNoGroupsFragment,getString(R.string.tag_groups_fragment));
-            transaction.addToBackStack(getString(R.string.tag_groups_fragment));
+            transaction.replace(R.id.main_content_frame, groupsNoGroupsFragment,getString(R.string.tag_fragment_groups_no_groups));
+            transaction.addToBackStack(getString(R.string.tag_fragment_groups_no_groups));
             transaction.commit();
             Log.d(TAG, "onClick: NoGroups fragment called...");
         }

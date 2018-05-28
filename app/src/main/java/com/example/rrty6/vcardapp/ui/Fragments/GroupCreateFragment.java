@@ -218,8 +218,8 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
 
                 MyVcardFragment mMyVcardFragment = new MyVcardFragment();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.main_content_frame,mMyVcardFragment,getString(R.string.tag_MyVcards));
-                transaction.addToBackStack(getString(R.string.tag_MyVcards));
+                transaction.replace(R.id.main_content_frame,mMyVcardFragment,getString(R.string.tag_fragment_my_vcard));
+                transaction.addToBackStack(getString(R.string.tag_fragment_my_vcard));
                 transaction.commit();
                 break;
             case R.id.create_upload_btn_my_vcard:

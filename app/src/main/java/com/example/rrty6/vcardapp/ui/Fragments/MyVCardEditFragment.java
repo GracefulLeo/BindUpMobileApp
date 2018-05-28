@@ -274,8 +274,8 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
 
                 MyVcardFragment mMyVcardFragment = new MyVcardFragment();
                 android.support.v4.app.FragmentTransaction transaction1 = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction1.replace(R.id.main_content_frame,mMyVcardFragment,getString(R.string.tag_MyVcards));
-                transaction1.addToBackStack(getString(R.string.tag_MyVcards));
+                transaction1.replace(R.id.main_content_frame,mMyVcardFragment,getString(R.string.tag_fragment_my_vcard));
+                transaction1.addToBackStack(getString(R.string.tag_fragment_my_vcard));
                 transaction1.commit();
                 Log.d(TAG, "init: MyVCards fragment transaction...");
                 break;

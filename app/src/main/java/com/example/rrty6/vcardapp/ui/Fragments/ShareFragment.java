@@ -364,8 +364,8 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         ContactsFragment contactsFragment = new ContactsFragment();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity()
                 .getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_content_frame, contactsFragment, "Contacts");
-        fragmentTransaction.addToBackStack("Contacts");
+        fragmentTransaction.add(R.id.main_content_frame, contactsFragment, getString(R.string.tag_fragment_contacts));
+        fragmentTransaction.addToBackStack(getString(R.string.tag_fragment_contacts));
         fragmentTransaction.commit();
     }
 

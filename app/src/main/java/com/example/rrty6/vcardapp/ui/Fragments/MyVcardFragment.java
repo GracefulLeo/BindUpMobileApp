@@ -39,8 +39,8 @@ public class MyVcardFragment extends Fragment {
             if (MainOperations.getCardList().isEmpty()){
                 MyVcardFirstLoginFragment mMyVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
                 FragmentTransaction transaction1 = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction1.replace(R.id.main_content_frame, mMyVcardFirstLoginFragment, getString(R.string.tag_MyVcards));
-                transaction1.addToBackStack(getString(R.string.tag_MyVcards));
+                transaction1.replace(R.id.main_content_frame, mMyVcardFirstLoginFragment, getString(R.string.tag_fragment_my_vcard_first_login));
+                transaction1.addToBackStack(getString(R.string.tag_fragment_my_vcard_first_login));
                 transaction1.commit();
             }
         } catch (Exception e) {

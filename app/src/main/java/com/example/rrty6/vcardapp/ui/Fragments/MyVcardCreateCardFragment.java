@@ -207,7 +207,7 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
                             mMiddleNameEditText.getText().toString(),
                             mCompanyEditText.getText().toString(), mAdressEditText.getText().toString(),
                             mPositionEditText.getText().toString(), phones, emails, "Site",null, new Base(mCardBitmapForView));
-
+//@TODO fix the field "SITE" above!!!!
 
                     MainOperations.createCard(userCard);
                     Snackbar.make(v,"Saved",Snackbar.LENGTH_LONG).setAction("Action",null).show();
@@ -218,8 +218,8 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
 
                 MyVcardFragment mMyVcardFragment = new MyVcardFragment();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.main_content_frame,mMyVcardFragment,getString(R.string.tag_MyVcards));
-                transaction.addToBackStack(getString(R.string.tag_MyVcards));
+                transaction.replace(R.id.main_content_frame,mMyVcardFragment,getString(R.string.tag_fragment_my_vcard));
+                transaction.addToBackStack(getString(R.string.tag_fragment_my_vcard));
                 transaction.commit();
                 break;
             case R.id.create_upload_btn_my_vcard:

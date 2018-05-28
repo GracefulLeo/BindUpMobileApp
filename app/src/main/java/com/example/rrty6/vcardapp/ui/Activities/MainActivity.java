@@ -36,6 +36,7 @@ import com.example.rrty6.vcardapp.ui.Fragments.MyVcardFirstLoginFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.MyVcardFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.ShareFragment;
 import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
+import com.example.rrty6.vcardapp.ui.model.FragmentTag;
 import com.example.rrty6.vcardapp.utils.App;
 import com.example.rrty6.vcardapp.utils.PreferenceKeys;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MainActivity";
 
     //@TODO check, is there necessary to have android:hardwareAccelerated="false"android:largeHeap="true" , in androidmanifest xml file
+    //@TODO UPDATE: now we need to check, should we get the parameters above back for consistent application work
     //Graphical elements
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
@@ -58,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<Card> cards;
     private List<Group> groups;
     private Bundle args = new Bundle();
+    private ArrayList<String> mFragmentTags = new ArrayList<>();
+    private ArrayList<FragmentTag> mFragments = new ArrayList<>();
+    private int mExitCount = 0;
 
     //Fragments
 
@@ -87,19 +92,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initToolbar();
         initNavigationView();
         isFirstLogin();
+        // After Share option we move transactioning on this point. So if statement with key from
+        // bundle below (bundle.getString("key")) is needed to go to the contact fragment right after sharing
         if (bundle.getString("key") != null && getIntent().getStringExtra("key").equals("To contacts")) {
-            mContactsFragment = new ContactsFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.main_content_frame, mContactsFragment, getString(R.string.tag_contacts));
-            transaction.addToBackStack(getString(R.string.tag_contacts));
-            transaction.commit();
+            //BackStack management right here
+            if (mContactsFragment == null) {
+                Log.d(TAG, "onCreate: Contacts...");
+                mContactsFragment = new ContactsFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.add(R.id.main_content_frame, mContactsFragment, getString(R.string.tag_fragment_contacts));
+                transaction.commit();
+                mFragmentTags.add(getString(R.string.tag_fragment_contacts));
+                mFragments.add(new FragmentTag(mContactsFragment, getString(R.string.tag_fragment_contacts)));
+            } else {
+                mFragmentTags.remove(getString(R.string.tag_fragment_contacts));
+                mFragmentTags.add(getString(R.string.tag_fragment_contacts));
+            }
+            setFragmentVisibility(getString(R.string.tag_fragment_contacts));
         }
     }
 
-
     //  ----------------------------------!!!initialization!!!------------------------------------------
 
-
+    //Check is this first appearance of user in the app or not
     private void firstCheck() {
         cards = new ArrayList<>();
         try {
@@ -107,29 +122,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         if (cards != null) {
             if (cards.size() == 0) {
-                myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.add(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_MyVcards));
-                transaction.addToBackStack("MyVcard");
-                transaction.commit();
+                if (myVcardFirstLoginFragment == null) {
+                    Log.d(TAG, "firstCheck: First Login...");
+                    myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.add(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_fragment_my_vcard));
+                    transaction.commit();
+                    mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_first_login));
+                    mFragments.add(new FragmentTag(myVcardFirstLoginFragment, getString(R.string.tag_fragment_my_vcard_first_login)));
+                } else {
+                    mFragmentTags.remove(getString(R.string.tag_fragment_my_vcard_first_login));
+                    mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_first_login));
+                }
+                setFragmentVisibility(getString(R.string.tag_fragment_my_vcard_first_login));
             }
         }
     }
 
     private void init() {
-
-        mMyVcardFragment = new MyVcardFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_MyVcards));
-        transaction.addToBackStack(getString(R.string.tag_MyVcards));
-        transaction.commit();
-        Log.d(TAG, "init: fragment transaction...");
+        // Initizialisation ....
+        if (mMyVcardFragment == null) {
+            Log.d(TAG, "init: MyVcard...");
+            mMyVcardFragment = new MyVcardFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_fragment_my_vcard));
+            transaction.commit();
+            mFragmentTags.add(getString(R.string.tag_fragment_my_vcard));
+            mFragments.add(new FragmentTag(mMyVcardFragment, getString(R.string.tag_fragment_my_vcard)));
+        } else {
+            mFragmentTags.remove(getString(R.string.tag_fragment_my_vcard));
+            mFragmentTags.add(getString(R.string.tag_fragment_my_vcard));
+        }
+        setFragmentVisibility(getString(R.string.tag_fragment_my_vcard));
     }
 
     private void initToolbar() {
+        // Toolbar initizialisation ...
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
@@ -139,13 +169,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (item.getItemId()) {
                     case R.id.edit_button_in_preview_fragment:
 //@TODO Make that Bundle here is work properly, test more...
-                        mMyVcardEditFragment = new MyVCardEditFragment();
-                        mMyVcardEditFragment.setArguments(args);
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.add(R.id.main_content_frame, mMyVcardEditFragment, getString(R.string.tag_MyVcards));
-                        transaction.addToBackStack(getString(R.string.tag_MyVcards));
-                        transaction.commit();
-                        Log.d(TAG, "init: MyVCards fragment transaction...");
+                        if (mMyVcardEditFragment == null) {
+                            Log.d(TAG, "onMenuItemClick: Edit My VCard...");
+                            mMyVcardEditFragment = new MyVCardEditFragment();
+                            mMyVcardEditFragment.setArguments(args);
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.add(R.id.main_content_frame, mMyVcardEditFragment, getString(R.string.tag_fragment_my_vcard_edit));
+                            transaction.commit();
+                            mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_edit));
+                            mFragments.add(new FragmentTag(mMyVcardEditFragment, getString(R.string.tag_fragment_my_vcard_edit)));
+                        } else {
+                            mFragmentTags.remove(getString(R.string.tag_fragment_my_vcard_edit));
+                            mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_edit));
+                        }
+                        setFragmentVisibility(getString(R.string.tag_fragment_my_vcard_edit));
                         break;
                     case R.id.edit_delete_button:
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -159,7 +196,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                     }
-
                                     Toast toast = Toast.makeText(getApplicationContext(),
                                             "Your card " + MainOperations.getCard(args.getLong("card id")).getSurname() + " " + MainOperations.getCard(args.getLong("card id")).getName() + " " + MainOperations.getCard(args.getLong("card id")).getMidlename() + " has been succesfully deleted",
                                             Toast.LENGTH_LONG);
@@ -169,12 +205,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-
-                                mMyVcardFragment = new MyVcardFragment();
-                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.add(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_MyVcards));
-                                transaction.addToBackStack(getString(R.string.tag_MyVcards));
-                                transaction.commit();
+                                if (mMyVcardFragment == null) {
+                                    Log.d(TAG, "onClick: My VCard");
+                                    mMyVcardFragment = new MyVcardFragment();
+                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                    transaction.add(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_fragment_my_vcard));
+                                    transaction.commit();
+                                    mFragmentTags.add(getString(R.string.tag_fragment_my_vcard));
+                                    mFragments.add(new FragmentTag(mMyVcardFragment, getString(R.string.tag_fragment_my_vcard)));
+                                } else {
+                                    mFragmentTags.remove(getString(R.string.tag_fragment_my_vcard));
+                                    mFragmentTags.add(getString(R.string.tag_fragment_my_vcard));
+                                }
+                                setFragmentVisibility(getString(R.string.tag_fragment_my_vcard));
                                 dialog.dismiss();
                             }
                         });
@@ -193,7 +236,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return false;
             }
         });
-
         toolbar.inflateMenu(R.menu.top_navigation_menu_my_vcards);
     }
 
@@ -216,6 +258,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //@TODO if problems appears check Matt Tabian course.
                 switch (item.getItemId()) {
                     case R.id.MyVCardItem: {
+                        //@TODO check, is this correct to clear backstack here
+                        mFragmentTags.clear();
+                        mFragmentTags = new ArrayList<>();
                         cards = new ArrayList<>();
                         try {
                             cards = MainOperations.getCardList();
@@ -223,31 +268,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             e.printStackTrace();
                         }
                         if (cards != null && cards.size() == 0) {
-                            myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
-                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            transaction.add(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_MyVcards));
-                            transaction.addToBackStack("MyVcard");
-                            transaction.commit();
+                            if (myVcardFirstLoginFragment == null) {
+                                Log.d(TAG, "onNavigationItemSelected: FirstLogin...");
+                                myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
+                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                transaction.add(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_fragment_my_vcard));
+                                transaction.commit();
+                                mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_first_login));
+                                mFragments.add(new FragmentTag(myVcardFirstLoginFragment, getString(R.string.tag_fragment_my_vcard_first_login)));
+                            } else {
+                                mFragmentTags.remove(getString(R.string.tag_fragment_my_vcard_first_login));
+                                mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_first_login));
+                            }
+                            setFragmentVisibility(getString(R.string.tag_fragment_my_vcard_first_login));
                             break;
-
                         }
                         Log.d(TAG, "onNavigationItemSelected: MyVCard item selected...");
-                        mMyVcardFragment = new MyVcardFragment();
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.add(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_MyVcards));
-                        transaction.addToBackStack(getString(R.string.tag_MyVcards));
-                        transaction.commit();
-                        Log.d(TAG, "init: MyVCards fragment transaction...");
+                        if (mMyVcardFragment == null) {
+                            Log.d(TAG, "onNavigationItemSelected: My VCard...");
+                            mMyVcardFragment = new MyVcardFragment();
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.add(R.id.main_content_frame, mMyVcardFragment, getString(R.string.tag_fragment_my_vcard));
+                            transaction.commit();
+                            mFragmentTags.add(getString(R.string.tag_fragment_my_vcard));
+                            mFragments.add(new FragmentTag(mMyVcardFragment, getString(R.string.tag_fragment_my_vcard)));
+                        } else {
+                            mFragmentTags.remove(getString(R.string.tag_fragment_my_vcard));
+                            mFragmentTags.add(getString(R.string.tag_fragment_my_vcard));
+                        }
+                        setFragmentVisibility(getString(R.string.tag_fragment_my_vcard));
                         break;
                     }
                     case R.id.contactsItem: {
-                        Log.d(TAG, "onNavigationItemSelected: Contacts item selected...");
-                        mContactsFragment = new ContactsFragment();
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.add(R.id.main_content_frame, mContactsFragment, getString(R.string.tag_contacts));
-                        transaction.addToBackStack(getString(R.string.tag_contacts));
-                        transaction.commit();
-                        Log.d(TAG, "init:Contact fragment transaction...");
+                        if (mContactsFragment == null) {
+                            Log.d(TAG, "onNavigationItemSelected: Contacts...");
+                            mContactsFragment = new ContactsFragment();
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.add(R.id.main_content_frame, mContactsFragment, getString(R.string.tag_fragment_contacts));
+                            transaction.commit();
+                            mFragmentTags.add(getString(R.string.tag_fragment_contacts));
+                            mFragments.add(new FragmentTag(mContactsFragment, getString(R.string.tag_fragment_contacts)));
+                        } else {
+                            mFragmentTags.remove(getString(R.string.tag_fragment_contacts));
+                            mFragmentTags.add(getString(R.string.tag_fragment_contacts));
+                        }
+                        setFragmentVisibility(getString(R.string.tag_fragment_contacts));
                         break;
                     }
                     case R.id.groups_item: {
@@ -259,22 +324,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         if (groups != null) {
                             if (groups.size() == 0) {
-                                groupsNoGroupsFragment = new GroupsNoGroupsFragment();
-                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.add(R.id.main_content_frame, groupsNoGroupsFragment, "Groups");
-                                transaction.addToBackStack("Groups");
-                                transaction.commit();
+                                if (groupsNoGroupsFragment == null) {
+                                    Log.d(TAG, "onNavigationItemSelected: GroupsNoGroup...");
+                                    groupsNoGroupsFragment = new GroupsNoGroupsFragment();
+                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                    transaction.add(R.id.main_content_frame, groupsNoGroupsFragment, getString(R.string.tag_fragment_groups_no_groups));
+                                    transaction.commit();
+                                    mFragmentTags.add(getString(R.string.tag_fragment_groups_no_groups));
+                                    mFragments.add(new FragmentTag(groupsNoGroupsFragment, getString(R.string.tag_fragment_groups_no_groups)));
+                                } else {
+                                    mFragmentTags.remove(getString(R.string.tag_fragment_groups_no_groups));
+                                    mFragmentTags.add(getString(R.string.tag_fragment_groups_no_groups));
+                                }
+                                setFragmentVisibility(getString(R.string.tag_fragment_groups_no_groups));
                                 break;
                             }
                         }
                         if (groups.size() != 0) {
-                            Log.d(TAG, "onNavigationItemSelected: Groups item selected...");
-                            groupsFragment = new GroupsFragment();
-                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            transaction.add(R.id.main_content_frame, groupsFragment, "Groups");
-                            transaction.addToBackStack("Groups");
-                            transaction.commit();
-                            Log.d(TAG, "onNavigationItemSelected: Group fragment transaction");
+                            if (groupsFragment == null) {
+                                Log.d(TAG, "onNavigationItemSelected: Groups...");
+                                groupsFragment = new GroupsFragment();
+                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                transaction.add(R.id.main_content_frame, groupsFragment, getString(R.string.tag_fragment_groups));
+                                transaction.commit();
+                                mFragmentTags.add(getString(R.string.tag_fragment_groups));
+                                mFragments.add(new FragmentTag(groupsFragment, getString(R.string.tag_fragment_groups)));
+                            } else {
+                                mFragmentTags.remove(getString(R.string.tag_fragment_groups));
+                                mFragmentTags.add(getString(R.string.tag_fragment_groups));
+                            }
+                            setFragmentVisibility(getString(R.string.tag_fragment_groups));
                             break;
                         }
                     }
@@ -289,11 +368,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (cards.isEmpty()) {
 
                         }
-                        shareFragment = new ShareFragment();
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.add(R.id.main_content_frame, shareFragment, "Share");
-                        transaction.addToBackStack("Share");
-                        transaction.commit();
+                        if (shareFragment == null) {
+                            Log.d(TAG, "onNavigationItemSelected: Share...");
+                            shareFragment = new ShareFragment();
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.add(R.id.main_content_frame, shareFragment, getString(R.string.tag_fragment_share));
+                            transaction.commit();
+                            mFragmentTags.add(getString(R.string.tag_fragment_share));
+                            mFragments.add(new FragmentTag(shareFragment, getString(R.string.tag_fragment_share)));
+                        } else {
+                            mFragmentTags.remove(getString(R.string.tag_fragment_share));
+                            mFragmentTags.add(getString(R.string.tag_fragment_share));
+                        }
+                        setFragmentVisibility(getString(R.string.tag_fragment_share));
                         break;
                     case R.id.log_out_item:
                         Log.d(TAG, "onNavigationItemSelected: log out item clicked...");
@@ -321,11 +408,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final SharedPreferences preferences = App.getSharedPreferences();
         boolean isFirstLogin = preferences.getBoolean(PreferenceKeys.FIRST_TIME_LOGIN, true);
         if (isFirstLogin) {
-            myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_fragment_preview_my_vcard));
-            transaction.addToBackStack(getString(R.string.tag_fragment_preview_my_vcard));
-            transaction.commit();
+            if (myVcardFirstLoginFragment == null) {
+                Log.d(TAG, "isFirstLogin: MyVCardFirstLogin...");
+                myVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.add(R.id.main_content_frame, myVcardFirstLoginFragment, getString(R.string.tag_fragment_my_vcard_first_login));
+                transaction.commit();
+                mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_first_login));
+                mFragments.add(new FragmentTag(myVcardFirstLoginFragment, getString(R.string.tag_fragment_my_vcard_first_login)));
+            } else {
+                mFragmentTags.remove(getString(R.string.tag_fragment_my_vcard_first_login));
+                mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_first_login));
+            }
+            setFragmentVisibility(getString(R.string.tag_fragment_my_vcard_first_login));
+
             Log.d(TAG, "isFirstLogin: launching alert dialog...");
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             alertDialogBuilder.setMessage(getString(R.string.first_time_user_message));
@@ -361,16 +457,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:
-                Log.d(TAG, "onNavigationItemSelected: Fab pressed...");
-                myVcardCreateCardFragment = new MyVcardCreateCardFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.add(R.id.main_content_frame, myVcardCreateCardFragment, "Groups");
-                transaction.addToBackStack("Groups");
-                transaction.commit();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                Log.d(TAG, "onNavigationItemSelected:Groups fragment transaction...");
+                if (myVcardCreateCardFragment == null) {
+                    Log.d(TAG, "onNavigationItemSelected: Fab pressed.MyVCard create...");
+                    myVcardCreateCardFragment = new MyVcardCreateCardFragment();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.add(R.id.main_content_frame, myVcardCreateCardFragment, getString(R.string.tag_fragment_my_vcard_create_card));
+                    transaction.commit();
+                    mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_create_card));
+                    mFragments.add(new FragmentTag(myVcardCreateCardFragment, getString(R.string.tag_fragment_my_vcard_create_card)));
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    Log.d(TAG, "onNavigationItemSelected:Groups fragment transaction...");
+                } else {
+                    mFragmentTags.remove(getString(R.string.tag_fragment_my_vcard_create_card));
+                    mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_create_card));
+                }
+                setFragmentVisibility(getString(R.string.tag_fragment_my_vcard_create_card));
                 break;
-
         }
     }
 
@@ -388,6 +490,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.main_content_frame, mMyVcardPreviewFragment, getString(R.string.tag_fragment_preview_my_vcard));
         transaction.commit();
+        mFragmentTags.add(getString(R.string.tag_fragment_preview_my_vcard));
+        mFragments.add(new FragmentTag(mMyVcardPreviewFragment, getString(R.string.tag_fragment_preview_my_vcard)));
+
+        setFragmentVisibility(getString(R.string.tag_fragment_preview_my_vcard));
     }
 
     @Override
@@ -396,14 +502,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportFragmentManager().beginTransaction().remove(contactsPreviewFragment).commitAllowingStateLoss();
         }
         contactsPreviewFragment = new ContactsPreviewFragment();
-//@TODO change all tags to the normal one
+        //@TODO change all tags to the normal one
+        //@TODO same here as bellow. Check are we really need to initialize args like that...
         Bundle args = new Bundle();
         args.putLong("card id", card.getId());
         contactsPreviewFragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.main_content_frame, contactsPreviewFragment, getString(R.string.tag_fragment_contacts_preview));
+        transaction.add(R.id.main_content_frame, contactsPreviewFragment, getString(R.string.tag_fragment_preview_contacts));
         transaction.commit();
+        mFragmentTags.add(getString(R.string.tag_fragment_preview_contacts));
+        mFragments.add(new FragmentTag(contactsPreviewFragment, getString(R.string.tag_fragment_preview_contacts)));
+
+        setFragmentVisibility(getString(R.string.tag_fragment_preview_contacts));
     }
 
     @Override
@@ -412,13 +523,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportFragmentManager().beginTransaction().remove(groupsPreviewFragment).commitAllowingStateLoss();
         }
         groupsPreviewFragment = new GroupsPreviewFragment();
+        //@TODO Check is this bundle initialization is correct
         Bundle args = new Bundle();
         args.putLong("groups id", group.getId());
         groupsPreviewFragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.main_content_frame, groupsPreviewFragment, "Groups");
+        transaction.add(R.id.main_content_frame, groupsPreviewFragment, getString(R.string.tag_fragment_preview_groups));
         transaction.commit();
+        mFragmentTags.add(getString(R.string.tag_fragment_preview_groups));
+        mFragments.add(new FragmentTag(groupsPreviewFragment, getString(R.string.tag_fragment_preview_groups)));
+
+        setFragmentVisibility(getString(R.string.tag_fragment_preview_groups));
+    }
+
+    private void setFragmentVisibility(String tagname) {
+        for (int i = 0; i < mFragments.size(); i++) {
+            if (tagname.equals(mFragments.get(i).getTag())) {
+                //show
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.show(mFragments.get(i).getFragment());
+                transaction.commit();
+            } else {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.hide(mFragments.get(i).getFragment());
+                transaction.commit();
+            }
+        }
     }
 
     // Methods for FAB. (Hiding and showing)
