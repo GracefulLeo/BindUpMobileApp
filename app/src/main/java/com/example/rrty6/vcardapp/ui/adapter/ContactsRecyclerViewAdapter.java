@@ -85,14 +85,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
         mInterface = (IMainActivity) mContext;
     }
 
-//    @Override
-//    public Filter getFilter() {
-//        return null;
-//    }
-
-
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         RelativeLayout mContactsPreviewContainer;
         CircleImageView mCompanyLogo;
         TextView mName;

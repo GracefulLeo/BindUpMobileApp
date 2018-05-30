@@ -1,6 +1,6 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
-import android.app.FragmentTransaction;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -43,25 +43,33 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
+@SuppressLint("ValidFragment")
 public class MyVCardEditFragment extends Fragment implements View.OnClickListener{
 
+    //constants
     private static final String TAG = "ViewProfileFragment";
     private static final int PICK_PHOTO_REQUEST = 1;
 
+    //widgets
     private TextView mFragmentHeading, mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView,
             mAdressTextView, mPositionTextView, mWebSiteTextView, mPhoneTextView, mEmailTextView;
     private EditText mCardIdText, mSurnameText, mNameText, mMiddleNameText, mCompanyText,
             mAdressText, mPositionText, mWebSiteText, mPhoneText, mEmailText;
-
     private ImageView mCompanyLogoImage;
     private Button mUpdateBtn;
-
     private Bitmap bitmap = null;
-    private Card mMyVcard;
     private Bitmap mCardBitmapForView;
     private CardView mCardView;
 
+    //vars
+    private Card mMyVcard;
     private IMainActivity mInterface;
+    private Context mContext;
+
+    @SuppressLint("ValidFragment")
+    public MyVCardEditFragment(Context context) {
+        this.mContext = context;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,25 +85,21 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
            setHasOptionsMenu(true);
         }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState){
         final View view = inflater.inflate(R.layout.vcard_view_for_editing_fragment, container, false);
+        mInterface = (IMainActivity) mContext;
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).hideFloatingActionButton();
         }
         Log.d(TAG, "onCreateViewMyVCardEdit: started.");
 
-
         //      View Init!!
-
         mCompanyLogoImage = view.findViewById(R.id.preview_logo);
         mCardView = view.findViewById(R.id.edit_cardview_vcard);
 
-
         //        Text View INIT!!!!
-
         mFragmentHeading = view.findViewById(R.id.edit_fragment_heading);
         mSurnameTextView = view.findViewById(R.id.edit_surname_text_view);
         mNameTextView = view.findViewById(R.id.edit_name_text_view);
@@ -108,7 +112,6 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
         mEmailTextView = view.findViewById(R.id.edit_email_text_view);
 
         //          Edit Text INIT!!
-
         mCardIdText = view.findViewById(R.id.edit_vcard_id_text);
         mSurnameText = view.findViewById(R.id.edit_surname_text);
         mNameText = view.findViewById(R.id.edit_name_text);
@@ -121,13 +124,10 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
         mEmailText = view.findViewById(R.id.edit_email_text);
 
         //          Buttons INIT!!
-
         mUpdateBtn = view.findViewById(R.id.edit_btn_update);
         mUpdateBtn.setOnClickListener(this);
 
-
         init();
-
         return view;
     }
 
@@ -140,7 +140,6 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
 
     private void init() {
         Log.d(TAG, "init: initializing " + getString(R.string.tag_fragment_preview_my_vcard));
-
 
         try {
             mFragmentHeading.setText("Edit");
@@ -182,8 +181,6 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
         }catch (NullPointerException e) {e.getMessage();} catch (Exception e) {
             e.printStackTrace();
         }
-
-
         System.out.println(mMyVcard==null);
         if (mMyVcard.getLogo() != null) {
             GlideApp
@@ -193,17 +190,16 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    //@TODO are it needed here???
     public void uploadPhoto () {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent,PICK_PHOTO_REQUEST);
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case PICK_PHOTO_REQUEST:
                 if (resultCode == RESULT_OK) {
@@ -218,7 +214,6 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
                                 .with(getActivity())
                                 .load(bitmap)
                                 .into(mCompanyLogoImage);
-
                     }
                 }
         }
@@ -271,13 +266,8 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
                 }
                 Toast toast = Toast.makeText(getActivity(), "Your card has been succesfully updated!", Toast.LENGTH_LONG);
                 toast.show();
-
-                MyVcardFragment mMyVcardFragment = new MyVcardFragment();
-                android.support.v4.app.FragmentTransaction transaction1 = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction1.replace(R.id.main_content_frame,mMyVcardFragment,getString(R.string.tag_fragment_my_vcard));
-                transaction1.addToBackStack(getString(R.string.tag_fragment_my_vcard));
-                transaction1.commit();
-                Log.d(TAG, "init: MyVCards fragment transaction...");
+                // Inflating MyVCardFragment via interface here...
+                mInterface.inflateMyVCardFragment(mContext);
                 break;
         }
     }

@@ -21,11 +21,11 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecyclerViewAdapter.ViewHolder> {
-
+    //constants
     private static final String TAG = "Groups Adapter";
 
     //vars
-    private List<Group> mGroups = new ArrayList<>();
+    private List<Group> mGroups;
     private Context mContext;
     private IMainActivity mInterface;
 
@@ -60,9 +60,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
                 mInterface.inflateViewGroupProfileGroups(mGroups.get(position));
             }
         });
-
-//final Card card = mFilteredUsers.get(position);
-
     }
 
     @Override
@@ -78,12 +75,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
         super.onAttachedToRecyclerView(recyclerView);
         mInterface = (IMainActivity) mContext;
     }
-
-//    @Override
-//    public Filter getFilter() {
-//        return null;
-//    }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

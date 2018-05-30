@@ -1,5 +1,6 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -36,6 +36,7 @@ import com.example.rrty6.vcardapp.data.storage.model.Email;
 import com.example.rrty6.vcardapp.data.storage.model.Logo;
 import com.example.rrty6.vcardapp.data.storage.model.Phone;
 import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
+import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,34 +44,44 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
+@SuppressLint("ValidFragment")
 public class MyVcardCreateCardFragment extends Fragment implements View.OnClickListener{
 
+    //constants
     private static final String TAG = "VcardViewFragment";
     private static final int PICK_PHOTO_REQUEST = 1;
 
-    //widgets
 
-    private List<Phone> phones = null;
-    private List<Email> emails = null;
+    //widgets
     private Bitmap bitmap = null;
     private TextView mFragmentHeading, mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView, mAdressTextView, mPositionTextView, mWebSiteTextView, mPhoneTextView, mEmailTextView;
     private EditText mCardIdEditText, mSurnameEditText, mNameEditText, mMiddleNameEditText, mCompanyEditText, mAdressEditText, mPositionEditText, mWebSiteEditText, mPhoneEditText, mEmailEditText;
     private RelativeLayout mBackArrow;
     private ImageView mCompanyLogoImage;
     private Button mBtnSaveData,mBtnUploadPhoto;
-
     private CardView mCardView;
     private Bitmap mCardBitmapForView;
+
+    //vars
+    private List<Phone> phones = null;
+    private List<Email> emails = null;
+    private IMainActivity mInterface;
+    private Context mContext;
+
+    @SuppressLint("ValidFragment")
+    public MyVcardCreateCardFragment(Context context) {
+        this.mContext = context;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState){
         final View view = inflater.inflate(R.layout.vcard_view_edit_and_create_fragment, container, false);
         Log.d(TAG, "onCreateView: started Creation of the Card..........");
+        mInterface = (IMainActivity) mContext;
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).hideFloatingActionButton();
         }
-
         setHasOptionsMenu(true);
 
         //      View Init!!
@@ -78,11 +89,9 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
         mCardView = view.findViewById(R.id.create_vcard);
 
         //       Picture init!
-
         mBackArrow = view.findViewById(R.id.back_arrow);
 
         //        Text View INIT!!!!
-
         mFragmentHeading = view.findViewById(R.id.preview_fragment_heading);
         mSurnameTextView = view.findViewById(R.id.create_surname_text_view);
         mNameTextView = view.findViewById(R.id.create_name_text_view);
@@ -108,7 +117,6 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
         mEmailEditText = view.findViewById(R.id.create_email_text);
 
         //          Buttons INIT!!
-
         mBtnUploadPhoto = view.findViewById(R.id.create_upload_btn_my_vcard);
         mBtnSaveData = view.findViewById(R.id.create_save_btn);
         mBtnUploadPhoto.setOnClickListener(this);
@@ -116,9 +124,7 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
         mBackArrow.setOnClickListener(this);
 
 //        setBackgroundImage(view);
-
         init();
-
         return view;
     }
 
@@ -141,13 +147,11 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent,PICK_PHOTO_REQUEST);
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case PICK_PHOTO_REQUEST:
                 if (resultCode == RESULT_OK) {
@@ -162,7 +166,6 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
                                 .with(getActivity())
                                 .load(bitmap)
                                 .into(mCompanyLogoImage);
-
                     }
                 }
         }
@@ -173,13 +176,11 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
             case R.id.create_save_btn:
                 Log.d(TAG, "onClick: save button clicked...");
                 try {
-
                     View view = getActivity().getCurrentFocus();
                     if (view != null) {
                         InputMethodManager imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
-
                     //@TODO Solve the problem with emails(if emails more then one add other field, same with phones
                     mSurnameTextView.setText(mSurnameEditText.getText().toString());
                     mNameTextView.setText(mNameEditText.getText().toString());
@@ -208,26 +209,19 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
                             mCompanyEditText.getText().toString(), mAdressEditText.getText().toString(),
                             mPositionEditText.getText().toString(), phones, emails, "Site",null, new Base(mCardBitmapForView));
 //@TODO fix the field "SITE" above!!!!
-
                     MainOperations.createCard(userCard);
                     Snackbar.make(v,"Saved",Snackbar.LENGTH_LONG).setAction("Action",null).show();
 
                 }catch (NullPointerException e) {e.getMessage();} catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                MyVcardFragment mMyVcardFragment = new MyVcardFragment();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.main_content_frame,mMyVcardFragment,getString(R.string.tag_fragment_my_vcard));
-                transaction.addToBackStack(getString(R.string.tag_fragment_my_vcard));
-                transaction.commit();
+                // Inflating MyVCardFragment via interface here...
+                mInterface.inflateMyVCardFragment(mContext);
                 break;
             case R.id.create_upload_btn_my_vcard:
                 Log.d(TAG, "onClick: clicked upload button...");
                 uploadPhoto();
                 break;
-
-
         }
     }
 
@@ -245,7 +239,6 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
         Bitmap returnedBitmap = Bitmap.createBitmap(600,339, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(returnedBitmap);
         v.draw(c);
-
         return returnedBitmap;
     }
 }

@@ -29,9 +29,11 @@ import java.util.List;
 
 public class MyVCardPreviewFragment extends Fragment implements View.OnClickListener{
 
+    // constants
     private static final String TAG = "ViewProfileFragment";
     private static final int PICK_PHOTO_REQUEST = 1;
 
+    // widgets
     private TextView mFragmentHeading, mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView,
             mAdressTextView, mPositionTextView, mWebSiteTextView, mPhoneTextView, mEmailTextView,
             mCardIdText, mSurnameText, mNameText, mMiddleNameText, mCompanyText,
@@ -40,6 +42,7 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
     private ImageView mCompanyLogoImage;
     private Button mBackBtn;
 
+    // vars
     private Card mMyVcard;
     private IMainActivity mInterface;
 
@@ -55,9 +58,8 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
             }
         }
            setHasOptionsMenu(true);
-           Log.d(TAG, "onCreate: got incoming bundle: " + mMyVcard.getName());
+//           Log.d(TAG, "onCreate in MyVCardPreviewFragment: got incoming bundle: " + mMyVcard.getName());
         }
-
 
     @Nullable
     @Override
@@ -67,15 +69,12 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         ((MainActivity)getActivity()).hideFloatingActionButton();
 
         //      View Init!!
-
         mCompanyLogoImage = view.findViewById(R.id.preview_logo);
 
         //       Picture init!
-
         mBackArrow = view.findViewById(R.id.back_arrow);
 
         //        Text View INIT!!!!
-
         mFragmentHeading = view.findViewById(R.id.preview_fragment_heading);
         mSurnameTextView = view.findViewById(R.id.preview_surname_text_view);
         mNameTextView = view.findViewById(R.id.preview_name_text_view);
@@ -88,7 +87,6 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         mEmailTextView = view.findViewById(R.id.preview_email_text_view);
 
         //          Edit Text INIT!!
-
         mCardIdText = view.findViewById(R.id.preview_vcard_id_text);
         mSurnameText = view.findViewById(R.id.preview_surname_text);
         mNameText = view.findViewById(R.id.preview_name_text);
@@ -101,11 +99,9 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         mEmailText = view.findViewById(R.id.preview_email_text);
 
         //          Buttons INIT!!
-
         mBackBtn = view.findViewById(R.id.preview_btn_back);
 
         init();
-
         return view;
     }
 
@@ -119,8 +115,6 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
 
     private void init() {
         Log.d(TAG, "init: initializing " + getString(R.string.tag_fragment_preview_my_vcard));
-
-
         try {
             mFragmentHeading.setText("Preview");
             List<Phone> phones = new ArrayList<>(mMyVcard.getPhones());
@@ -141,8 +135,6 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
                 mEmailTextView.setText(emails.get(0).getEmail());
             } else { mEmailTextView.setVisibility(View.INVISIBLE);
             }
-
-
             mSurnameText.setText(mMyVcard.getSurname());
             mNameText.setText(mMyVcard.getName());
             mMiddleNameText.setText(mMyVcard.getMidlename());
@@ -161,14 +153,12 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         }catch (NullPointerException e) {e.getMessage();} catch (Exception e) {
             e.printStackTrace();
         }
-
         if (mMyVcard.getLogo() != null) {
             GlideApp
                     .with(getActivity())
                     .load(mMyVcard.getLogo().getLogoBitmap())
                     .into(mCompanyLogoImage);
         }
-
     }
 
     @Override
@@ -178,7 +168,6 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
                 // set some action on this button
                 //@TODO organize backstack already!!!
                 break;
-
         }
     }
 }

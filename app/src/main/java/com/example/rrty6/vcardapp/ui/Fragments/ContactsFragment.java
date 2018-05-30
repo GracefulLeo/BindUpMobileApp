@@ -22,12 +22,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ContactsFragment extends Fragment {
-
+    //constants
     private static final int NUM_COLUMNS = 1;
     private static final String TAG = "ContactsFragment";
 
     //widgets
     private RecyclerView mRecyclerView;
+
     //vars
     private ContactsRecyclerViewAdapter mContactsRecyclerViewAdapter;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;

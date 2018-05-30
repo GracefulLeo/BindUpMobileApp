@@ -9,7 +9,11 @@
         android:title="@string/edit"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_delete"/>
-
+    <item
+        android:id="@+id/bac_arrow_contacts"
+        android:icon="@drawable/ic_back_arrow"
+        android:title=""
+        app:showAsAction="ifRoom"/>
 
 
 </menu>

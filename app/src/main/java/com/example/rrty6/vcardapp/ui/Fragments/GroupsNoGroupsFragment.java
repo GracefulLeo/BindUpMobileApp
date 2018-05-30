@@ -1,9 +1,10 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +12,26 @@ import android.view.ViewGroup;
 
 import com.example.rrty6.vcardapp.R;
 import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
+import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 
+@SuppressLint("ValidFragment")
 public class GroupsNoGroupsFragment extends Fragment {
 
+    //constants
     private static final String TAG = "MyVcardFragment";
+
+    //widgets
+    //@TODO check is there necessesary to have this crap here...
     private FloatingActionButton mFabNoGroups;
 
+    //Vars
+    private IMainActivity mInterface;
+    private Context mContext;
 
-    public GroupsNoGroupsFragment() {
+
+    @SuppressLint("ValidFragment")
+    public GroupsNoGroupsFragment(Context context) {
+        this.mContext = context;
     }
 
     @Override
@@ -27,28 +40,21 @@ public class GroupsNoGroupsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.groups_no_groups_view, container, false);
         Log.d(TAG, "onCreateView: MyVCard fragment started ...");
-
+        mInterface = (IMainActivity) mContext;
         MainActivity.mFab.hide();
         mFabNoGroups = view.findViewById(R.id.fab_groups_no_groups);
         mFabNoGroups.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (v.getId() == R.id.fab_groups_no_groups){
-                    GroupCreateFragment groupCreateFragmentFragment = new GroupCreateFragment();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.main_content_frame,groupCreateFragmentFragment,getString(R.string.tag_fragment_groups_create));
-                    transaction.addToBackStack(getString(R.string.tag_fragment_groups_create));
-                    transaction.commit();
-                    Log.d(TAG, "onClick: Groups preview called...");
+                    // Inflating GroupCreateFragment via interface here...
+                    mInterface.inflateGroupCreateFragment(mContext);
                 }
             }
         });
 //@todo checkout, if FAB is would work in the way i expect it should ....
         return view;
-
     }
-
-
 }
 
 

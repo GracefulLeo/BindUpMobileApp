@@ -29,10 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContactsPreviewFragment extends Fragment implements View.OnClickListener{
-
+    //constants
     private static final String TAG = "ViewProfileFragment";
     private static final int PICK_PHOTO_REQUEST = 1;
 
+    //widgets
     private TextView mFragmentHeading, mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView,
             mAdressTextView, mPositionTextView, mWebSiteTextView, mPhoneTextView, mEmailTextView,
             mCardIdText, mSurnameText, mNameText, mMiddleNameText, mCompanyText,
@@ -42,6 +43,7 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
     private Button mBackBtn;
     private FloatingActionButton mFabForCall, mFabForSms, mFabForEmail;
 
+    //vars
     private Card mMyVcard;
     private IMainActivity mInterface;
 
@@ -71,15 +73,12 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
         }
 
         //      View Init!!
-
         mCompanyLogoImage = view.findViewById(R.id.contacts_preview_logo);
 
         //       Picture init!
-
         mBackArrow = view.findViewById(R.id.back_arrow);
 
         //        Text View INIT!!!!
-
         mFragmentHeading = view.findViewById(R.id.contacts_preview_fragment_heading);
         mSurnameTextView = view.findViewById(R.id.contacts_preview_surname_text_view);
         mNameTextView = view.findViewById(R.id.contacts_preview_name_text_view);
@@ -92,7 +91,6 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
         mEmailTextView = view.findViewById(R.id.contacts_preview_email_text_view);
 
         //          Edit Text INIT!!
-
         mCardIdText = view.findViewById(R.id.contacts_preview_vcard_id_text);
         mSurnameText = view.findViewById(R.id.contacts_preview_surname_text);
         mNameText = view.findViewById(R.id.contacts_preview_name_text);
@@ -105,7 +103,6 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
         mEmailText = view.findViewById(R.id.contacts_preview_email_text);
 
         //          Buttons INIT!!
-
         mBackBtn = view.findViewById(R.id.contacts_preview_btn_back);
         mFabForCall = view.findViewById(R.id.fab_call_contacts_preview);
         mFabForSms = view.findViewById(R.id.fab_sms_contacts_preview);
@@ -117,9 +114,7 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
         mFabForEmail.setOnClickListener(this);
 //        mEditButton.setOnClickListener(this);
 
-
         init();
-
         return view;
     }
 
@@ -140,8 +135,6 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
 
     private void init() {
         Log.d(TAG, "init: initializing " + getString(R.string.tag_fragment_preview_my_vcard));
-
-
         try {
             mFragmentHeading.setText("Contacts");
             List<Phone> phones = new ArrayList<>(mMyVcard.getPhones());
@@ -188,7 +181,6 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
         }catch (NullPointerException e) {e.getMessage();} catch (Exception e) {
             e.printStackTrace();
         }
-
         if (mMyVcard.getLogo() != null) {
             GlideApp
                     .with(getActivity())

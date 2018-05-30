@@ -21,6 +21,9 @@
     <string name="name_surname">Name , surname</string>
     <string name="android_studio_android_com">android.studio@android.com</string>
     <string name="myvcard_first_appearance">Create your first VCard by tapping plus</string>
+    <string name="edit">edit</string>
+    <string name="delete_message" > Are you sure you want delete this VCard? This action can not be undone</string>
+    <string name="groups_first_appearance">Create your first group by tapping plus</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -37,27 +40,24 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
 
+    <!--BUTTONS-->
+    <string name="delete_confirmation_button">YES</string>
+    <string name="delete_declining_button">NO</string>
+
     <!-- Fragment Tags -->
     <string name="tag_fragment_my_vcard">My VCard</string>
     <string name="tag_fragment_contacts">Contacts</string>
     <string name="tag_fragment_groups">Groups</string>
-
-
-    <string name="edit">edit</string>
-    <string name="delete_message" > Are you sure you want delete this VCard? This action can not be undone</string>
-
-   <!--BUTTONS-->
-    <string name="delete_confirmation_button">YES</string>
-    <string name="delete_declining_button">NO</string>
-    <string name="groups_first_appearance">Create your first group by tapping plus</string>
-    <string name="tag_fragment_my_vcard_first_login">My VCard</string>
-    <string name="tag_fragment_my_vcard_edit">My VCard</string>
-    <string name="tag_fragment_groups_no_groups">Groups</string>
+    <string name="tag_fragment_my_vcard_first_login">My VCard First Login</string>
+    <string name="tag_fragment_my_vcard_edit">My VCard Edit</string>
+    <string name="tag_fragment_groups_no_groups">Groups no Groups</string>
     <string name="tag_fragment_share">Share</string>
-    <string name="tag_fragment_my_vcard_create_card">My VCard</string>
-    <string name="tag_fragment_preview_my_vcard">My VCard</string>
-    <string name="tag_fragment_preview_contacts">Contacts</string>
-    <string name="tag_fragment_preview_groups">Groups</string>
-    <string name="tag_fragment_groups_create">Groups</string>
+    <string name="tag_fragment_my_vcard_create_card">My VCard Create Card</string>
+    <string name="tag_fragment_preview_my_vcard">My VCard Preview</string>
+    <string name="tag_fragment_preview_contacts">Contacts Preview</string>
+    <string name="tag_fragment_preview_groups">Groups Preview</string>
+    <string name="tag_fragment_groups_create">Groups Create</string>
+    <string name="message_for_one_more_tap_to_exit">1 more click to exit</string>
+    <string name="no_vcards_share_fragment">You don\'t have any vcards to share. Create one first.</string>
 
 </resources>

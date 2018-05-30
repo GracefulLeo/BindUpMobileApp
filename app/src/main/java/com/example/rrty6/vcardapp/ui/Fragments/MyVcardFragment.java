@@ -1,5 +1,7 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,39 +18,45 @@ import com.example.rrty6.vcardapp.data.MainOperations;
 import com.example.rrty6.vcardapp.data.storage.model.Card;
 import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
 import com.example.rrty6.vcardapp.ui.adapter.MyVCardsFragmentAdapter;
+import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class MyVcardFragment extends Fragment {
 
+    //constants
     private static final String TAG = "MyVcardFragment";
     private static final  int NUM_COLUMNS = 1;
     
     //widgets
     private RecyclerView mRecyclerView;
+
     //vars
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private MyVCardsFragmentAdapter mRecyclerViewAdapter;
     private List<Card> mCards;
+    private IMainActivity mInterface;
+    private Context mContext;
+
+    @SuppressLint("ValidFragment")
+    public MyVcardFragment(Context context) {
+        this.mContext = context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         try {
             if (MainOperations.getCardList().isEmpty()){
-                MyVcardFirstLoginFragment mMyVcardFirstLoginFragment = new MyVcardFirstLoginFragment();
-                FragmentTransaction transaction1 = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction1.replace(R.id.main_content_frame, mMyVcardFirstLoginFragment, getString(R.string.tag_fragment_my_vcard_first_login));
-                transaction1.addToBackStack(getString(R.string.tag_fragment_my_vcard_first_login));
-                transaction1.commit();
+                // Inflate MyVCardFirstLoginFragment via interface here...
+                mInterface.inflateVCardFirstLoginFragment(mContext);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
         View view = inflater.inflate(R.layout.my_vcard_fragment,container,false);
+        mInterface = (IMainActivity) mContext;
         Log.d(TAG, "onCreateView: MyVCard fragment started ...");
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).showFloatingActionButton();
@@ -80,5 +88,9 @@ public class MyVcardFragment extends Fragment {
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mRecyclerViewAdapter = new MyVCardsFragmentAdapter(getActivity(),mCards);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
+    }
+
+    public void scrollToTop(){
+        mRecyclerView.smoothScrollToPosition(0);
     }
 }

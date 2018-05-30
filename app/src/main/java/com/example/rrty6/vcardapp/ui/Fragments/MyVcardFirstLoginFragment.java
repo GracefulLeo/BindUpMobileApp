@@ -1,24 +1,32 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.rrty6.vcardapp.R;
+import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 
+@SuppressLint("ValidFragment")
 public class MyVcardFirstLoginFragment extends Fragment {
 
+    //constants
     private static final String TAG = "MyVcardFragment";
     private FloatingActionButton mFabMyVcardFirstFragment;
 
+    //Vars
+    private IMainActivity mInterface;
+    private Context mContext;
 
-    public MyVcardFirstLoginFragment() {
-
+    @SuppressLint("ValidFragment")
+    public MyVcardFirstLoginFragment(Context context) {
+        this.mContext = context;
     }
 
     @Override
@@ -26,6 +34,7 @@ public class MyVcardFirstLoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.my_vcard_first_login, container, false);
+        mInterface = (IMainActivity) mContext;
         mFabMyVcardFirstFragment = view.findViewById(R.id.fab_first_login_fragment);
         mFabMyVcardFirstFragment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,13 +42,8 @@ public class MyVcardFirstLoginFragment extends Fragment {
                 switch (v.getId()) {
                     case R.id.fab_first_login_fragment:
                         Log.d(TAG, "onNavigationItemSelected: Fab pressed...");
-                        MyVcardCreateCardFragment mVCardViewFragment = new MyVcardCreateCardFragment();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.main_content_frame, mVCardViewFragment, getString(R.string.tag_fragment_my_vcard_create_card));
-                        transaction.addToBackStack(getString(R.string.tag_fragment_my_vcard_create_card));
-                        transaction.commit();
-                        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                        Log.d(TAG, "onNavigationItemSelected:Groups fragment transaction...");
+                        // Inflating MyVCardCreateCardFragment via interface here...
+                        mInterface.inflateCreateCardFragment(mContext);
                         break;
                 }
             }
@@ -48,10 +52,3 @@ public class MyVcardFirstLoginFragment extends Fragment {
         return view;
     }
 }
-
-
-
-
-
-
-

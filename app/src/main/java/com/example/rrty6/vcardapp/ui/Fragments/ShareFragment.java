@@ -1,5 +1,6 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -38,6 +39,7 @@ import com.example.rrty6.vcardapp.data.storage.model.Email;
 import com.example.rrty6.vcardapp.data.storage.model.Logo;
 import com.example.rrty6.vcardapp.data.storage.model.Phone;
 import com.example.rrty6.vcardapp.data.storage.model.SocialLink;
+import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 import com.example.rrty6.vcardapp.utils.App;
 
 import java.lang.reflect.Method;
@@ -45,16 +47,19 @@ import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.List;
 
+@SuppressLint("ValidFragment")
 public class ShareFragment extends Fragment implements WifiP2pManager.ConnectionInfoListener {
 
+    //constants
     private static final String TAG = "Share fragment";
 
-    private List<Card> cards;
-    private Card mMyVcard;
+    //widgets
     private ListView listViewPeers;
     private ArrayAdapter arrayAdapter;
 
-
+    //vars
+    private Card mMyVcard;
+    private List<Card> cards;
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
     private String deviceName;
@@ -65,16 +70,22 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     private BroadcastReceiver receiver = null;
     private Card receivedData = null;
     private int port = 8448;
+    private IMainActivity mInterface;
+    private Context mContext;
 
+    @SuppressLint("ValidFragment")
+    public ShareFragment(Context context) {
+        this.mContext = context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_share, container, false);
+        mInterface = (IMainActivity) mContext;
         Log.d(TAG, "onCreateView: Share fragment....");
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         listViewPeers = view.findViewById(R.id.share_list_view);
-
         try {
             cards = MainOperations.getCardList();
         } catch (SQLException e) {
@@ -95,16 +106,13 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     public void cardSelector() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Select VCard you want to share");
-
         ListView modeList = new ListView(getActivity());
         try {
             cards = MainOperations.getCardList();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         modeList.setAdapter(new ShareFragment.MyAdapter());
-
         builder.setView(modeList);
         //@TODO Check, is there anything else we can add to this button...
         builder.setNegativeButton("Cancel", null);
@@ -125,7 +133,6 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
 
     private void startShare() {
         listViewPeers = getActivity().findViewById(R.id.share_list_view);
-//        arrayAdapter = wifiOperations.getAdapter();
         try {
             arrayAdapter = new PeerAdapter(this, android.R.layout.simple_list_item_1);
         } catch (Exception e) {
@@ -141,7 +148,6 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     public void initDiscover() {
         startWifi();
         if (!wasWifiEnabled) {
-//            handler.sendEmptyMessage(2);
             initBlock();
         }
         setName(mMyVcard.getName());
@@ -149,7 +155,6 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
             @Override
             public void onSuccess() {
             }
-
             @Override
             public void onFailure(int reasonCode) {
                 initDiscover();
@@ -237,38 +242,24 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         manager.stopPeerDiscovery(channel, new WifiP2pManager.ActionListener() {
 
             @Override
-            public void onSuccess() {
-
-
-            }
+            public void onSuccess() { }
 
             @Override
-            public void onFailure(int i) {
-
-            }
+            public void onFailure(int i) { }
         });
         manager.clearLocalServices(channel, new WifiP2pManager.ActionListener() {
             @Override
-            public void onSuccess() {
-
-            }
+            public void onSuccess() { }
 
             @Override
-            public void onFailure(int i) {
-
-
-            }
+            public void onFailure(int i) { }
         });
         manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
             @Override
-            public void onSuccess() {
-
-            }
+            public void onSuccess() { }
 
             @Override
-            public void onFailure(int i) {
-
-            }
+            public void onFailure(int i) { }
         });
         super.onDestroy();
     }
@@ -287,7 +278,6 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
 
     private void send(InetAddress address) {
         if (!wasWifiEnabled) {
-//            handler.sendEmptyMessage(3);
             getActivity().unregisterReceiver(stopReceiver);
         }
         ClientThread clientThread = new ClientThread(address, port, mMyVcard);
@@ -361,26 +351,18 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     private void kill() {
         Toast toast = Toast.makeText(getActivity(), "Card is successfully shared", Toast.LENGTH_LONG);
         toast.show();
-        ContactsFragment contactsFragment = new ContactsFragment();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity()
-                .getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_content_frame, contactsFragment, getString(R.string.tag_fragment_contacts));
-        fragmentTransaction.addToBackStack(getString(R.string.tag_fragment_contacts));
-        fragmentTransaction.commit();
+        // Inflating ContactFragment via interface here...
+        mInterface.inflateContactFragment(mContext);
     }
 
     private void finishWifi() {
         returnName();
         manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
             @Override
-            public void onSuccess() {
-
-            }
+            public void onSuccess() { }
 
             @Override
-            public void onFailure(int reason) {
-
-            }
+            public void onFailure(int reason) { }
         });
         if (!wasWifiEnabled) {
             WifiManager wManager = (WifiManager) App.getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -400,7 +382,6 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
             manager.requestConnectionInfo(channel, this);
         }
     }
-
 
     // Adapter for alert dialog, to work properly with collection representing
     private class MyAdapter extends BaseAdapter {

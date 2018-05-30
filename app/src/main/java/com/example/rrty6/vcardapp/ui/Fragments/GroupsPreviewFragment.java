@@ -29,9 +29,11 @@ import java.util.List;
 
 public class GroupsPreviewFragment extends Fragment implements View.OnClickListener{
 
+    //constants
     private static final String TAG = "ViewProfileFragment";
     private static final int PICK_PHOTO_REQUEST = 1;
 
+    //widgets
     private TextView mFragmentHeading, mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView,
             mAdressTextView, mPositionTextView, mWebSiteTextView, mPhoneTextView, mEmailTextView,
             mCardIdText, mSurnameText, mNameText, mMiddleNameText, mCompanyText,
@@ -41,6 +43,7 @@ public class GroupsPreviewFragment extends Fragment implements View.OnClickListe
     private Button mBackBtn;
     private FloatingActionButton mFabForCall, mFabForSms, mFabForEmail;
 
+    //vars
     private Card mMyVcard;
     private IMainActivity mInterface;
 
@@ -58,24 +61,18 @@ public class GroupsPreviewFragment extends Fragment implements View.OnClickListe
            Log.d(TAG, "onCreate: got incoming bundle: ");
         }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState){
         final View view = inflater.inflate(R.layout.vcard_view_for_contacts_preview_fragment, container, false);
         Log.d(TAG, "onCreateView: started.");
-
-
         //      View Init!!
-
         mCompanyLogoImage = view.findViewById(R.id.contacts_preview_logo);
 
         //       Picture init!
-
         mBackArrow = view.findViewById(R.id.back_arrow);
 
         //        Text View INIT!!!!
-
         mFragmentHeading = view.findViewById(R.id.contacts_preview_fragment_heading);
         mSurnameTextView = view.findViewById(R.id.contacts_preview_surname_text_view);
         mNameTextView = view.findViewById(R.id.contacts_preview_name_text_view);
@@ -88,7 +85,6 @@ public class GroupsPreviewFragment extends Fragment implements View.OnClickListe
         mEmailTextView = view.findViewById(R.id.contacts_preview_email_text_view);
 
         //          Edit Text INIT!!
-
         mCardIdText = view.findViewById(R.id.contacts_preview_vcard_id_text);
         mSurnameText = view.findViewById(R.id.contacts_preview_surname_text);
         mNameText = view.findViewById(R.id.contacts_preview_name_text);
@@ -101,21 +97,17 @@ public class GroupsPreviewFragment extends Fragment implements View.OnClickListe
         mEmailText = view.findViewById(R.id.contacts_preview_email_text);
 
         //          Buttons INIT!!
-
         mBackBtn = view.findViewById(R.id.contacts_preview_btn_back);
         mFabForCall = view.findViewById(R.id.fab_call_contacts_preview);
         mFabForSms = view.findViewById(R.id.fab_sms_contacts_preview);
         mFabForEmail = view.findViewById(R.id.fab_email_contacts_preview);
-
 
         mFabForSms.setOnClickListener(this);
         mFabForCall.setOnClickListener(this);
         mFabForEmail.setOnClickListener(this);
 //        mEditButton.setOnClickListener(this);
 
-
         init();
-
         return view;
     }
 
@@ -136,8 +128,6 @@ public class GroupsPreviewFragment extends Fragment implements View.OnClickListe
 
     private void init() {
         Log.d(TAG, "init: initializing " + getString(R.string.tag_fragment_preview_my_vcard));
-
-
         try {
             mFragmentHeading.setText("Contacts");
             List<Phone> phones = new ArrayList<>(mMyVcard.getPhones());
@@ -158,7 +148,6 @@ public class GroupsPreviewFragment extends Fragment implements View.OnClickListe
                 mEmailTextView.setText(emails.get(0).getEmail());
             } else { mEmailTextView.setVisibility(View.INVISIBLE);
             }
-
             mSurnameText.setText(mMyVcard.getSurname());
             mNameText.setText(mMyVcard.getName());
             mMiddleNameText.setText(mMyVcard.getMidlename());
@@ -191,8 +180,8 @@ public class GroupsPreviewFragment extends Fragment implements View.OnClickListe
                     .load(mMyVcard.getLogo().getLogoBitmap())
                     .into(mCompanyLogoImage);
         }
-
     }
+
     @Override
     public void onClick(View v) {
         switch(v.getId()){

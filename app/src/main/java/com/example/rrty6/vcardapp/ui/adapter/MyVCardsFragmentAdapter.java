@@ -21,14 +21,8 @@ import java.util.List;
 
 public class MyVCardsFragmentAdapter extends RecyclerView.Adapter<MyVCardsFragmentAdapter.ViewHolder> {
 
-
     //constants
-//    private final List<Fragment> mFragmentList = new ArrayList<>();
-//    private final List<String> mFragmentTitle = new ArrayList<>();
     private static final String TAG = "MyVCardsFragmentAdapter";
-
-    //widgets
-
 
     //vars
     private List<Card> mMyVcards = new ArrayList<>();
@@ -40,21 +34,6 @@ public class MyVCardsFragmentAdapter extends RecyclerView.Adapter<MyVCardsFragme
         mMyVcards = cards;
         mContext = context;
     }
-//@TODO check, in case of working properly of this adapter , is this unused or not
-//    public void addFragment (Fragment fragment,String title){
-//        mFragmentList.add(fragment);
-//        mFragmentTitle.add(title);
-//    }
-//
-//    @Override
-//    public Fragment getItem(int position) {
-//        return mFragmentList.get(position);
-//    }
-//
-//    @Override
-//    public int getCount() {
-//        return mFragmentList.size();
-//    }
 
     @NonNull
     @Override

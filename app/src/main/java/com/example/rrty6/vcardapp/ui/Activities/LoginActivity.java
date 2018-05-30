@@ -58,7 +58,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     InputMethodManager imm = (InputMethodManager)getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
-
                 Log.d(TAG, "onClick: registration clicked....");
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
@@ -72,18 +71,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         InputMethodManager imm = (InputMethodManager)getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
-
                     Log.d(TAG, "onCreate: Checking if this a first login....");
                     MainOperations.login(mEmailET.getText().toString(), mPasswordEditText.getText().toString());
                     Toast toast = Toast.makeText(getApplicationContext(),"You are succesfully authorized!", Toast.LENGTH_LONG);
                     toast.show();
                     System.out.println(mEmailET.getText().toString() + " " + mPasswordEditText.getText().toString());
-//                    MainOperations.login("sanson@user.com","1111");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 Log.d(TAG, "onClick: clicked...");
-
                 intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

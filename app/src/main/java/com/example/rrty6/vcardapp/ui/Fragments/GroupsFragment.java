@@ -1,10 +1,10 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -20,27 +20,38 @@ import com.example.rrty6.vcardapp.data.MainOperations;
 import com.example.rrty6.vcardapp.data.storage.model.Group;
 import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
 import com.example.rrty6.vcardapp.ui.adapter.GroupsRecyclerViewAdapter;
+import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class GroupsFragment extends Fragment {
 
+    //constants
     private static final int NUM_COLUMNS = 1;
     private static final String TAG = "GroupsFragment";
 
     //widgets
     private RecyclerView mRecyclerView;
+
     //vars
     private GroupsRecyclerViewAdapter mGroupsRecyclerViewAdapter;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private List<Group> mGroups;
     private FloatingActionButton mFab;
+    private IMainActivity mInterface;
+    private Context mContext;
+
+    @SuppressLint("ValidFragment")
+    public GroupsFragment(Context context) {
+        this.mContext = context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.group_fragment, container, false);
+        mInterface = (IMainActivity) mContext;
         Log.d(TAG, "onCreateView: started.");
 
         mRecyclerView = view.findViewById(R.id.recycler_view_container_groups);
@@ -51,18 +62,12 @@ public class GroupsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (v.getId() == R.id.fab_groups){
-                    GroupCreateFragment groupCreateFragmentFragment = new GroupCreateFragment();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.main_content_frame,groupCreateFragmentFragment,getString(R.string.tag_fragment_groups_create));
-                    transaction.addToBackStack(getString(R.string.tag_fragment_groups_create));
-                    transaction.commit();
-                    Log.d(TAG, "onClick: Groups preview called...");
+                    // Inflating GroupCreateFragment via interface here...
+                    mInterface.inflateGroupCreateFragment(mContext);
                 }
             }
         });
-
         setHasOptionsMenu(true);
-
         getGroups();
         return view;
     }
@@ -79,6 +84,8 @@ public class GroupsFragment extends Fragment {
         }
         try {
             mGroups = MainOperations.getGroupList();
+            //@TODO put groups in bundle here and get bundle in MainActivity.Create if statement:
+            //@TODO if mGroups == empty then transfer to GroupNoGroupsFragment
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -86,12 +93,8 @@ public class GroupsFragment extends Fragment {
             initRecyclerView();
         }
         if(mGroups == null){
-            GroupsNoGroupsFragment groupsNoGroupsFragment = new GroupsNoGroupsFragment();
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.main_content_frame, groupsNoGroupsFragment,getString(R.string.tag_fragment_groups_no_groups));
-            transaction.addToBackStack(getString(R.string.tag_fragment_groups_no_groups));
-            transaction.commit();
-            Log.d(TAG, "onClick: NoGroups fragment called...");
+            // Inflating GroupsNoGroupFragment via interface here...
+            mInterface.inflateGroupNoGroupsFragment(mContext);
         }
     }
 
@@ -102,5 +105,4 @@ public class GroupsFragment extends Fragment {
         mGroupsRecyclerViewAdapter = new GroupsRecyclerViewAdapter(getActivity(), mGroups);
         mRecyclerView.setAdapter(mGroupsRecyclerViewAdapter);
     }
-
 }

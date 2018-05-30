@@ -27,17 +27,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         mButtonRegister = findViewById(R.id.btn_register_for_registration);
 
-
         mEmailET = findViewById(R.id.email_enter_for_register);
         mPasswordET = findViewById(R.id.password_enter_for_register);
         mPasswordRepetitionET = findViewById(R.id.password_repeat_enter_for_registration);
-
 
         mButtonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //@TODO make it smoother. Code is very ugly....
-
                 if (Objects.equals(mPasswordET.getText().toString(), mPasswordRepetitionET.getText().toString())) {
                     try {
                         if(isEmailValid(mEmailET.getText().toString())) {
@@ -56,8 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast toast = Toast.makeText(getApplicationContext(), "Invalid email . Please check if entered data is correct", Toast.LENGTH_LONG);
                             toast.show();
                         }
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -66,8 +61,6 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     private boolean isEmailValid(String email) {
