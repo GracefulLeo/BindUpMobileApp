@@ -130,14 +130,11 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
         inflater.inflate(R.menu.top_navigation_menu_registration,menu);
         setMenuVisibility(true);
         super.onCreateOptionsMenu(menu, inflater);
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).hideFloatingActionButton();
-        }
     }
 
     private void init() {
         Log.d(TAG, "init: initializing " + getString(R.string.tag_fragment_preview_my_vcard));
-        mFragmentHeading.setText("My VCard");
+        mFragmentHeading.setText(R.string.tag_fragment_groups);
     }
 
     public void uploadPhoto () {

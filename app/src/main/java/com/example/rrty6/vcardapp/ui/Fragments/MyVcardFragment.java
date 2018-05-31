@@ -23,6 +23,7 @@ import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 import java.sql.SQLException;
 import java.util.List;
 
+@SuppressLint("ValidFragment")
 public class MyVcardFragment extends Fragment {
 
     //constants
@@ -58,9 +59,9 @@ public class MyVcardFragment extends Fragment {
         View view = inflater.inflate(R.layout.my_vcard_fragment,container,false);
         mInterface = (IMainActivity) mContext;
         Log.d(TAG, "onCreateView: MyVCard fragment started ...");
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).showFloatingActionButton();
-        }
+//        if (getActivity() instanceof MainActivity) {
+//            ((MainActivity) getActivity()).showFloatingActionButton();
+//        }
         mRecyclerView = view.findViewById(R.id.my_vcard_recycler_view_container);
         mRecyclerView.setHasFixedSize(true);
 

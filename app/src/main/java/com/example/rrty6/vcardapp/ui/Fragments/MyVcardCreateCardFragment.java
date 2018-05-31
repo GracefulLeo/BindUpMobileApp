@@ -133,9 +133,6 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
         inflater.inflate(R.menu.top_navigation_menu_registration,menu);
         setMenuVisibility(true);
         super.onCreateOptionsMenu(menu, inflater);
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).hideFloatingActionButton();
-        }
     }
 
     private void init() {

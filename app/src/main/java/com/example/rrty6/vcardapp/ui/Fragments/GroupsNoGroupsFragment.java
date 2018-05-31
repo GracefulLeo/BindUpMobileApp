@@ -41,7 +41,6 @@ public class GroupsNoGroupsFragment extends Fragment {
         View view = inflater.inflate(R.layout.groups_no_groups_view, container, false);
         Log.d(TAG, "onCreateView: MyVCard fragment started ...");
         mInterface = (IMainActivity) mContext;
-        MainActivity.mFab.hide();
         mFabNoGroups = view.findViewById(R.id.fab_groups_no_groups);
         mFabNoGroups.setOnClickListener(new View.OnClickListener() {
             @Override

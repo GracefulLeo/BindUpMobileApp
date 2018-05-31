@@ -56,7 +56,6 @@ public class GroupsFragment extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.recycler_view_container_groups);
         mRecyclerView.setHasFixedSize(true);
-        MainActivity.mFab.hide();
         mFab = view.findViewById(R.id.fab_groups);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override

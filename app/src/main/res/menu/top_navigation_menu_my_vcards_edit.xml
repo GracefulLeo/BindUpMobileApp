@@ -3,17 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <item
         android:id="@+id/edit_delete_button"
         android:title="@string/edit"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_delete"/>
-    <item
-        android:id="@+id/bac_arrow_contacts"
-        android:icon="@drawable/ic_back_arrow"
-        android:title=""
-        app:showAsAction="ifRoom"/>
-
 
 </menu>

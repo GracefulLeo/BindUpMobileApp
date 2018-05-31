@@ -66,7 +66,7 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState){
         final View view = inflater.inflate(R.layout.vcard_view_for_preview_fragment, container, false);
         Log.d(TAG, "onCreateView: started.");
-        ((MainActivity)getActivity()).hideFloatingActionButton();
+//        ((MainActivity)getActivity()).hideFloatingActionButton();
 
         //      View Init!!
         mCompanyLogoImage = view.findViewById(R.id.preview_logo);

@@ -90,9 +90,6 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState){
         final View view = inflater.inflate(R.layout.vcard_view_for_editing_fragment, container, false);
         mInterface = (IMainActivity) mContext;
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).hideFloatingActionButton();
-        }
         Log.d(TAG, "onCreateViewMyVCardEdit: started.");
 
         //      View Init!!

@@ -61,10 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         inflateMyVCardEditFragment();
                         break;
 
-                    case R.id.back_arrow_contacts:
-                        onBackPressed();
-                        break;
-
                     case R.id.edit_delete_button:
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                         alertDialogBuilder.setMessage(getString(R.string.delete_message));
@@ -111,10 +107,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initNavigationView() {
         mDrawerLayout = findViewById(R.id.drawer_layout);
         Log.d(TAG, "initNavigationView: NavDrawer initialization...");
-        ActionBarDrawerToggle mToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 toolbar, R.string.view_navigation_open, R.string.view_navigation_close);
-        mDrawerLayout.addDrawerListener(mToggle);
-        mToggle.syncState();
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
         Log.d(TAG, "initNavigationView: toggle initialized...");
 
         NavigationView mNavigationView = findViewById(R.id.navigation_view);
@@ -210,11 +206,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    private void enableViews(boolean enable) {
+
+        if(enable) {
+//You may not want to open the drawer on swipe from the left in this case
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+// Remove hamburger
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
+            // Show back button
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            // when DrawerToggle is disabled i.e. setDrawerIndicatorEnabled(false), navigation icon
+            // clicks are disabled i.e. the UP button will not work.
+            // We need to add a listener, as in below, so DrawerToggle will forward
+            // click events to this listener.
+            if(!mToolBarNavigationListenerIsRegistered) {
+                mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Doesn't have to be onBackPressed
+                        onBackPressed();
+                    }
+                });
+                mToolBarNavigationListenerIsRegistered = true;
+            }
+        } else {
+//You must regain the power of swipe for the drawer.
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
+// Remove back button
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            // Show hamburger
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
+            // Remove the/any drawer toggle listener
+            mDrawerToggle.setToolbarNavigationClickListener(null);
+            mToolBarNavigationListenerIsRegistered = false;
+        }
+    }
+
     //Constants
     private static final String TAG = "MainActivity";
-    public static FloatingActionButton mFab;
 
     //vars
+    public  FloatingActionButton mFab;
+    private boolean mToolBarNavigationListenerIsRegistered = false;
+    private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
     private List<Card> cards;
@@ -340,6 +375,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFragments.add(new FragmentTag(mMyVcardPreviewFragment, getString(R.string.tag_fragment_preview_my_vcard)));
 
         setFragmentVisibility(getString(R.string.tag_fragment_preview_my_vcard));
+        enableViews(true);
+        hideFloatingActionButton();
     }
 
     @Override
@@ -360,6 +397,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFragments.add(new FragmentTag(mContactsPreviewFragment, getString(R.string.tag_fragment_preview_contacts)));
 
         setFragmentVisibility(getString(R.string.tag_fragment_preview_contacts));
+        enableViews(true);
+        hideFloatingActionButton();
     }
 
     @Override
@@ -380,6 +419,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFragments.add(new FragmentTag(mGroupsPreviewFragment, getString(R.string.tag_fragment_preview_groups)));
 
         setFragmentVisibility(getString(R.string.tag_fragment_preview_groups));
+        enableViews(true);
+        hideFloatingActionButton();
     }
 
     @Override
@@ -397,6 +438,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.add(getString(R.string.tag_fragment_my_vcard));
         }
         setFragmentVisibility(getString(R.string.tag_fragment_my_vcard));
+        showFloatingActionButton();
     }
 
     @Override
@@ -414,6 +456,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.add(getString(R.string.tag_fragment_groups_create));
         }
         setFragmentVisibility(getString(R.string.tag_fragment_groups_create));
+        enableViews(true);
+        hideFloatingActionButton();
     }
 
     @Override
@@ -430,6 +474,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.remove(getString(R.string.tag_fragment_groups_no_groups));
             mFragmentTags.add(getString(R.string.tag_fragment_groups_no_groups));
         }
+        enableViews(false);
         setFragmentVisibility(getString(R.string.tag_fragment_groups_no_groups));
     }
 
@@ -449,6 +494,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_create_card));
         }
         setFragmentVisibility(getString(R.string.tag_fragment_my_vcard_create_card));
+        enableViews(true);
+        hideFloatingActionButton();
     }
 
     @Override
@@ -466,6 +513,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_first_login));
         }
         setFragmentVisibility(getString(R.string.tag_fragment_my_vcard_first_login));
+        enableViews(false);
+        showFloatingActionButton();
     }
 
     @Override
@@ -483,6 +532,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.add(getString(R.string.tag_fragment_contacts));
         }
         setFragmentVisibility(getString(R.string.tag_fragment_contacts));
+        enableViews(false);
+        hideFloatingActionButton();
     }
 
     private void inflateGroupFragment() {
@@ -499,6 +550,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.add(getString(R.string.tag_fragment_groups));
         }
         setFragmentVisibility(getString(R.string.tag_fragment_groups));
+        enableViews(false);
     }
 
     private void inflateMyVCardEditFragment() {
@@ -516,6 +568,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.add(getString(R.string.tag_fragment_my_vcard_edit));
         }
         setFragmentVisibility(getString(R.string.tag_fragment_my_vcard_edit));
+        enableViews(true);
+        hideFloatingActionButton();
     }
 
     private void inflateShareFragment() {
@@ -532,6 +586,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.add(getString(R.string.tag_fragment_share));
         }
         setFragmentVisibility(getString(R.string.tag_fragment_share));
+        enableViews(false);
+        hideFloatingActionButton();
     }
 
     private void setFragmentVisibility(String tagname) {
@@ -556,6 +612,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //navigate backwards...
             String topFragmentTag = mFragmentTags.get(backStackCount - 1);
             String newTopFragmentTag = mFragmentTags.get(backStackCount - 2);
+            if (newTopFragmentTag.equals(getString(R.string.tag_fragment_my_vcard)) || newTopFragmentTag.equals(getString(R.string.tag_fragment_contacts)) || newTopFragmentTag.equals(getString(R.string.tag_fragment_groups))){
+                enableViews(false);
+            }
+            if (newTopFragmentTag.equals(getString(R.string.tag_fragment_my_vcard))){
+                showFloatingActionButton();
+            }
             setFragmentVisibility(newTopFragmentTag);
             mFragmentTags.remove(topFragmentTag);
             mExitCount = 0;
