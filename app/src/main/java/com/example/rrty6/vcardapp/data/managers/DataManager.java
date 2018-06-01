@@ -1,7 +1,7 @@
 package com.example.rrty6.vcardapp.data.managers;
 
-import android.support.annotation.LayoutRes;
-import android.widget.ArrayAdapter;
+import android.os.Handler;
+import android.os.Message;
 
 import com.example.rrty6.vcardapp.data.network.model.req.CreateCardReq;
 import com.example.rrty6.vcardapp.data.network.model.req.CreateGroupReq;
@@ -96,6 +96,20 @@ public class DataManager {
                 mPreferenceManager.loadToken() != null && !mPreferenceManager.loadToken().isEmpty() &&
                 mPreferenceManager.loadUserID() != null && !mPreferenceManager.loadUserID().isEmpty();
     }
+
+    public void handleError(Handler handler) {
+        Message message = new Message();
+        message.what = 0;
+        handler.sendMessage(message);//Finish: Handle error
+    }
+
+    public void handleException(/*Handler handler, Exception e*/) {
+//        Message message = new Message();
+//        message.what = 0;
+//        message.obj = e;
+//        handler.sendMessage(message);//Finish: Handle exception
+    }
+
     //endregion ================ Utils =================================
 
     //region ================ Network ===================================
@@ -230,7 +244,6 @@ public class DataManager {
             return null;
         }
     }
-
     public Call<ResponseBody> updateGroup(UpdateGroupReq req) {
         if (isAuthorized()) {
             return mRestService.updateGroup(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), req.getId(), req);
@@ -238,6 +251,7 @@ public class DataManager {
             return null;
         }
     }
+
     //endregion ============= Network ===================================
 
     //region===========DataBase=================================
@@ -245,201 +259,360 @@ public class DataManager {
     //Saves Card
     //NEEDS PRE-STORED LOGO AND BASE_64
     //DOESN'T SAVE EMAIL AND PHONES
-    public void addCard(Card card) throws SQLException {
-        cardDao.create(card);
+    public void addCard(Card card) {
+        try {
+            cardDao.create(card);
+        } catch (SQLException e) {
+            handleException();
+        }
     }
 
-    public void updateCard(Card card) throws SQLException {
+    public void updateCard(Card card) {
         if (card.isMy()) {
-            cardDao.update(card);
+            try {
+                cardDao.update(card);
+            } catch (SQLException e) {
+                handleException();
+            }
+        }
+    }
+
+    public void updateLogo(Logo logo) {
+        try {
+            logoDao.update(logo);
+        } catch (SQLException e) {
+            handleException();
         }
     }
 
     //Returns all MY!!! cards from DB
-    //NOT TESTED
-    public List<Card> getCardList() throws SQLException {
-        List<Card> cards = cardDao.queryForAll();
-        List<Card> ecept = new ArrayList<>();
-        for (Card card : cards) {
-            if (!card.isMy()) {
-                ecept.add(card);
+    public List<Card> getCardList() {
+        List<Card> cards = null;
+        try {
+            cards = cardDao.queryForAll();
+            List<Card> ecept = new ArrayList<>();
+            for (Card card : cards) {
+                if (!card.isMy()) {
+                    ecept.add(card);
+                }
             }
+            cards.removeAll(ecept);
+        } catch (SQLException e) {
+            handleException();
         }
-        cards.removeAll(ecept);
         return cards;
     }
 
-    public List<Card> getAllCardsFromDB() throws SQLException {
-        return cardDao.queryForAll();
+    public List<Card> getAllCardsFromDB() {
+        try {
+            return cardDao.queryForAll();
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
     }
 
-    public Card getCard(Card card) throws SQLException {
-        return cardDao.queryForSameId(card);
+    public Card getCard(Card card) {
+        try {
+            return cardDao.queryForSameId(card);
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
     }
 
-    public Card getCardFromDB(String remoteId) throws SQLException {
-        QueryBuilder<Card, Long> queryBuilder = cardDao.queryBuilder();
-        queryBuilder.where().eq("REMOTE_ID", remoteId);
-        PreparedQuery<Card> preparedQuery = queryBuilder.prepare();
-        return (Card) (cardDao.query(preparedQuery) != null && cardDao.query(preparedQuery).size() > 0 ? cardDao.query(preparedQuery).get(0) : null);
+    public Card getCardFromDB(String remoteId) {
+        try {
+            QueryBuilder<Card, Long> queryBuilder = cardDao.queryBuilder();
+            queryBuilder.where().eq("REMOTE_ID", remoteId);
+            PreparedQuery<Card> preparedQuery = queryBuilder.prepare();
+            return (Card) (cardDao.query(preparedQuery) != null && cardDao.query(preparedQuery).size() > 0 ? cardDao.query(preparedQuery).get(0) : null);
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
     }
 
     //Returns specified card
     //NOT TESTED
-    public Card getCardById(long id) throws SQLException {
-        return cardDao.queryForId(id);
+    public Card getCardById(long id) {
+        try {
+            return cardDao.queryForId(id);
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
     }
 
     //NOT TESTED
-    public void deleteCard(Card card) throws SQLException {
-        cardDao.delete(card);
+    public void deleteCard(Card card) {
+        try {
+            cardDao.delete(card);
+        } catch (SQLException e) {
+            handleException();
+        }
     }
 
     //Saves Email
     //One by One!!!
     //NEEDS PRE-STORED CARD
-    public void addEmail(Email email) throws SQLException {
-        emailDao.create(email);
-    }
-
-    public List<Email> getAllEmails() throws SQLException {
-        return emailDao.queryForAll();
-    }
-
-    public List<Phone> getAllPhones() throws SQLException {
-        return phoneDao.queryForAll();
-    }
-
-    public List<Logo> getAllLogos() throws SQLException {
-        return logoDao.queryForAll();
-    }
-
-    public List<Base> getAllBases() throws SQLException {
-        return baseDao.queryForAll();
-    }
-
-    public List<GroupCard> getAllGroupCards() throws SQLException {
-        return groupCardDao.queryForAll();
-    }
-
-
-    //Saves collection of emails
-    public void addEmails(Collection<Email> emails) throws SQLException {
-        if (emails != null && emails.size() != 0) {
-            for (Email email : emails) {
-                emailDao.create(email);
-            }
+    public void addEmail(Email email) {
+        try {
+            emailDao.create(email);
+        } catch (SQLException e) {
+            handleException();
         }
     }
 
-    public void deleteEmails(Collection<Email> emails) throws SQLException {
-        if (emails != null && emails.size() > 0) {
-            for (Email email : emails) {
-                emailDao.delete(email);
+    public List<Email> getAllEmails() {
+        try {
+            return emailDao.queryForAll();
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
+    }
+
+    public List<Phone> getAllPhones() {
+        try {
+            return phoneDao.queryForAll();
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
+    }
+
+    public List<Logo> getAllLogos() {
+        try {
+            return logoDao.queryForAll();
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
+    }
+
+
+    public List<Base> getAllBases() {
+        try {
+            return baseDao.queryForAll();
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
+    }
+
+    public List<GroupCard> getAllGroupCards() {
+        try {
+            return groupCardDao.queryForAll();
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
+    }
+
+    //Saves collection of emails
+    public void addEmails(Collection<Email> emails) {
+        try {
+            if (emails != null && emails.size() != 0) {
+                for (Email email : emails) {
+                    emailDao.create(email);
+                }
             }
+        } catch (SQLException e) {
+            handleException();
+        }
+    }
+
+    public void deleteEmails(Collection<Email> emails) {
+        try {
+            if (emails != null && emails.size() > 0) {
+                for (Email email : emails) {
+                    emailDao.delete(email);
+                }
+            }
+        } catch (SQLException e) {
+            handleException();
         }
     }
 
     //Saves Phone
     //One by One!!!
     //NEEDS PRE-STORED CARD
-    public void addPhone(Phone phone) throws SQLException {
-        phoneDao.create(phone);
-    }
-
-    //Saves collection of phones
-    public void addPhones(Collection<Phone> phones) throws SQLException {
-        if (phones != null && phones.size() > 0) {
-            for (Phone phone : phones) {
-                phoneDao.create(phone);
-            }
+    public void addPhone(Phone phone) {
+        try {
+            phoneDao.create(phone);
+        } catch (SQLException e) {
+            handleException();
         }
     }
 
-    public void deletePhones(Collection<Phone> phones) throws SQLException {
-        if (phones != null && phones.size() != 0) {
-            for (Phone phone : phones) {
-                phoneDao.delete(phone);
+    //Saves collection of phones
+    public void addPhones(Collection<Phone> phones) {
+        try {
+            if (phones != null && phones.size() > 0) {
+                for (Phone phone : phones) {
+                    phoneDao.create(phone);
+                }
             }
+        } catch (SQLException e) {
+            handleException();
+        }
+    }
+
+    public void deletePhones(Collection<Phone> phones) {
+        try {
+            if (phones != null && phones.size() != 0) {
+                for (Phone phone : phones) {
+                    phoneDao.delete(phone);
+                }
+            }
+        } catch (SQLException e) {
+            handleException();
         }
     }
 
     //Saves Logo(only "fid" yet)TODO: download logo
     //NEEDED FOR SAVING CARD
-    public void addLogo(Logo logo) throws SQLException {
-        logoDao.create(logo);
+    public void addLogo(Logo logo) {
+        try {
+            logoDao.create(logo);
+        } catch (SQLException e) {
+            handleException();
+        }
     }
 
-    public void deleteLogo(Logo logo) throws SQLException {
-        logoDao.delete(logo);
+//    }
+
+    public void deleteLogo(Logo logo) {
+        try {
+            logoDao.delete(logo);
+        } catch (SQLException e) {
+            handleException();
+        }
     }
 
-    public void addSocialLink(SocialLink link) throws SQLException {
-        socialLinkDao.create(link);
+    public void addSocialLink(SocialLink link) {
+        try {
+            socialLinkDao.create(link);
+        } catch (SQLException e) {
+            handleException();
+        }
     }
 
-    public void addSocialLinks(Collection<SocialLink> socialLinks) throws SQLException {
-        if (socialLinks != null && socialLinks.size() > 0) {
-            for (SocialLink link : socialLinks) {
-                socialLinkDao.create(link);
+    public void addSocialLinks(Collection<SocialLink> socialLinks) {
+        try {
+            if (socialLinks != null && socialLinks.size() > 0) {
+                for (SocialLink link : socialLinks) {
+                    socialLinkDao.create(link);
+                }
             }
+        } catch (SQLException e) {
+            handleException();
         }
     }
 
     //Saves Base
     //NEEDED FOR SAVING CARD
-    public void addBase64(Base base) throws SQLException {
-        baseDao.create(base);
-    }
-
-    public void deleteBase64(Base base) throws SQLException {
-        baseDao.delete(base);
-    }
-
-    public List<Card> getContactList() throws SQLException {
-        List<Card> cards = cardDao.queryForAll();
-        List<Card> ecept = new ArrayList<>();
-        for (Card card : cards) {
-            if (!card.isMy()) {
-                ecept.add(card);
-            }
+    public void addBase64(Base base) {
+        try {
+            baseDao.create(base);
+        } catch (SQLException e) {
+            handleException();
         }
-        return ecept;
+    }
+
+    public void deleteBase64(Base base) {
+        try {
+            baseDao.delete(base);
+        } catch (SQLException e) {
+            handleException();
+        }
+    }
+
+    public List<Card> getContactList() {
+        try {
+            List<Card> cards = cardDao.queryForAll();
+            List<Card> ecept = new ArrayList<>();
+            for (Card card : cards) {
+                if (!card.isMy()) {
+                    ecept.add(card);
+                }
+            }
+            return ecept;
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
     }
 
     //region=====================================Group=====================================
-    public void addContactToGroup(Group group, Card card) throws SQLException {
-        groupCardDao.create(new GroupCard(group, card));
+
+    public void addGroup(Group group) {
+        try {
+            groupDao.create(group);
+        } catch (SQLException e) {
+            handleException();
+        }
     }
 
-    public void addGroup(Group group) throws SQLException {
-        groupDao.create(group);
+    public void addContactToGroup(Group group, Card card) {
+        try {
+            groupCardDao.create(new GroupCard(group, card));
+        } catch (SQLException e) {
+            handleException();
+        }
     }
 
-    public void deleteGroup(Group group) throws SQLException {
-        groupDao.delete(group);
+    public void deleteGroup(Group group) {
+        try {
+            groupDao.delete(group);
+        } catch (SQLException e) {
+            handleException();
+        }
     }
 
-    public void deleteContactFromGroup(Group group, Card card) throws SQLException {
-        groupCardDao.delete(new GroupCard(group, card));
+    public void deleteContactFromGroup(Group group, Card card) {
+        try {
+            groupCardDao.delete(new GroupCard(group, card));
+        } catch (SQLException e) {
+            handleException();
+        }
     }
 
-    public List<Group> getGroupList() throws SQLException {
-        return groupDao.queryForAll();
+    public List<Group> getGroupList() {
+        try {
+            return groupDao.queryForAll();
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
     }
 
-    public List<Card> getGroupContacts(Group group) throws SQLException {
-        PreparedQuery<Card> cardsForGroupQuery = makeCardsForGroupQuery();
-        cardsForGroupQuery.setArgumentHolderValue(0, group);
-        return cardDao.query(cardsForGroupQuery);
+    public List<Card> getGroupContacts(Group group) {
+        try {
+            PreparedQuery<Card> cardsForGroupQuery = makeCardsForGroupQuery();
+            cardsForGroupQuery.setArgumentHolderValue(0, group);
+            return cardDao.query(cardsForGroupQuery);
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
     }
 
-    public void updateGroup(Group group) throws SQLException {
-        groupDao.update(group);
+    public void updateGroup(Group group) {
+        try {
+            groupDao.update(group);
+        } catch (SQLException e) {
+            handleException();
+        }
     }
 
-    public void deleteGroupCard(GroupCard groupCard) throws SQLException {
-        groupCardDao.delete(groupCard);
+    public void deleteGroupCard(GroupCard groupCard) {
+        try {
+            groupCardDao.delete(groupCard);
+        } catch (SQLException e) {
+            handleException();
+        }
     }
 
     private PreparedQuery<Card> makeCardsForGroupQuery() throws SQLException {
@@ -456,6 +629,15 @@ public class DataManager {
         // where the id matches in the card-id from the inner query
         cardQb.where().in("id", groupCardQb);
         return cardQb.prepare();
+    }
+
+    public Group getGroup(Long id) {
+        try {
+            return groupDao.queryForId(id);
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
     }
     //endregion=====================================Group=====================================
 

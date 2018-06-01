@@ -1,6 +1,7 @@
 package com.example.rrty6.vcardapp.data.network.model.req;
 
 import com.example.rrty6.vcardapp.data.network.model.SimpleUnd;
+import com.example.rrty6.vcardapp.data.storage.model.Group;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -29,6 +30,24 @@ public class CreateGroupReq {
         this.groupName = name;
         this.fieldLogotype = new FieldLogo();
         this.fieldMyContacts = new MyContacts();
+    }
+
+    public CreateGroupReq(Group group, List<String> contactsIds) {
+        type = "group";
+        groupName = group.getName();
+        if (group.getDescription() != null && !group.getDescription().isEmpty()) {
+            description = group.getDescription();
+        }
+        if (group.getLogo() != null) {
+            fieldLogotype = new FieldLogo();
+            fieldLogotype.setLogoUnd(group.getLogo().getFid());
+        }
+        if (contactsIds != null && contactsIds.size() != 0) {
+            fieldMyContacts = new MyContacts();
+            for (String id : contactsIds) {
+                fieldMyContacts.addUnd(new SimpleUnd(id));
+            }
+        }
     }
 
     public void setDescription(String description) {
