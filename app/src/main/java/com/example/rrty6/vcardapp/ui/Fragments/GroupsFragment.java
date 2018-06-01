@@ -3,6 +3,7 @@ package com.example.rrty6.vcardapp.ui.Fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -81,13 +82,9 @@ public class GroupsFragment extends Fragment {
         if (mGroups != null) {
             mGroups.clear();
         }
-        try {
-            mGroups = MainOperations.getGroupList();
+        mGroups = new MainOperations(new Handler()).getGroupList();
             //@TODO put groups in bundle here and get bundle in MainActivity.Create if statement:
             //@TODO if mGroups == empty then transfer to GroupNoGroupsFragment
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         if (mGroupsRecyclerViewAdapter == null) {
             initRecyclerView();
         }

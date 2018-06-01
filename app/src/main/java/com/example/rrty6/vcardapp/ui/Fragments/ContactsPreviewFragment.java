@@ -3,6 +3,7 @@ package com.example.rrty6.vcardapp.ui.Fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -52,11 +53,7 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            try {
-                mMyVcard = MainOperations.getCard(bundle.getLong("card id"));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            mMyVcard = new MainOperations(new Handler()).getCard(bundle.getLong("card id"));
         }
            Log.d(TAG, "onCreate: got incoming bundle: " + mMyVcard.getName());
         }

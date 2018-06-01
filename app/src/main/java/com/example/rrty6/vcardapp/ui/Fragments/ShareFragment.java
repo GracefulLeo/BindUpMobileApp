@@ -13,6 +13,7 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -86,11 +87,8 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         Log.d(TAG, "onCreateView: Share fragment....");
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         listViewPeers = view.findViewById(R.id.share_list_view);
-        try {
-            cards = MainOperations.getCardList();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        cards = new MainOperations(new Handler()).getCardList();
+
         manager = (WifiP2pManager) getContext().getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(getContext(), App.getContext().getMainLooper(), null);
 
@@ -107,11 +105,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Select VCard you want to share");
         ListView modeList = new ListView(getActivity());
-        try {
-            cards = MainOperations.getCardList();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        cards = new MainOperations(new Handler()).getCardList();
         modeList.setAdapter(new ShareFragment.MyAdapter());
         builder.setView(modeList);
         //@TODO Check, is there anything else we can add to this button...
@@ -290,7 +284,6 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         }
         finishWifi();
         receivedData = clientThread.getReceiveObject();
-        try {
             for (Phone phone : receivedData.getPhones()) {
                 phone.setCard(receivedData);
             }
@@ -300,10 +293,8 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
             for (SocialLink socialLink : receivedData.getSocialLinks()) {
                 socialLink.setCard(receivedData);
             }
-            MainOperations.createContact(receivedData);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            new MainOperations(new Handler()).createContact(receivedData);
+
         kill();
     }
 
@@ -322,7 +313,6 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         }
         finishWifi();
         receivedData = serverThread.getReceiveObject();
-        try {
             for (Phone phone : receivedData.getPhones()) {
                 phone.setCard(receivedData);
             }
@@ -341,10 +331,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
             for (SocialLink socialLink : receivedData.getSocialLinks()) {
                 socialLink.setCard(receivedData);
             }
-            MainOperations.createContact(receivedData);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            new MainOperations(new Handler()).createContact(receivedData);
         kill();
     }
 

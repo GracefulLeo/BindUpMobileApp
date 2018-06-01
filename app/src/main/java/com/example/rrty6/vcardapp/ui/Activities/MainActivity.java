@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -67,21 +68,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         alertDialogBuilder.setPositiveButton(R.string.delete_confirmation_button, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                try {
                                     View view = getCurrentFocus();
                                     if (view != null) {
                                         InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                     }
                                     Toast toast = Toast.makeText(getApplicationContext(),
-                                            "Your card " + MainOperations.getCard(args.getLong("card id")).getSurname() + " " + MainOperations.getCard(args.getLong("card id")).getName() + " " + MainOperations.getCard(args.getLong("card id")).getMidlename() + " has been succesfully deleted",
+                                            "Your card " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getSurname() + " " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getName() + " " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getMidlename() + " has been succesfully deleted",
                                             Toast.LENGTH_LONG);
                                     toast.show();
-                                    System.out.println(MainOperations.getCard(args.getLong("card id")));
-                                    MainOperations.deleteCard(MainOperations.getCard(args.getLong("card id")));
-                                } catch (SQLException e) {
-                                    e.printStackTrace();
-                                }
+                                    System.out.println(new MainOperations(new Handler()).getCard(args.getLong("card id")));
+                                    new MainOperations(new Handler()).deleteCard(new MainOperations(new Handler()).getCard(args.getLong("card id")));
                                 dialog.dismiss();
                                 inflateMyVCardFragment(getApplicationContext());
                             }
@@ -124,11 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         mFragmentTags.clear();
                         mFragmentTags = new ArrayList<>();
                         cards = new ArrayList<>();
-                        try {
-                            cards = MainOperations.getCardList();
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
+                        cards = new MainOperations(new Handler()).getCardList();
                         if (cards != null && cards.size() == 0) {
                             inflateVCardFirstLoginFragment(getApplicationContext());
                             break;
@@ -143,11 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     case R.id.groups_item: {
                         groups = new ArrayList<>();
-                        try {
-                            groups = MainOperations.getGroupList();
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
+                            groups = new MainOperations(new Handler()).getGroupList();
                         if (groups != null) {
                             if (groups.size() == 0) {
                                 inflateGroupNoGroupsFragment(getApplicationContext());
@@ -162,11 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.share_item:
                         Log.d(TAG, "onNavigationItemSelected: share item clicked...");
                         cards = new ArrayList<>();
-                        try {
-                            cards = MainOperations.getCardList();
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
+                        cards = new MainOperations(new Handler()).getCardList();
                         //@TODO Play around case:"there is no vcards" . For now it's just a mock dialog
                         if (cards.isEmpty()) {
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -193,11 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("logout", false);
                         startActivity(intent);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                        try {
-                            MainOperations.logout();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        new MainOperations(new Handler()).logout();
                         finish();
                         break;
                 }
@@ -299,11 +280,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void firstCheck() {
         cards = new ArrayList<>();
-        try {
-            cards = MainOperations.getCardList();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        cards = new MainOperations(new Handler()).getCardList();
+
         if (cards != null) {
             if (cards.size() == 0) {
                 inflateVCardFirstLoginFragment(this);

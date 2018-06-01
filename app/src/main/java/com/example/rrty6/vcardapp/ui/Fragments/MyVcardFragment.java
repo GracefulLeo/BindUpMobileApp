@@ -3,6 +3,7 @@ package com.example.rrty6.vcardapp.ui.Fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,15 +49,12 @@ public class MyVcardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        try {
-            if (MainOperations.getCardList().isEmpty()){
-                // Inflate MyVCardFirstLoginFragment via interface here...
-                mInterface.inflateVCardFirstLoginFragment(mContext);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        View view = inflater.inflate(R.layout.my_vcard_fragment,container,false);
+//        List<Card> cards = new MainOperations(new Handler()).getCardList();
+//        if (cards == null) {
+            // Inflate MyVCardFirstLoginFragment via interface here...
+//            mInterface.inflateVCardFirstLoginFragment(mContext);
+//        }
+        View view = inflater.inflate(R.layout.my_vcard_fragment, container, false);
         mInterface = (IMainActivity) mContext;
         Log.d(TAG, "onCreateView: MyVCard fragment started ...");
 //        if (getActivity() instanceof MainActivity) {
@@ -73,11 +71,7 @@ public class MyVcardFragment extends Fragment {
         if (mCards != null){
             mCards.clear();
         }
-        try {
-            mCards = MainOperations.getCardList();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            mCards = new MainOperations(new Handler()).getCardList();
         if (mRecyclerViewAdapter == null){
             initRecyclerView();
         }

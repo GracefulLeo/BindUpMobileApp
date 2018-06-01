@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -206,7 +207,7 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
                             mCompanyEditText.getText().toString(), mAdressEditText.getText().toString(),
                             mPositionEditText.getText().toString(), phones, emails, "Site",null, new Base(mCardBitmapForView));
 //@TODO fix the field "SITE" above!!!!
-                    MainOperations.createCard(userCard);
+                    new MainOperations(new Handler()).createCard(userCard);
                     Snackbar.make(v,"Saved",Snackbar.LENGTH_LONG).setAction("Action",null).show();
 
                 }catch (NullPointerException e) {e.getMessage();} catch (Exception e) {

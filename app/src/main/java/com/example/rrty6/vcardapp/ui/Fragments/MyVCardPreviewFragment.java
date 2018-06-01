@@ -1,6 +1,7 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -51,11 +52,7 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            try {
-                mMyVcard = MainOperations.getCard(bundle.getLong("card id"));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+                mMyVcard = new MainOperations(new Handler()).getCard(bundle.getLong("card id"));
         }
            setHasOptionsMenu(true);
 //           Log.d(TAG, "onCreate in MyVCardPreviewFragment: got incoming bundle: " + mMyVcard.getName());

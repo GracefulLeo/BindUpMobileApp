@@ -3,6 +3,8 @@ package com.example.rrty6.vcardapp.ui.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,12 +19,39 @@ import com.example.rrty6.vcardapp.data.MainOperations;
 import com.example.rrty6.vcardapp.utils.App;
 import com.example.rrty6.vcardapp.utils.PreferenceKeys;
 
+import static com.example.rrty6.vcardapp.utils.Const.HandlerConstants.methodEnd;
+import static com.example.rrty6.vcardapp.utils.Const.HandlerConstants.methodStart;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+
+    // constants
 
     private static final String TAG = "LoginActivity";
 
+    // widgets
+
     private Button mLogin , mRegister;
     private EditText mEmailET, mPasswordEditText;
+
+    // vars
+
+    private MainOperations mainOperations = new MainOperations(new MyHandler());
+//    private MainOperations mainOperations = new MainOperations(new Handler(){
+//        @Override
+//        public void handleMessage(Message msg) {
+//            Toast toast;
+//            switch (msg.what){
+//                case methodStart:
+//                    toast = Toast.makeText(getApplicationContext(),"MEthod have been started", Toast.LENGTH_LONG);
+//                    toast.show();
+//                    break;
+//                case methodEnd:
+//                    toast = Toast.makeText(getApplicationContext(),"MEthod have been ended", Toast.LENGTH_LONG);
+//                    toast.show();
+//                    break;
+//            }
+//        }
+//    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
                     Log.d(TAG, "onCreate: Checking if this a first login....");
-                    MainOperations.login(mEmailET.getText().toString(), mPasswordEditText.getText().toString());
+                    mainOperations.login(mEmailET.getText().toString(), mPasswordEditText.getText().toString());
                     Toast toast = Toast.makeText(getApplicationContext(),"You are succesfully authorized!", Toast.LENGTH_LONG);
                     toast.show();
                     System.out.println(mEmailET.getText().toString() + " " + mPasswordEditText.getText().toString());
@@ -89,7 +118,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-
+   public static class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            Toast toast;
+            switch (msg.what){
+                case methodStart:
+                    toast = Toast.makeText(getApplicationContext(),"MEthod have been started", Toast.LENGTH_LONG);
+                    toast.show();
+                    break;
+                case methodEnd:
+                    toast = Toast.makeText(getApplicationContext(),"MEthod have been ended", Toast.LENGTH_LONG);
+                    toast.show();
+                    break;
+            }
+        }
+    }
 
 }
 //intent = new Intent(LoginActivity.this, MainActivity.class);

@@ -2,6 +2,7 @@ package com.example.rrty6.vcardapp.ui.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -36,25 +37,21 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
 //@TODO make it smoother. Code is very ugly....
                 if (Objects.equals(mPasswordET.getText().toString(), mPasswordRepetitionET.getText().toString())) {
-                    try {
-                        if(isEmailValid(mEmailET.getText().toString())) {
-                            if (isPasswordValid(mPasswordET.getText().toString())){
-                            MainOperations.register(mEmailET.getText().toString(), mPasswordET.getText().toString());
+                    if (isEmailValid(mEmailET.getText().toString())) {
+                        if (isPasswordValid(mPasswordET.getText().toString())) {
+                            new MainOperations(new Handler()).register(mEmailET.getText().toString(), mPasswordET.getText().toString());
                             Toast toast = Toast.makeText(getApplicationContext(), "Registration succesfully completed!", Toast.LENGTH_LONG);
                             toast.show();
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                             startActivity(intent);
                             finish();
-                            }else {
-                                Toast toast = Toast.makeText(getApplicationContext(), "Password must be not shorter then 4 characters", Toast.LENGTH_LONG);
-                                toast.show();
-                            }
-                        }else{
-                            Toast toast = Toast.makeText(getApplicationContext(), "Invalid email . Please check if entered data is correct", Toast.LENGTH_LONG);
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Password must be not shorter then 4 characters", Toast.LENGTH_LONG);
                             toast.show();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Invalid email . Please check if entered data is correct", Toast.LENGTH_LONG);
+                        toast.show();
                     }
                 } else {
                     Snackbar.make(v, "Password doesn't match", Snackbar.LENGTH_LONG).setAction("Action", null).show();

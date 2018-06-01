@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -160,7 +161,7 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
                     group = new Group(new Logo(null,bitmap), mGroupNameEditText.getText().toString(),mGroupDescriptionEditText.getText().toString());
-                    MainOperations.createGroup(group,null);
+                    new MainOperations(new Handler()).createGroup(group,null);
                     Snackbar.make(v,R.string.created_group_message,Snackbar.LENGTH_LONG).setAction("Action",null).show();
                 }catch (NullPointerException e) {e.getMessage();} catch (Exception e) {
                     e.printStackTrace();
@@ -187,28 +188,20 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Select VCard you want to share");
         ListView modeList = new ListView(getActivity());
-        try {
-            contacts = MainOperations.getContacts();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        contacts = new MainOperations(new Handler()).getContacts();
         modeList.setAdapter(new GroupCreateFragment.MyAdapter());
         builder.setView(modeList);
         // dialogue creation...
         builder.setPositiveButton(R.string.create_groups_add_user_btn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                try {
                     System.out.println(group ==null);
                     try {
                         group = new Group(new Logo(null,bitmap), mGroupNameEditText.getText().toString(),mGroupDescriptionEditText.getText().toString());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    MainOperations.createGroup(group,selectedContacts);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                    new MainOperations(new Handler()).createGroup(group,selectedContacts);
             }
         });
         final Dialog dialog = builder.create();

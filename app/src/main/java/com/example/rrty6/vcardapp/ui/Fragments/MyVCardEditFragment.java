@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -76,11 +77,7 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            try {
-                mMyVcard = MainOperations.getCard(bundle.getLong("card id"));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+                mMyVcard = new MainOperations(new Handler()).getCard(bundle.getLong("card id"));
         }
            setHasOptionsMenu(true);
         }
@@ -257,7 +254,7 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
                             mSurnameText.getText().toString(),mMiddleNameText.getText().toString(),mCompanyText.getText().toString(),
                             mAdressText.getText().toString(),mPositionText.getText().toString(),phones,emails,mWebSiteText.getText().toString(),
                             null,new Base(mCardBitmapForView));
-                    MainOperations.updateCard(mMyVcard,cardForUpdate);
+                    new MainOperations(new Handler()).updateCard(mMyVcard,cardForUpdate);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

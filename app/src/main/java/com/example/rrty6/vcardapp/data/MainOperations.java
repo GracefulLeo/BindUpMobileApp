@@ -16,6 +16,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.rrty6.vcardapp.utils.Const.HandlerConstants.*;
+
 public class MainOperations {
     private static final String TAG = "MainOperations";
     private MainOperations INSTANCE;
@@ -60,7 +62,7 @@ public class MainOperations {
     }
 
     public void login(final String email, final String password) {
-        handler.sendEmptyMessage(0);//Finish: Start progress bar (end in downloadUserData)
+        handler.sendEmptyMessage(methodStart);//Finish: Start progress bar (end in downloadUserData)
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -111,7 +113,7 @@ public class MainOperations {
                         mDataManager.addContactToGroup(group, mDataManager.getCardFromDB(cardRemoteId));
                     }
                 }
-                handler.sendEmptyMessage(0);//Finish: login/registration successfully finished
+                handler.sendEmptyMessage(methodEnd);//Finish: login/registration successfully finished
             }
         }).start();
     }

@@ -1,6 +1,7 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -60,11 +61,7 @@ public class ContactsFragment extends Fragment {
         if (mCards != null) {
             mCards.clear();
         }
-        try {
-            mCards = MainOperations.getContacts();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            mCards = new MainOperations(new Handler()).getContacts();
         if (mContactsRecyclerViewAdapter == null) {
             initRecyclerView();
         }
