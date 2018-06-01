@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         }
                         if (groups.size() != 0) {
-                            inflateGroupFragment();
+                            inflateGroupFragment(MainActivity.this);
                             break;
                         }
                     }
@@ -536,7 +536,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         hideFloatingActionButton();
     }
 
-    private void inflateGroupFragment() {
+    @Override
+    public void inflateGroupFragment(Context context) {
         if (mGroupsFragment == null) {
             Log.d(TAG, "onNavigationItemSelected: Groups...");
             mGroupsFragment = new GroupsFragment(this);

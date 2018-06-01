@@ -30,7 +30,7 @@ public class Group {
     public Group(@Nullable Logo logo, String name, @Nullable String description) throws Exception {
         if (name != null && !name.isEmpty()) {
             this.name = name;
-            if (logo!=null && !logo.getLogo().isEmpty()) {
+            if (logo != null && logo.getLogo() != null && !logo.getLogo().isEmpty()) {
                 this.logo = logo;
             }
             if (description!=null && !description.isEmpty()) {

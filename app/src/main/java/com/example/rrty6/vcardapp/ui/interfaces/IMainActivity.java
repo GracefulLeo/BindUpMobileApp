@@ -15,6 +15,8 @@ public interface IMainActivity   {
 
     void inflateMyVCardFragment (Context context);
 
+    void inflateGroupFragment (Context context);
+
     void inflateGroupCreateFragment (Context context);
 
     void inflateGroupNoGroupsFragment (Context context);
