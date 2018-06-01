@@ -7,17 +7,17 @@ public class SimpleUnd {
 
     @SerializedName("target_id")
     @Expose
-    public String target_id;
+    public String targetId;
 
     public SimpleUnd(String targetId) {
-        this.target_id = targetId;
+        this.targetId = targetId;
     }
 
-    public void setTarget_id(String target_id) {
-        this.target_id = target_id;
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
     }
 
-    public String getTarget_id() {
-        return target_id;
+    public String getTargetId() {
+        return targetId;
     }
 }

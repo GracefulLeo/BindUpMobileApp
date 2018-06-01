@@ -1,5 +1,7 @@
 package com.example.rrty6.vcardapp.data.network.model.req;
 
+import android.util.Log;
+
 import com.example.rrty6.vcardapp.data.managers.DataManager;
 import com.example.rrty6.vcardapp.data.storage.model.Card;
 import com.example.rrty6.vcardapp.data.storage.model.Email;
@@ -64,11 +66,6 @@ public class CreateCardReq {
         surname = card.getSurname();
         if (card.getLogo() != null && card.getLogo().getFid() != null) {
             fieldLogotype = new FieldLogotype(card.getLogo().getFid());
-            try {
-                DataManager.getInstance().addLogo(card.getLogo());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
         if (card.getMidlename() != null) {
             middleName = card.getMidlename();

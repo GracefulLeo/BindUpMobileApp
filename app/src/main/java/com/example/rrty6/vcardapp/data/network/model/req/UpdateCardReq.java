@@ -54,66 +54,39 @@ public class UpdateCardReq {
     @Expose
     public String base64Vcard = null;
 
-    public UpdateCardReq(Card card, CardCompare compare) {
+    public UpdateCardReq(Card card) {
         type = "vcard";
-        if (compare.title && card.getTitle()!=null && !card.getTitle().isEmpty()) {
-            title = card.getTitle();
-        }
-        if (compare.fieldLogotype) {
-
-            fieldLogotype = new FieldLogotype(card.getLogo().getFid());
-        }
-        if (compare.fieldName && card.getName()!=null && !card.getName().isEmpty()) {
-            name = card.getName();
-        }
-        if (compare.fieldSurname && card.getMidlename()!=null && !card.getMidlename().isEmpty()) {
-            surname = card.getSurname();
-        }
-        if (compare.fieldMiddleName) {
-            middleName = card.getMidlename();
-        }
-        if (compare.fieldCompanyName) {
-            company = card.getCompany();
-        }
-        if (compare.fieldPosition) {
-            position = card.getPosition();
-        }
-        if (compare.fieldAddress) {
-            address = card.getAddress();
-        }
-        if (compare.fieldPhone) {
-            StringBuilder phones = new StringBuilder();
-            for (Phone p: card.getPhones()) {
-                if (phones.length() == 0) {
-                    phones.append(p.getPhone());
-                } else {
-                    phones.append(",");
-                    phones.append(p.getPhone());
-                }
+        title = card.getTitle();
+        fieldLogotype = new FieldLogotype(card.getLogo().getFid());
+        name = card.getName();
+        surname = card.getSurname();
+        middleName = card.getMidlename();
+        company = card.getCompany();
+        position = card.getPosition();
+        address = card.getAddress();
+        StringBuilder phones = new StringBuilder();
+        for (Phone p : card.getPhones()) {
+            if (phones.length() == 0) {
+                phones.append(p.getPhone());
+            } else {
+                phones.append(",");
+                phones.append(p.getPhone());
             }
-            phone = phones.toString();
         }
-        if (compare.fieldMail) {
-            StringBuilder mails = new StringBuilder();
-            for (Email p : card.getEmails()) {
-                if (mails.length() == 0) {
-                    mails.append(p.getEmail());
-                } else {
-                    mails.append(",");
-                    mails.append(p.getEmail());
-                }
+        phone = phones.toString();
+        StringBuilder mails = new StringBuilder();
+        for (Email p : card.getEmails()) {
+            if (mails.length() == 0) {
+                mails.append(p.getEmail());
+            } else {
+                mails.append(",");
+                mails.append(p.getEmail());
             }
-            mail = mails.toString();
         }
-        if (compare.fieldWebSite) {
-            webSite = card.getSite();
-        }
-        if (compare.fieldSocialLinks) {
-            socialLinks = card.getSocialLinksString();
-        }
-        if (compare.fieldBase64Vcard) {
-            base64Vcard = card.getBase().getBase64();
-        }
+        mail = mails.toString();
+        webSite = card.getSite();
+        socialLinks = card.getSocialLinksString();
+        base64Vcard = card.getBase().getBase64();
     }
 
     public class FieldLogotype {

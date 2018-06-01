@@ -23,7 +23,7 @@ public class Card implements Serializable{
     @DatabaseField(columnName = "REMOTE_ID")/*(unique = true)*/
     private String remoteId;
 
-    @DatabaseField//true is for MyCards, false for MyContacts
+    @DatabaseField//true is for MyCards, false for MyContacts for dividing in one db table
     private boolean isMy;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
@@ -123,9 +123,9 @@ public class Card implements Serializable{
 
 
     public void update(Card card) {
-        if (card.getLogo() != null && !card.getLogo().getLogo().isEmpty()) {
+//        if (card.getLogo() != null && !card.getLogo().getLogo().isEmpty()) {
             logo = card.getLogo();
-        }
+//        }
         if (card.getTitle() != null && !card.getTitle().isEmpty()) {
             title = card.getTitle();
         }
@@ -135,24 +135,24 @@ public class Card implements Serializable{
         if (card.getSurname() != null && !card.getSurname().isEmpty()) {
             surname = card.getSurname();
         }
-        if (card.getMidlename() != null && !card.getMidlename().isEmpty()) {
+//        if (card.getMidlename() != null && !card.getMidlename().isEmpty()) {
             midlename = card.getMidlename();
-        }
-        if (card.getCompany() != null && !card.getCompany().isEmpty()) {
+//        }
+//        if (card.getCompany() != null && !card.getCompany().isEmpty()) {
             company = card.getCompany();
-        }
-        if (card.getAddress() != null && !card.getAddress().isEmpty()) {
+//        }
+//        if (card.getAddress() != null && !card.getAddress().isEmpty()) {
             address = card.getAddress();
-        }
-        if (card.getPosition() != null && !card.getPosition().isEmpty()) {
+//        }
+//        if (card.getPosition() != null && !card.getPosition().isEmpty()) {
             position = card.getPosition();
-        }
-        if (card.getPhones() != null && !card.getPhones().isEmpty()) {
+//        }
+//        if (card.getPhones() != null && !card.getPhones().isEmpty()) {
             phones = card.getPhones();
             for (Phone phone : phones) {
                 phone.setCard(this);
             }
-        }
+//        }
         emails = card.getEmails();
         for (Email email : emails) {
             email.setCard(this);

@@ -1,6 +1,7 @@
 package com.example.rrty6.vcardapp.data.storage.operation;
 
 
+import android.os.Handler;
 import android.support.annotation.Nullable;
 
 import com.example.rrty6.vcardapp.data.managers.DataManager;
@@ -18,10 +19,15 @@ import java.util.List;
 
 //Stub to promote work with DB
 public class DatabaseOperation {
-    public static final DataManager DATA_MANAGER = DataManager.getInstance();
+    private static final DataManager DATA_MANAGER = DataManager.getInstance();
+//    private Handler handler;
+//
+//    public DatabaseOperation(Handler handler) {
+//        this.handler = handler;
+//    }
 
     //Save one MyCard/Contact from server
-    public static void saveCard(final Card card) throws SQLException {
+    public static void saveCard(final Card card) {
         DATA_MANAGER.addLogo(card.getLogo());
 
         DATA_MANAGER.addBase64(card.getBase());
@@ -50,7 +56,7 @@ public class DatabaseOperation {
         }
     }
 
-    public static void createCard(Card card) throws SQLException {
+    public static void createCard(Card card) {
         if (card.getLogo() != null) {
             DATA_MANAGER.addLogo(card.getLogo());
         }
@@ -59,12 +65,13 @@ public class DatabaseOperation {
         if (card.getTitle() == null || card.getTitle().isEmpty()) {
             card.setTitle("Visit card #" + card.getId());
         }
+        DATA_MANAGER.updateCard(card);
         DATA_MANAGER.addEmails(card.getEmails());
         DATA_MANAGER.addPhones(card.getPhones());
         DATA_MANAGER.addSocialLinks(card.getSocialLinks());
     }
 
-    public static void createGroup(Group group, @Nullable List<Card> contacts) throws SQLException {
+    public static void createGroup(Group group, @Nullable List<Card> contacts) {
         if (group.getLogo() != null) {
             DATA_MANAGER.addLogo(group.getLogo());
         }
@@ -76,7 +83,7 @@ public class DatabaseOperation {
         }
     }
 
-    public static void deleteCard(Card card) throws SQLException {
+    public static void deleteCard(Card card) {
         if (card.getLogo() != null) {
             DATA_MANAGER.deleteLogo(card.getLogo());
         }
@@ -86,8 +93,8 @@ public class DatabaseOperation {
         DATA_MANAGER.deletePhones(card.getPhones());
     }
 
-    public static void updateGroupContacts(Group group, List<Card> contacts) throws SQLException {
-        List<Card> oldList = DATA_MANAGER.getInstance().getGroupContacts(group);
+    public static void updateGroupContacts(Group group, List<Card> contacts) {
+        List<Card> oldList = DATA_MANAGER.getGroupContacts(group);
         for (Card card : oldList) {
             DATA_MANAGER.deleteContactFromGroup(group, card);
         }
@@ -96,15 +103,15 @@ public class DatabaseOperation {
         }
     }
 
-    public static void deleteGroup(Group group) throws SQLException {
-        List<Card> oldList = DATA_MANAGER.getInstance().getGroupContacts(group);
+    public static void deleteGroup(Group group) {
+        List<Card> oldList = DATA_MANAGER.getGroupContacts(group);
         for (Card card : oldList) {
             DATA_MANAGER.deleteContactFromGroup(group, card);
         }
         DATA_MANAGER.deleteGroup(group);
     }
 
-    public static void clearDb() throws SQLException {
+    public static void clearDb(){
         for (Card card : DATA_MANAGER.getAllCardsFromDB()) {
             DATA_MANAGER.deleteCard(card);
         }
@@ -124,7 +131,19 @@ public class DatabaseOperation {
         }
     }
 
-    public static Card getCard(Long id) throws SQLException {
+    public static Card getCard(Long id) {
         return DATA_MANAGER.getCardById(id);
+    }
+
+//    public static Logo getLogo(Long id) {
+//        if (id != 0) {
+//            return DATA_MANAGER.getLogo(id);
+//        } else {
+//            return null;
+//        }
+//    }
+
+    public static Group getGroup(Long id) {
+            return DATA_MANAGER.getGroup(id);
     }
 }

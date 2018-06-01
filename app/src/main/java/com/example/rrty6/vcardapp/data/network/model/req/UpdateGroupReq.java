@@ -30,31 +30,27 @@ public class UpdateGroupReq {
     @Expose
     public MyContacts fieldMyContacts;
 
-    public UpdateGroupReq(Group group, GroupCompare compare) {
+    public UpdateGroupReq(Group group) {
         if (group.getRemoteId() != null && !group.getRemoteId().isEmpty()) {
             type = "group";
             id = group.getRemoteId();
-            if (compare.fieldLogotype) {
+            if (group.getLogo() != null && group.getLogo().getFid() != null) {
                 fieldLogotype = new FieldLogotype(group.getLogo().getFid());
             }
-            if (compare.fieldGroupName) {
+            if (group.getName() != null) {
                 groupName = group.getName();
             }
-            if (compare.fieldDescription) {
+            if (group.getDescription() != null) {
                 description = group.getDescription();
             }
         }
     }
 
-    public UpdateGroupReq(Group group, List<Card> contacts) {
-        if (group.getRemoteId() != null && !group.getRemoteId().isEmpty()) {
+    public UpdateGroupReq(String remoteId, List<String> contacts) {
+        if (remoteId != null && !remoteId.isEmpty()) {
             type = "group";
-            id = group.getRemoteId();
-            List<String> contact = new ArrayList<>();
-            for (Card card: contacts) {
-                contact.add(card.getRemoteId());
-            }
-            fieldMyContacts = new MyContacts(contact);
+            id = remoteId;
+            fieldMyContacts = new MyContacts(contacts);
         }
     }
 

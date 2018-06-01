@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.rrty6.vcardapp">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/><!--needed for jobService-->
     <uses-permission android:name="android.permission.INTERNET"
         android:required="true"/>
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -46,6 +46,23 @@
         <activity
             android:name=".ui.Activities.RegisterActivity">
         </activity>
+
+        <service
+            android:name="com.example.rrty6.vcardapp.data.operations.MyJobService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name="com.example.rrty6.vcardapp.data.operations.JobIntentService"
+            android:enabled="true" />
+
+        <receiver
+            android:name="com.example.rrty6.vcardapp.data.operations.JobBroadcastReceiver"
+            android:exported="false">
+            <!--<intent-filter>-->
+            <!--<action android:name="dima.example.com.jobtest.STATE_CHANGE" />-->
+            <!--</intent-filter>-->
+        </receiver>
 
     </application>
 
