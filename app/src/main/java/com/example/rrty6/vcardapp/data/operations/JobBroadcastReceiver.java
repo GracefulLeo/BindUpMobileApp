@@ -65,7 +65,6 @@ public class JobBroadcastReceiver extends BroadcastReceiver {
                 Log.i(TAG, "ACTION_PERFORM_CREATE_GROUP");
                 bundle.putString(ACTION, ACTION_CREATE_GROUP);
                 bundle.putLong(GROUP_ID, intent.getLongExtra(GROUP_ID, 0));
-                bundle.putStringArray(GROUP_CONTACTS_IDS, (String[]) intent.getStringArrayListExtra(GROUP_CONTACTS_IDS).toArray());
                 exerciseJobBuilder.setExtras(bundle);
                 jobScheduler.schedule(exerciseJobBuilder.build());
                 break;
@@ -79,8 +78,7 @@ public class JobBroadcastReceiver extends BroadcastReceiver {
             case ACTION_PERFORM_UPDATE_GROUP_CONTACTS:
                 Log.i(TAG, "ACTION_PERFORM_UPDATE_GROUP_CONTACTS");
                 bundle.putString(ACTION, ACTION_UPDATE_GROUP_CONTACTS);
-                bundle.putString(GROUP_REMOTE_ID, intent.getStringExtra(GROUP_REMOTE_ID));
-                bundle.putStringArray(GROUP_CONTACTS_IDS, (String[]) intent.getStringArrayListExtra(GROUP_CONTACTS_IDS).toArray());
+                bundle.putLong(GROUP_ID, intent.getLongExtra(GROUP_ID,0));
                 exerciseJobBuilder.setExtras(bundle);
                 jobScheduler.schedule(exerciseJobBuilder.build());
                 break;

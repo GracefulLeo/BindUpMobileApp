@@ -60,9 +60,6 @@ public class JobInitiation {
         Log.i(TAG, "Create group");
         Intent createGroupIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
         createGroupIntentForBroadcast.putExtra(GROUP_ID, groupId);
-        if (cardList.size() > 0) {
-            createGroupIntentForBroadcast.putStringArrayListExtra(GROUP_CONTACTS_IDS, (ArrayList<String>) cardList);
-        }
         createGroupIntentForBroadcast.setAction(ACTION_PERFORM_CREATE_GROUP);
         App.getContext().sendBroadcast(createGroupIntentForBroadcast);
     }
@@ -78,10 +75,7 @@ public class JobInitiation {
     public static void updateGroupContacts(String remoteId, List<String> cardList) {
         Log.i(TAG, "updateGroupContacts");
         Intent createGroupIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
-        createGroupIntentForBroadcast.putExtra(GROUP_REMOTE_ID, remoteId);
-        if (cardList.size() > 0) {
-            createGroupIntentForBroadcast.putStringArrayListExtra(GROUP_CONTACTS_IDS, (ArrayList<String>) cardList);
-        }
+        createGroupIntentForBroadcast.putExtra(GROUP_ID, remoteId);
         createGroupIntentForBroadcast.setAction(ACTION_PERFORM_UPDATE_GROUP_CONTACTS);
         App.getContext().sendBroadcast(createGroupIntentForBroadcast);
     }

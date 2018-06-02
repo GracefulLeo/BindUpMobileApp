@@ -101,7 +101,7 @@ public interface RestService {
                                   @Body UpdateGroupsReq req);
 
     @Headers("Content-Type: application/json")
-    @PUT("node/{nid}")
+    @PUT("entity_vcard/{nid}")
     Call<ResponseBody> updateCard(@Header("Cookie") String cookie, @Header("X-CSRF-TOKEN") String token, @Path("nid") String cardId,
                                    @Body UpdateCardReq req);
 

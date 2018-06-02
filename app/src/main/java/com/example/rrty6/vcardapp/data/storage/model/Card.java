@@ -15,7 +15,7 @@ import java.util.Map;
 
 @DatabaseTable(tableName = "CARDS")
 //Entity for DB
-public class Card implements Serializable{
+public class Card implements Serializable {
 
     @DatabaseField(generatedId = true, columnName = "id")
     private Long id;
@@ -42,11 +42,11 @@ public class Card implements Serializable{
     private String address = null;
     @DatabaseField
     private String position = null;
-    @ForeignCollectionField (eager = true)
+    @ForeignCollectionField(eager = true)
     private Collection<Phone> phones = null;
-    @ForeignCollectionField (eager = true)
+    @ForeignCollectionField(eager = true)
     private Collection<Email> emails = null;
-    @ForeignCollectionField (eager = true)
+    @ForeignCollectionField(eager = true)
     private Collection<SocialLink> socialLinks = null;
     @DatabaseField
     private String site;
@@ -58,7 +58,7 @@ public class Card implements Serializable{
 
     //Constructor for UI
     public Card(Logo logo, String title, String name, String surname, String midlename, String company, String address, String position,
-                Collection<Phone> phones, Collection<Email> emails, String site,Collection<SocialLink> socialLinks, Base base) throws Exception {
+                Collection<Phone> phones, Collection<Email> emails, String site, Collection<SocialLink> socialLinks, Base base) throws Exception {
         //Checkout field name shouldn't be null
         if (name != null && !name.isEmpty()) {
             //Checkout field surname shouldn't be null
@@ -124,7 +124,7 @@ public class Card implements Serializable{
 
     public void update(Card card) {
 //        if (card.getLogo() != null && !card.getLogo().getLogo().isEmpty()) {
-            logo = card.getLogo();
+        logo = card.getLogo();
 //        }
         if (card.getTitle() != null && !card.getTitle().isEmpty()) {
             title = card.getTitle();
@@ -136,22 +136,22 @@ public class Card implements Serializable{
             surname = card.getSurname();
         }
 //        if (card.getMidlename() != null && !card.getMidlename().isEmpty()) {
-            midlename = card.getMidlename();
+        midlename = card.getMidlename();
 //        }
 //        if (card.getCompany() != null && !card.getCompany().isEmpty()) {
-            company = card.getCompany();
+        company = card.getCompany();
 //        }
 //        if (card.getAddress() != null && !card.getAddress().isEmpty()) {
-            address = card.getAddress();
+        address = card.getAddress();
 //        }
 //        if (card.getPosition() != null && !card.getPosition().isEmpty()) {
-            position = card.getPosition();
+        position = card.getPosition();
 //        }
 //        if (card.getPhones() != null && !card.getPhones().isEmpty()) {
-            phones = card.getPhones();
-            for (Phone phone : phones) {
-                phone.setCard(this);
-            }
+        phones = card.getPhones();
+        for (Phone phone : phones) {
+            phone.setCard(this);
+        }
 //        }
         emails = card.getEmails();
         for (Email email : emails) {
@@ -343,7 +343,7 @@ public class Card implements Serializable{
                 "phones=" + (phones != null && phones.size() > 0 ? Arrays.toString(phones.toArray()) : "null") + ",\n" +
                 "emails=" + (emails != null && emails.size() > 0 ? Arrays.toString(emails.toArray()) : "null") + ",\n" +
                 "site='" + site + ",\n" +
-                "base=" + base + ",\n" +
+                "base=" + (base == null) + "  " + (base != null ? (base.getBase64().length()) : "null") + ",\n" +
                 '}';
     }
 }

@@ -3,10 +3,10 @@ package com.example.rrty6.vcardapp.data.network;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.rrty6.vcardapp.data.MainOperations;
 import com.example.rrty6.vcardapp.data.managers.DataManager;
+import com.example.rrty6.vcardapp.data.network.model.SimpleUnd;
 import com.example.rrty6.vcardapp.data.network.model.req.CreateCardReq;
 import com.example.rrty6.vcardapp.data.network.model.req.CreateGroupReq;
 import com.example.rrty6.vcardapp.data.network.model.req.UpdateCardReq;
@@ -15,18 +15,16 @@ import com.example.rrty6.vcardapp.data.network.model.req.UpdateContactsReq;
 import com.example.rrty6.vcardapp.data.network.model.req.UpdateGroupReq;
 import com.example.rrty6.vcardapp.data.network.model.req.UpdateGroupsReq;
 import com.example.rrty6.vcardapp.data.network.model.req.UploadLogoReq;
-import com.example.rrty6.vcardapp.data.network.model.req.UploadLogoReq.*;
-import com.example.rrty6.vcardapp.data.network.model.req.UserRegisterReq;
-import com.example.rrty6.vcardapp.data.network.model.res.CreateGroupRes;
-import com.example.rrty6.vcardapp.data.network.model.res.GetGroupRes;
-import com.example.rrty6.vcardapp.data.network.model.res.GetUserRes;
+import com.example.rrty6.vcardapp.data.network.model.req.UploadLogoReq.Filepath;
 import com.example.rrty6.vcardapp.data.network.model.req.UserLoginReq;
+import com.example.rrty6.vcardapp.data.network.model.req.UserRegisterReq;
 import com.example.rrty6.vcardapp.data.network.model.res.CreateCardRes;
+import com.example.rrty6.vcardapp.data.network.model.res.CreateGroupRes;
 import com.example.rrty6.vcardapp.data.network.model.res.GetCardRes;
 import com.example.rrty6.vcardapp.data.network.model.res.GetFileRes;
+import com.example.rrty6.vcardapp.data.network.model.res.GetGroupRes;
+import com.example.rrty6.vcardapp.data.network.model.res.GetUserRes;
 import com.example.rrty6.vcardapp.data.network.model.res.LoginRes;
-import com.example.rrty6.vcardapp.data.network.model.SimpleUnd;
-import com.example.rrty6.vcardapp.data.network.model.res.TokenRes;
 import com.example.rrty6.vcardapp.data.network.model.res.UploadLogoRes;
 import com.example.rrty6.vcardapp.data.storage.model.Base;
 import com.example.rrty6.vcardapp.data.storage.model.Card;
@@ -36,7 +34,6 @@ import com.example.rrty6.vcardapp.data.storage.model.Logo;
 import com.example.rrty6.vcardapp.data.storage.model.Phone;
 import com.example.rrty6.vcardapp.data.storage.model.SocialLink;
 import com.example.rrty6.vcardapp.data.storage.operation.DatabaseOperation;
-import com.example.rrty6.vcardapp.utils.App;
 import com.example.rrty6.vcardapp.utils.Const.ListRole;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -49,10 +46,10 @@ import java.util.Set;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.rrty6.vcardapp.utils.Const.*;
+import static com.example.rrty6.vcardapp.utils.Const.LinkType;
+import static com.example.rrty6.vcardapp.utils.UIHandler.WhatValue.*;
 
 public class NetworkOperations {
     private static final String TAG = "NetworkOperations";
@@ -69,11 +66,11 @@ public class NetworkOperations {
         }
         if (response != null) {
             if (response.code() == 200) {
-                signIn(email, password, mainOperations);
+                signIn(handler, email, password, mainOperations);
             } else {
-                if (response.code() == 406 && response.message().equals("Not Acceptable : The e-mail address test@user.com is already registered. Have you forgotten your password?")) {
+                if (response.code() == 406) {
                     Log.e(TAG, "The e-mail address " + email + " is already registered");
-                    handler.sendEmptyMessage(0);//Finish: already used email
+                    handler.sendEmptyMessage(alreadyUsedEmail);
                 } else {
                     Log.e(TAG, "Unchecked response code" + response.code() + "  " + response.message());
                 }
@@ -83,7 +80,7 @@ public class NetworkOperations {
         }
     }
 
-    public void signIn(String email, String password, final MainOperations mainOperations) {
+    public void signIn(Handler handler, String email, String password, final MainOperations mainOperations) {
         Log.i(TAG, "signIn start");
         Call<LoginRes> call = mDataManager.logginUser(new UserLoginReq(email, password));
         Response<LoginRes> response = null;
@@ -106,6 +103,9 @@ public class NetworkOperations {
                 } else {
                     Log.e(TAG, "Null response body" + response.code() + "  " + response.message());
                 }
+            } else if (response.code() == 401 && response.message().equals("Unauthorized : Wrong username or password.")) {
+                Log.e(TAG, "Wrong username or password");
+                handler.sendEmptyMessage(wrongUserNameOrPassword);
             } else {
                 Log.e(TAG, "Unchecked response code" + response.code() + "  " + response.message());
             }
@@ -583,8 +583,12 @@ public class NetworkOperations {
         return false;
     }
 
-    public static boolean updateGroupContacts(String remoteId, List<String> contacts) {
-        UpdateGroupReq updateGroupReq = new UpdateGroupReq(remoteId, contacts);
+    public static boolean updateGroupContacts(Group group) {
+        List<String> contacts = new ArrayList<>();
+        for (Card card : DatabaseOperation.getGroupContacts(group)) {
+            contacts.add(card.getRemoteId());
+        }
+        UpdateGroupReq updateGroupReq = new UpdateGroupReq(group.getRemoteId() , contacts);
         Call<ResponseBody> call = mDataManager.updateGroup(updateGroupReq);
         Response<ResponseBody> response = null;
         try {

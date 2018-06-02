@@ -47,11 +47,9 @@ public class UpdateGroupReq {
     }
 
     public UpdateGroupReq(String remoteId, List<String> contacts) {
-        if (remoteId != null && !remoteId.isEmpty()) {
-            type = "group";
-            id = remoteId;
-            fieldMyContacts = new MyContacts(contacts);
-        }
+        type = "group";
+        id = remoteId;
+        fieldMyContacts = new MyContacts(contacts);
     }
 
     public String getId() {
