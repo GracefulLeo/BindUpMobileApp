@@ -26,6 +26,7 @@ import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 import java.sql.SQLException;
 import java.util.List;
 
+@SuppressLint("ValidFragment")
 public class GroupsFragment extends Fragment {
 
     //constants

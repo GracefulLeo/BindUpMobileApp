@@ -371,7 +371,6 @@ public class NetworkOperations {
             if (card.getLogo() != null) {
                 createLogo(card.getLogo(), Filepath.VCARDS);
             }
-            System.out.println(card.getLogo().getId());
             CreateCardReq createCardReq = new CreateCardReq(card);
             Call<CreateCardRes> call = mDataManager.sendCard(createCardReq);
             Response<CreateCardRes> response = null;

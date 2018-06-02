@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -25,7 +26,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
-public class MyVcardFragment extends Fragment {
+public class MyVcardFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     //constants
     private static final String TAG = "MyVcardFragment";
@@ -33,6 +34,7 @@ public class MyVcardFragment extends Fragment {
     
     //widgets
     private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     //vars
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
@@ -49,18 +51,18 @@ public class MyVcardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        List<Card> cards = new MainOperations(new Handler()).getCardList();
-//        if (cards == null) {
-            // Inflate MyVCardFirstLoginFragment via interface here...
-//            mInterface.inflateVCardFirstLoginFragment(mContext);
-//        }
+        List<Card> cards = new MainOperations(new Handler()).getCardList();
+        if (cards == null) {
+//             Inflate MyVCardFirstLoginFragment via interface here...
+            mInterface.inflateVCardFirstLoginFragment(mContext);
+        }
         View view = inflater.inflate(R.layout.my_vcard_fragment, container, false);
         mInterface = (IMainActivity) mContext;
         Log.d(TAG, "onCreateView: MyVCard fragment started ...");
-//        if (getActivity() instanceof MainActivity) {
-//            ((MainActivity) getActivity()).showFloatingActionButton();
-//        }
         mRecyclerView = view.findViewById(R.id.my_vcard_recycler_view_container);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_myvcard);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setHasFixedSize(true);
 
         showCards();
@@ -72,9 +74,9 @@ public class MyVcardFragment extends Fragment {
             mCards.clear();
         }
             mCards = new MainOperations(new Handler()).getCardList();
-        if (mRecyclerViewAdapter == null){
+//        if (mRecyclerViewAdapter == null){
             initRecyclerView();
-        }
+//        }
     }
 
     private void initRecyclerView() {
@@ -87,5 +89,16 @@ public class MyVcardFragment extends Fragment {
 
     public void scrollToTop(){
         mRecyclerView.smoothScrollToPosition(0);
+    }
+
+    @Override
+    public void onRefresh() {
+        showCards();
+        onItemsLoadComplete();
+    }
+
+    void onItemsLoadComplete () {
+        mRecyclerViewAdapter.notifyDataSetChanged();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

@@ -63,23 +63,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
 
                     case R.id.edit_delete_button:
+                        Log.d(TAG, "onMenuItemClick: Delete button clicked");
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                         alertDialogBuilder.setMessage(getString(R.string.delete_message));
                         alertDialogBuilder.setPositiveButton(R.string.delete_confirmation_button, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                    View view = getCurrentFocus();
-                                    if (view != null) {
-                                        InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                    }
-                                    Toast toast = Toast.makeText(getApplicationContext(),
-                                            "Your card " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getSurname() + " " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getName() + " " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getMidlename() + " has been succesfully deleted",
-                                            Toast.LENGTH_LONG);
-                                    toast.show();
-                                    System.out.println(new MainOperations(new Handler()).getCard(args.getLong("card id")));
-                                    new MainOperations(new Handler()).deleteCard(new MainOperations(new Handler()).getCard(args.getLong("card id")));
+                                View view = getCurrentFocus();
+                                if (view != null) {
+                                    InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                }
+                                Toast toast = Toast.makeText(getApplicationContext(),
+                                        "Your card " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getSurname() + " " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getName() + " " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getMidlename() + " has been succesfully deleted",
+                                        Toast.LENGTH_LONG);
+                                toast.show();
+                                System.out.println(new MainOperations(new Handler()).getCard(args.getLong("card id")));
+                                new MainOperations(new Handler()).deleteCard(new MainOperations(new Handler()).getCard(args.getLong("card id")));
                                 dialog.dismiss();
+                                mFragmentTags.clear();
+                                enableViews(false);
                                 inflateMyVCardFragment(getApplicationContext());
                             }
                         });
@@ -119,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.MyVCardItem: {
                         //@TODO check, is this correct to clear backstack here
                         mFragmentTags.clear();
-                        mFragmentTags = new ArrayList<>();
+//                      mFragmentTags = new ArrayList<>();
                         cards = new ArrayList<>();
                         cards = new MainOperations(new Handler()).getCardList();
                         if (cards != null && cards.size() == 0) {
@@ -136,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     case R.id.groups_item: {
                         groups = new ArrayList<>();
-                            groups = new MainOperations(new Handler()).getGroupList();
+                        groups = new MainOperations(new Handler()).getGroupList();
                         if (groups != null) {
                             if (groups.size() == 0) {
                                 inflateGroupNoGroupsFragment(getApplicationContext());
@@ -189,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void enableViews(boolean enable) {
 
-        if(enable) {
+        if (enable) {
 //You may not want to open the drawer on swipe from the left in this case
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 // Remove hamburger
@@ -200,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // clicks are disabled i.e. the UP button will not work.
             // We need to add a listener, as in below, so DrawerToggle will forward
             // click events to this listener.
-            if(!mToolBarNavigationListenerIsRegistered) {
+            if (!mToolBarNavigationListenerIsRegistered) {
                 mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -228,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MainActivity";
 
     //vars
-    public  FloatingActionButton mFab;
+    public FloatingActionButton mFab;
     private boolean mToolBarNavigationListenerIsRegistered = false;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
@@ -354,7 +357,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setFragmentVisibility(getString(R.string.tag_fragment_preview_my_vcard));
         enableViews(true);
-        hideFloatingActionButton();
     }
 
     @Override
@@ -363,7 +365,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportFragmentManager().beginTransaction().remove(mContactsPreviewFragment).commitAllowingStateLoss();
         }
         mContactsPreviewFragment = new ContactsPreviewFragment();
-        //@TODO same here as bellow. Check are we really need to initialize args like that...
         Bundle args = new Bundle();
         args.putLong("card id", card.getId());
         mContactsPreviewFragment.setArguments(args);
@@ -376,7 +377,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setFragmentVisibility(getString(R.string.tag_fragment_preview_contacts));
         enableViews(true);
-        hideFloatingActionButton();
     }
 
     @Override
@@ -385,7 +385,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportFragmentManager().beginTransaction().remove(mGroupsPreviewFragment).commitAllowingStateLoss();
         }
         mGroupsPreviewFragment = new GroupsPreviewFragment();
-        //@TODO Check is this bundle initialization is correct
         Bundle args = new Bundle();
         args.putLong("groups id", group.getId());
         mGroupsPreviewFragment.setArguments(args);
@@ -398,11 +397,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setFragmentVisibility(getString(R.string.tag_fragment_preview_groups));
         enableViews(true);
-        hideFloatingActionButton();
     }
 
     @Override
     public void inflateMyVCardFragment(Context context) {
+        if (mMyVcardCreateCardFragment != null) {
+            mMyVcardCreateCardFragment = null;
+        }
+        if (mFragmentTags !=null ){
+            mFragmentTags.clear();
+            if (mDrawerLayout != null) {
+                enableViews(false);
+            }
+        }
         if (mMyVcardFragment == null) {
             Log.d(TAG, "Inflating: My VCard...");
             mMyVcardFragment = new MyVcardFragment(this);
@@ -416,7 +423,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.add(getString(R.string.tag_fragment_my_vcard));
         }
         setFragmentVisibility(getString(R.string.tag_fragment_my_vcard));
-        showFloatingActionButton();
     }
 
     @Override
@@ -435,7 +441,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         setFragmentVisibility(getString(R.string.tag_fragment_groups_create));
         enableViews(true);
-        hideFloatingActionButton();
     }
 
     @Override
@@ -473,7 +478,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         setFragmentVisibility(getString(R.string.tag_fragment_my_vcard_create_card));
         enableViews(true);
-        hideFloatingActionButton();
     }
 
     @Override
@@ -492,7 +496,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         setFragmentVisibility(getString(R.string.tag_fragment_my_vcard_first_login));
         enableViews(false);
-        showFloatingActionButton();
     }
 
     @Override
@@ -511,7 +514,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         setFragmentVisibility(getString(R.string.tag_fragment_contacts));
         enableViews(false);
-        hideFloatingActionButton();
     }
 
     @Override
@@ -548,7 +550,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         setFragmentVisibility(getString(R.string.tag_fragment_my_vcard_edit));
         enableViews(true);
-        hideFloatingActionButton();
     }
 
     private void inflateShareFragment() {
@@ -566,10 +567,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         setFragmentVisibility(getString(R.string.tag_fragment_share));
         enableViews(false);
-        hideFloatingActionButton();
     }
 
     private void setFragmentVisibility(String tagname) {
+        //hide FAB
+        if (tagname.equals(getString(R.string.tag_fragment_preview_my_vcard))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_preview_contacts))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_preview_groups))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_groups_create))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_preview_my_vcard))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_groups_no_groups))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_my_vcard_create_card))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_contacts))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_groups))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_my_vcard_edit))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_my_vcard_edit))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_share))) {
+            hideFloatingActionButton();
+        }
+
+        // Show FAB
+
+        else if (tagname.equals(getString(R.string.tag_fragment_my_vcard_first_login))) {
+            showFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_my_vcard))) {
+            showFloatingActionButton();
+        }
+
         for (int i = 0; i < mFragments.size(); i++) {
             if (tagname.equals(mFragments.get(i).getTag())) {
                 //show
@@ -587,33 +622,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         int backStackCount = mFragmentTags.size();
-        if (backStackCount > 1){
+        if (backStackCount > 1) {
             //navigate backwards...
             String topFragmentTag = mFragmentTags.get(backStackCount - 1);
             String newTopFragmentTag = mFragmentTags.get(backStackCount - 2);
-            if (newTopFragmentTag.equals(getString(R.string.tag_fragment_my_vcard)) || newTopFragmentTag.equals(getString(R.string.tag_fragment_contacts)) || newTopFragmentTag.equals(getString(R.string.tag_fragment_groups))){
+            if (newTopFragmentTag.equals(getString(R.string.tag_fragment_my_vcard)) || newTopFragmentTag.equals(getString(R.string.tag_fragment_contacts)) || newTopFragmentTag.equals(getString(R.string.tag_fragment_groups)) || newTopFragmentTag.equals(getString(R.string.tag_fragment_groups_no_groups))) {
                 enableViews(false);
             }
-            if (newTopFragmentTag.equals(getString(R.string.tag_fragment_my_vcard))){
+            if (newTopFragmentTag.equals(getString(R.string.tag_fragment_my_vcard))) {
                 showFloatingActionButton();
             }
             setFragmentVisibility(newTopFragmentTag);
             mFragmentTags.remove(topFragmentTag);
             mExitCount = 0;
-        }
-        else if(backStackCount == 1){
+        } else if (backStackCount == 1) {
             String topFragmentTag = mFragmentTags.get(backStackCount - 1);
-            if (topFragmentTag.equals(getString(R.string.tag_fragment_my_vcard))){
+            if (topFragmentTag.equals(getString(R.string.tag_fragment_my_vcard))) {
                 mMyVcardFragment.scrollToTop();
-                mExitCount ++;
-                Toast.makeText(this, R.string.message_for_one_more_tap_to_exit, Toast.LENGTH_SHORT).show();
-            }
-            else {
-                mExitCount ++;
-                Toast.makeText(this, R.string.message_for_one_more_tap_to_exit, Toast.LENGTH_SHORT).show();
+                mExitCount++;
+                if (mExitCount == 1) {
+                    Toast.makeText(this, R.string.message_for_one_more_tap_to_exit, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                mExitCount++;
+                if (mExitCount == 1) {
+                    Toast.makeText(this, R.string.message_for_one_more_tap_to_exit, Toast.LENGTH_SHORT).show();
+                }
             }
         }
-        if (mExitCount >= 2){
+        if (mExitCount >= 2) {
             super.onBackPressed();
         }
     }

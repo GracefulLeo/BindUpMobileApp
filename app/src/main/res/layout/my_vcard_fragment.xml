@@ -6,15 +6,21 @@
     tools:context=".ui.Fragments.MyVcardFragment"
     android:background="@color/mainBackground">
 
-    <android.support.v7.widget.RecyclerView
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/my_vcard_recycler_view_container"
-        android:scrollbars="vertical"
-        android:orientation="vertical">
+        android:id="@+id/swipe_refresh_layout_myvcard">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/my_vcard_recycler_view_container"
+            android:scrollbars="vertical"
+            android:orientation="vertical">
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
-
-    </android.support.v7.widget.RecyclerView>
 
 </FrameLayout>

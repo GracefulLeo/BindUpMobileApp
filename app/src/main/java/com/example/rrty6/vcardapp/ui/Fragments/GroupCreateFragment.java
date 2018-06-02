@@ -106,9 +106,11 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
         mBtnSaveData.setOnClickListener(this);
         mBtnAddUsersGroup.setOnClickListener(this);
 
+
         init();
         return view;
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

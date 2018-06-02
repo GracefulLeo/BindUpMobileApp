@@ -57,7 +57,6 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
     private Bitmap bitmap = null;
     private TextView mFragmentHeading, mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView, mAdressTextView, mPositionTextView, mWebSiteTextView, mPhoneTextView, mEmailTextView;
     private EditText mCardIdEditText, mSurnameEditText, mNameEditText, mMiddleNameEditText, mCompanyEditText, mAdressEditText, mPositionEditText, mWebSiteEditText, mPhoneEditText, mEmailEditText;
-    private RelativeLayout mBackArrow;
     private ImageView mCompanyLogoImage;
     private Button mBtnSaveData,mBtnUploadPhoto;
     private CardView mCardView;
@@ -89,9 +88,6 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
         mCompanyLogoImage = view.findViewById(R.id.create_logo);
         mCardView = view.findViewById(R.id.create_vcard);
 
-        //       Picture init!
-        mBackArrow = view.findViewById(R.id.back_arrow);
-
         //        Text View INIT!!!!
         mFragmentHeading = view.findViewById(R.id.preview_fragment_heading);
         mSurnameTextView = view.findViewById(R.id.create_surname_text_view);
@@ -122,7 +118,6 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
         mBtnSaveData = view.findViewById(R.id.create_save_btn);
         mBtnUploadPhoto.setOnClickListener(this);
         mBtnSaveData.setOnClickListener(this);
-        mBackArrow.setOnClickListener(this);
 
 //        setBackgroundImage(view);
         init();
@@ -213,6 +208,7 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
                 }catch (NullPointerException e) {e.getMessage();} catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 // Inflating MyVCardFragment via interface here...
                 mInterface.inflateMyVCardFragment(mContext);
                 break;

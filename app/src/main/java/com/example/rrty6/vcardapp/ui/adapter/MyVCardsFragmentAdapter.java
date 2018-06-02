@@ -25,7 +25,7 @@ public class MyVCardsFragmentAdapter extends RecyclerView.Adapter<MyVCardsFragme
     private static final String TAG = "MyVCardsFragmentAdapter";
 
     //vars
-    private List<Card> mMyVcards = new ArrayList<>();
+    private List<Card> mMyVcards;
     private Context mContext;
     private IMainActivity mInterface;
 
