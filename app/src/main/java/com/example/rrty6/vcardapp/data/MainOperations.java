@@ -41,7 +41,7 @@ public class MainOperations {
     }
 
     public void register(final String email, final String password) {
-        handler.sendEmptyMessage(0);//Finish: Start progress bar (end in downloadUserData)
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -54,14 +54,14 @@ public class MainOperations {
                 if (isValidEmail(email)) {
                     networkOperations.register(handler, email, password, INSTANCE);
                 } else {
-                    handler.sendEmptyMessage(0);//Finish: Email is not valid
+                    handler.sendEmptyMessage(methodEnd);
                 }
             }
         }).start();
     }
 
     public void login(final String email, final String password) {
-        handler.sendEmptyMessage(methodStart);//Finish: Start progress bar (end in downloadUserData)
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -71,7 +71,7 @@ public class MainOperations {
                     mDataManager.getPreferenceManager().logoutUser();
                 }
                 if (isValidEmail(email)) {
-                    networkOperations.signIn(email, password, INSTANCE);
+                    networkOperations.signIn(handler, email, password, INSTANCE);
                 } else {
                     mDataManager.handleError(handler);
                 }
@@ -80,16 +80,16 @@ public class MainOperations {
     }
 
     public void logout() {
-        handler.sendEmptyMessage(0);//Finish: Start progress bar
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             public void run() {
                 Log.i(TAG, "logout start");
                 if (mDataManager.isAuthorized()) {
                     networkOperations.logOut();
-                    handler.sendEmptyMessage(0);//Finish: logout successfully finished
+                    handler.sendEmptyMessage(methodEnd);
                 } else {
                     Log.e(TAG, "User has not been authorized");
-                    handler.sendEmptyMessage(0);//Finish: creating card failed User has not been authorized
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
                 }
             }
         }).start();
@@ -112,7 +112,7 @@ public class MainOperations {
                         mDataManager.addContactToGroup(group, mDataManager.getCardFromDB(cardRemoteId));
                     }
                 }
-                handler.sendEmptyMessage(methodEnd);//Finish: login/registration successfully finished
+                handler.sendEmptyMessage(methodEnd);
             }
         }).start();
     }
@@ -150,7 +150,7 @@ public class MainOperations {
 //    }//TODO: test
 
     public void createCard(final Card card) {
-        handler.sendEmptyMessage(0);//Finish: start creating card
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -159,17 +159,17 @@ public class MainOperations {
                     card.setMy(true);
                     DatabaseOperation.createCard(card);
                     JobInitiation.createCard(card.getId());
-                    handler.sendEmptyMessage(0);//Finish: creating card finished
+                    handler.sendEmptyMessage(methodEnd);
                 } else {
                     Log.e(TAG, "User has not been authorized");
-                    handler.sendEmptyMessage(0);//Finish: creating card failed User has not been authorized
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
                 }
             }
         }).start();
     }
 
     public void updateCard(final Card oldCard, final Card newCard) {
-        handler.sendEmptyMessage(0);//Finish: start updating card
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -178,17 +178,17 @@ public class MainOperations {
                     oldCard.update(newCard);
                     mDataManager.updateCard(oldCard);
                     JobInitiation.updateCard(oldCard.getId());
-                    handler.sendEmptyMessage(0);//Finish: updating card finished
+                    handler.sendEmptyMessage(methodEnd);
                 } else {
                     Log.e(TAG, "User has not been authorized");
-                    handler.sendEmptyMessage(0);//Finish: updating card failed User has not been authorized
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
                 }
             }
         }).start();
     }
 
     public void deleteCard(final Card card) {
-        handler.sendEmptyMessage(0);//Finish: start deleting card
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -196,17 +196,17 @@ public class MainOperations {
                     Log.i(TAG, "deleteCard start for card: " + card.getRemoteId());
                     JobInitiation.deleteCard(card.getRemoteId());
                     DatabaseOperation.deleteCard(card);
-                    handler.sendEmptyMessage(0);//Finish: deleting card finished
+                    handler.sendEmptyMessage(methodEnd);
                 } else {
                     Log.e(TAG, "User has not been authorized");
-                    handler.sendEmptyMessage(0);//Finish: deleting card failed User has not been authorized
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
                 }
             }
         }).start();
     }
 
     public void createContact(final Card card) {
-        handler.sendEmptyMessage(0);//Finish: start creating contact
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -215,17 +215,17 @@ public class MainOperations {
                     card.setMy(false);
                     DatabaseOperation.createCard(card);
                     JobInitiation.addContact(card.getRemoteId());
-                    handler.sendEmptyMessage(0);//Finish: creating contact finished
+                    handler.sendEmptyMessage(methodEnd);
                 } else {
                     Log.e(TAG, "User has not been authorized");
-                    handler.sendEmptyMessage(0);//Finish: creating contact failed User has not been authorized
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
                 }
             }
         }).start();
     }
 
     public void deleteContact(final Card card) {
-        handler.sendEmptyMessage(0);//Finish: start deleting contact
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -233,17 +233,17 @@ public class MainOperations {
                     Log.i(TAG, "deleteContact");
                     JobInitiation.deleteContact(card.getRemoteId());
                     DatabaseOperation.deleteCard(card);
-                    handler.sendEmptyMessage(0);//Finish: deleting contact finished
+                    handler.sendEmptyMessage(methodEnd);
                 } else {
                     Log.e(TAG, "User has not been authorized");
-                    handler.sendEmptyMessage(0);//Finish: deleting contact failed User has not been authorized
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
                 }
             }
         }).start();
     }
 
     public void createGroup(final Group group, @Nullable final List<Card> contacts) {
-        handler.sendEmptyMessage(0);//Finish: start creating group
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -257,17 +257,17 @@ public class MainOperations {
                         }
                     }
                     JobInitiation.createGroup(group.getId(), ids);
-                    handler.sendEmptyMessage(0);//Finish: creating group finished
+                    handler.sendEmptyMessage(methodEnd);
                 } else {
                     Log.e(TAG, "User has not been authorized");
-                    handler.sendEmptyMessage(0);//Finish: creating group failed User has not been authorized
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
                 }
             }
         }).start();
     }
 
     public void updateGroup(final Group oldGroup, final Group newGroup) {
-        handler.sendEmptyMessage(0);//Finish: start updating group
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -276,17 +276,17 @@ public class MainOperations {
                     oldGroup.update(newGroup);
                     mDataManager.updateGroup(oldGroup);
                     JobInitiation.updateGroup(oldGroup.getId());
-                    handler.sendEmptyMessage(0);//Finish: updating group finished
+                    handler.sendEmptyMessage(methodEnd);
                 } else {
                     Log.e(TAG, "User has not been authorized");
-                    handler.sendEmptyMessage(0);//Finish: updating group failed User has not been authorized
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
                 }
             }
         }).start();
     }
 
     public void updateGroupContacts(final Group group, final List<Card> contacts) {
-        handler.sendEmptyMessage(0);//Finish: start updating group contacts
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -300,17 +300,17 @@ public class MainOperations {
                         }
                     }
                     JobInitiation.updateGroupContacts(group.getRemoteId(), ids);
-                    handler.sendEmptyMessage(0);//Finish: updating group contacts finished
+                    handler.sendEmptyMessage(methodEnd);
                 } else {
                     Log.e(TAG, "User has not been authorized");
-                    handler.sendEmptyMessage(0);//Finish: updating group contacts failed User has not been authorized
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
                 }
             }
         }).start();
     }
 
     public void deleteGroup(final Group group) {
-        handler.sendEmptyMessage(0);//Finish: start deleting group
+        handler.sendEmptyMessage(methodStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -318,10 +318,10 @@ public class MainOperations {
                     Log.i(TAG, "deleteGroup start");
                     JobInitiation.deleteGroup(group.getRemoteId());
                     DatabaseOperation.deleteGroup(group);
-                    handler.sendEmptyMessage(0);//Finish: deleting group finished
+                    handler.sendEmptyMessage(methodEnd);
                 } else {
                     Log.e(TAG, "User has not been authorized");
-                    handler.sendEmptyMessage(0);//Finish: deleting group failed User has not been authorized
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
                 }
             }
         }).start();
@@ -334,7 +334,7 @@ public class MainOperations {
             return mDataManager.getCardList();
         } else {
             Log.e(TAG, "User has not been authorized");
-            handler.sendEmptyMessage(0);//Finish: getting card list failed User has not been authorized
+            handler.sendEmptyMessage(userHasNotBeenAuthorized);
             return null;
         }
     }
@@ -346,7 +346,7 @@ public class MainOperations {
             return DatabaseOperation.getCard(id);
         } else {
             Log.e(TAG, "User has not been authorized");
-            handler.sendEmptyMessage(0);//Finish: getting card failed User has not been authorized
+            handler.sendEmptyMessage(userHasNotBeenAuthorized);
             return null;
         }
     }
@@ -358,7 +358,7 @@ public class MainOperations {
             return mDataManager.getGroupList();
         } else {
             Log.e(TAG, "User has not been authorized");
-            handler.sendEmptyMessage(0);//Finish: getting group list failed User has not been authorized
+            handler.sendEmptyMessage(userHasNotBeenAuthorized);
             return null;
         }
     }
@@ -370,7 +370,7 @@ public class MainOperations {
             return mDataManager.getContactList();
         } else {
             Log.e(TAG, "User has not been authorized");
-            handler.sendEmptyMessage(0);//Finish: deleting contacts list failed User has not been authorized
+            handler.sendEmptyMessage(userHasNotBeenAuthorized);
             return null;
         }
     }
@@ -382,7 +382,7 @@ public class MainOperations {
             return mDataManager.getGroupContacts(group);
         } else {
             Log.e(TAG, "User has not been authorized");
-            handler.sendEmptyMessage(0);//Finish: deleting group contacts list failed User has not been authorized
+            handler.sendEmptyMessage(userHasNotBeenAuthorized);
             return null;
         }
     }

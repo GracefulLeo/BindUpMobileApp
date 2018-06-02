@@ -32,5 +32,8 @@ public class UIHandler extends Handler {
     public interface WhatValue {
         int methodStart = 1;
         int methodEnd = 2;
+        int alreadyUsedEmail = 3;
+        int wrongUserNameOrPassword = 4;
+        int userHasNotBeenAuthorized = 5;
     }
 }
