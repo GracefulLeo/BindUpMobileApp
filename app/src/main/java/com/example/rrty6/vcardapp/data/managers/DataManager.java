@@ -639,6 +639,18 @@ public class DataManager {
             return null;
         }
     }
+
+    public Group getGroupByRemoteId(String remoteId) {
+        try {
+            QueryBuilder<Group, Long> queryBuilder = groupDao.queryBuilder();
+            queryBuilder.where().eq("REMOTE_ID", remoteId);
+            PreparedQuery<Group> preparedQuery = queryBuilder.prepare();
+            return (Group) (groupDao.query(preparedQuery) != null && groupDao.query(preparedQuery).size() > 0 ? groupDao.query(preparedQuery).get(0) : null);
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
+    }
     //endregion=====================================Group=====================================
 
     //endregion========DataBase=================================

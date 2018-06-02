@@ -179,4 +179,8 @@ public class DatabaseOperation {
     public static List<Card> getGroupContacts(Group group) {
         return DATA_MANAGER.getGroupContacts(group);
     }
+
+    public static Group getGroupByRemoteId(String remoteId) {
+        return DATA_MANAGER.getGroupByRemoteId(remoteId);
+    }
 }

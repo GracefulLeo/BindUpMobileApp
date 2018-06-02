@@ -584,8 +584,12 @@ public class NetworkOperations {
         return false;
     }
 
-    public static boolean updateGroupContacts(String remoteId, List<String> contacts) {
-        UpdateGroupReq updateGroupReq = new UpdateGroupReq(remoteId, contacts);
+    public static boolean updateGroupContacts(Group group) {
+        List<String> contacts = new ArrayList<>();
+        for (Card card : DatabaseOperation.getGroupContacts(group)) {
+            contacts.add(card.getRemoteId());
+        }
+        UpdateGroupReq updateGroupReq = new UpdateGroupReq(group.getRemoteId() , contacts);
         Call<ResponseBody> call = mDataManager.updateGroup(updateGroupReq);
         Response<ResponseBody> response = null;
         try {

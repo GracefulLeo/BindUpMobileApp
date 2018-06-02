@@ -39,7 +39,6 @@ public class JobIntentService extends IntentService {
                     isSuccess = NetworkOperations.createCard(card);
                     successIntent = new Intent(MY_BC_RCVR + ACTION_EXECUTE_CREATE_CARD);
                     successIntent.putExtra(IS_SUCCESS, isSuccess);
-//                    successIntent.putExtra(IS_SUCCESS, false);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(successIntent);
                     Log.i(TAG, "ACTION_EXECUTE_CREATE_CARD end");
                     break;
@@ -96,7 +95,7 @@ public class JobIntentService extends IntentService {
                     break;
                 case ACTION_EXECUTE_UPDATE_GROUP_CONTACTS:
                     Log.i(TAG, "ACTION_EXECUTE_UPDATE_GROUP_CONTACTS begin");
-                    isSuccess = NetworkOperations.updateGroupContacts(intent.getStringExtra(GROUP_REMOTE_ID), intent.getStringArrayListExtra(GROUP_CONTACTS_IDS));
+                    isSuccess = NetworkOperations.updateGroupContacts(DatabaseOperation.getGroup(intent.getLongExtra(GROUP_ID,0)));
                     successIntent = new Intent(MY_BC_RCVR + ACTION_EXECUTE_UPDATE_GROUP_CONTACTS);
                     successIntent.putExtra(IS_SUCCESS, isSuccess);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(successIntent);
