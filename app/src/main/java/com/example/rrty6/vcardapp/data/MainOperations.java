@@ -23,7 +23,6 @@ public class MainOperations {
     private static DataManager mDataManager = DataManager.getInstance();
     private final Handler handler;
     private NetworkOperations networkOperations = new NetworkOperations();
-//    private DatabaseOperation databaseOperation;
 
     public MainOperations(Handler handler) {
         this.handler = handler;
