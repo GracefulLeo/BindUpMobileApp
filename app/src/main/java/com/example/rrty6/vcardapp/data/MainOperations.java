@@ -109,7 +109,7 @@ public class MainOperations {
                 for (Group group : networkOperations.getMyGroups()) {
                     DatabaseOperation.createGroup(group, null);
                     for (String cardRemoteId : networkOperations.getGroupContacts(group.getRemoteId())) {
-                        mDataManager.addContactToGroup(group, mDataManager.getCardFromDB(cardRemoteId));
+                        DatabaseOperation.addContactToGroup(group, cardRemoteId);
                     }
                 }
                 handler.sendEmptyMessage(methodEnd);
@@ -274,7 +274,7 @@ public class MainOperations {
                 if (mDataManager.isAuthorized()) {
                     Log.i(TAG, "updateGroup start");
                     oldGroup.update(newGroup);
-                    mDataManager.updateGroup(oldGroup);
+                    DatabaseOperation.updateGroup(oldGroup);
                     JobInitiation.updateGroup(oldGroup.getId());
                     handler.sendEmptyMessage(methodEnd);
                 } else {
@@ -355,7 +355,7 @@ public class MainOperations {
     public List<Group> getGroupList() {
         Log.i(TAG, "getGroupList");
         if (mDataManager.isAuthorized()) {
-            return mDataManager.getGroupList();
+            return DatabaseOperation.getGroupList();
         } else {
             Log.e(TAG, "User has not been authorized");
             handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -367,7 +367,7 @@ public class MainOperations {
     public List<Card> getContacts() {
         Log.i(TAG, "getContacts");
         if (mDataManager.isAuthorized()) {
-            return mDataManager.getContactList();
+            return DatabaseOperation.getContactList();
         } else {
             Log.e(TAG, "User has not been authorized");
             handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -379,7 +379,7 @@ public class MainOperations {
     public List<Card> getGroupContacts(Group group) {
         Log.i(TAG, "getGroupContacts for group: " + group.getId());
         if (mDataManager.isAuthorized()) {
-            return mDataManager.getGroupContacts(group);
+            return DatabaseOperation.getGroupContacts(group);
         } else {
             Log.e(TAG, "User has not been authorized");
             handler.sendEmptyMessage(userHasNotBeenAuthorized);

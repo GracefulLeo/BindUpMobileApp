@@ -39,15 +39,13 @@ public class JobIntentService extends IntentService {
                     isSuccess = NetworkOperations.createCard(card);
                     successIntent = new Intent(MY_BC_RCVR + ACTION_EXECUTE_CREATE_CARD);
                     successIntent.putExtra(IS_SUCCESS, isSuccess);
+//                    successIntent.putExtra(IS_SUCCESS, false);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(successIntent);
                     Log.i(TAG, "ACTION_EXECUTE_CREATE_CARD end");
                     break;
                 case ACTION_EXECUTE_UPDATE_CARD:
                     Log.i(TAG, "ACTION_EXECUTE_UPDATE_CARD begin");
                     card = DatabaseOperation.getCard(intent.getLongExtra(CARD_ID, 0));
-
-                    System.out.println(card);
-
                     isSuccess = NetworkOperations.updateCard(card);
                     successIntent = new Intent(MY_BC_RCVR + ACTION_EXECUTE_UPDATE_CARD);
                     successIntent.putExtra(IS_SUCCESS, isSuccess);

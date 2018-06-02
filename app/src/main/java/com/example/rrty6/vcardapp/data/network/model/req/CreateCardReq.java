@@ -109,9 +109,7 @@ public class CreateCardReq {
         if (card.getSocialLinks() != null) {
             socialLinks = card.getSocialLinksString();
         }
-        if (card.getBase() != null) {
-            base64Vcard = "data:image/png;base64," + card.getBase().getBase64();
-        }
+        base64Vcard = "data:image/png;base64," + card.getBase().getBase64();
     }
 
     public class FieldLogotype {

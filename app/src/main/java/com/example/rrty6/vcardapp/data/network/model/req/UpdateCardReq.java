@@ -92,7 +92,7 @@ public class UpdateCardReq {
         mail = mails.toString();
         webSite = card.getSite();
         socialLinks = card.getSocialLinksString();
-        base64Vcard = card.getBase().getBase64();
+        base64Vcard = "data:image/png;base64," + card.getBase().getBase64();
     }
 
     public class FieldLogotype {
