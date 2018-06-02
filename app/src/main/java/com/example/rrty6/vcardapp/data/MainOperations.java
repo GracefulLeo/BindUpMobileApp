@@ -40,7 +40,7 @@ public class MainOperations {
     }
 
     public void register(final String email, final String password) {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(registerStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -50,17 +50,13 @@ public class MainOperations {
                     DatabaseOperation.clearDb();
                     mDataManager.getPreferenceManager().logoutUser();
                 }
-                if (isValidEmail(email)) {
-                    networkOperations.register(handler, email, password, INSTANCE);
-                } else {
-                    handler.sendEmptyMessage(methodEnd);
-                }
+                networkOperations.register(handler, email, password, INSTANCE);
             }
         }).start();
     }
 
     public void login(final String email, final String password) {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(loginStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -79,13 +75,13 @@ public class MainOperations {
     }
 
     public void logout() {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(logoutStart);
         new Thread(new Runnable() {
             public void run() {
                 Log.i(TAG, "logout start");
                 if (mDataManager.isAuthorized()) {
                     networkOperations.logOut();
-                    handler.sendEmptyMessage(methodEnd);
+                    handler.sendEmptyMessage(logoutFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -111,7 +107,7 @@ public class MainOperations {
                         DatabaseOperation.addContactToGroup(group, cardRemoteId);
                     }
                 }
-                handler.sendEmptyMessage(methodEnd);
+                handler.sendEmptyMessage(authorizationFinished);
             }
         }).start();
     }
@@ -149,7 +145,7 @@ public class MainOperations {
 //    }//TODO: test
 
     public void createCard(final Card card) {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(createCardStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -158,7 +154,7 @@ public class MainOperations {
                     card.setMy(true);
                     DatabaseOperation.createCard(card);
                     JobInitiation.createCard(card.getId());
-                    handler.sendEmptyMessage(methodEnd);
+                    handler.sendEmptyMessage(createCardFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -168,7 +164,7 @@ public class MainOperations {
     }
 
     public void updateCard(final Card oldCard, final Card newCard) {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(updateCardStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -177,7 +173,7 @@ public class MainOperations {
                     oldCard.update(newCard);
                     DatabaseOperation.updateCard(oldCard);
                     JobInitiation.updateCard(oldCard.getId());
-                    handler.sendEmptyMessage(methodEnd);
+                    handler.sendEmptyMessage(updateCardFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -187,7 +183,7 @@ public class MainOperations {
     }
 
     public void deleteCard(final Card card) {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(deleteCardStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -195,7 +191,7 @@ public class MainOperations {
                     Log.i(TAG, "deleteCard start for card: " + card.getRemoteId());
                     JobInitiation.deleteCard(card.getRemoteId());
                     DatabaseOperation.deleteCard(card);
-                    handler.sendEmptyMessage(methodEnd);
+                    handler.sendEmptyMessage(deleteCardFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -205,7 +201,7 @@ public class MainOperations {
     }
 
     public void createContact(final Card card) {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(createContactStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -214,7 +210,7 @@ public class MainOperations {
                     card.setMy(false);
                     DatabaseOperation.createCard(card);
                     JobInitiation.addContact(card.getRemoteId());
-                    handler.sendEmptyMessage(methodEnd);
+                    handler.sendEmptyMessage(createContactFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -224,7 +220,7 @@ public class MainOperations {
     }
 
     public void deleteContact(final Card card) {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(deleteContactStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -232,7 +228,7 @@ public class MainOperations {
                     Log.i(TAG, "deleteContact");
                     JobInitiation.deleteContact(card.getRemoteId());
                     DatabaseOperation.deleteCard(card);
-                    handler.sendEmptyMessage(methodEnd);
+                    handler.sendEmptyMessage(deleteContactFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -242,7 +238,7 @@ public class MainOperations {
     }
 
     public void createGroup(final Group group, @Nullable final List<Card> contacts) {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(createGroupStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -256,7 +252,7 @@ public class MainOperations {
                         }
                     }
                     JobInitiation.createGroup(group.getId(), ids);
-                    handler.sendEmptyMessage(methodEnd);
+                    handler.sendEmptyMessage(createGroupFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -266,7 +262,7 @@ public class MainOperations {
     }
 
     public void updateGroup(final Group oldGroup, final Group newGroup) {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(updateGroupStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -275,7 +271,7 @@ public class MainOperations {
                     oldGroup.update(newGroup);
                     DatabaseOperation.updateGroup(oldGroup);
                     JobInitiation.updateGroup(oldGroup.getId());
-                    handler.sendEmptyMessage(methodEnd);
+                    handler.sendEmptyMessage(updateGroupFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -285,7 +281,7 @@ public class MainOperations {
     }
 
     public void updateGroupContacts(final Group group, final List<Card> contacts) {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(updateGroupContactsStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -299,7 +295,7 @@ public class MainOperations {
                         }
                     }
                     JobInitiation.updateGroupContacts(group.getRemoteId(), ids);
-                    handler.sendEmptyMessage(methodEnd);
+                    handler.sendEmptyMessage(updateGroupContactsFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -309,7 +305,7 @@ public class MainOperations {
     }
 
     public void deleteGroup(final Group group) {
-        handler.sendEmptyMessage(methodStart);
+        handler.sendEmptyMessage(deleteGroupStart);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -317,7 +313,7 @@ public class MainOperations {
                     Log.i(TAG, "deleteGroup start");
                     JobInitiation.deleteGroup(group.getRemoteId());
                     DatabaseOperation.deleteGroup(group);
-                    handler.sendEmptyMessage(methodEnd);
+                    handler.sendEmptyMessage(deleteGroupFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);
