@@ -10,3 +10,6 @@
 .gradle/4.4/taskHistory/taskHistory.bin
 .gradle/
 
+app/app.iml
+*.iml
+.iml
