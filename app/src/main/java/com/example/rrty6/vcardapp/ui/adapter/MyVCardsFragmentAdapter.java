@@ -53,8 +53,10 @@ public class MyVCardsFragmentAdapter extends RecyclerView.Adapter<MyVCardsFragme
                     .with(holder.itemView.getContext())
                     .load(mMyVcards.get(position).getLogo().getLogoBitmap())
                     .into(holder.mCompanyLogo);
+        }else if(mMyVcards.get(position).getLogo() == null) {
+            holder.mCompanyLogo.setImageResource(R.drawable.ic_person);
+            System.out.println("empty...");
         }
-        System.out.println(mMyVcards.get(position).getSurname()==null);
         holder.mSurname.setText(mMyVcards.get(position).getSurname());
         holder.mName.setText(mMyVcards.get(position).getName());
         holder.mCompany.setText(mMyVcards.get(position).getCompany());

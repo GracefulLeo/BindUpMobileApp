@@ -64,11 +64,9 @@ public class GroupsPreviewFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState){
         final View view = inflater.inflate(R.layout.vcard_view_for_contacts_preview_fragment, container, false);
         Log.d(TAG, "onCreateView: started.");
+
         //      View Init!!
         mCompanyLogoImage = view.findViewById(R.id.contacts_preview_logo);
-
-        //       Picture init!
-        mBackArrow = view.findViewById(R.id.back_arrow);
 
         //        Text View INIT!!!!
         mFragmentHeading = view.findViewById(R.id.contacts_preview_fragment_heading);
