@@ -12,11 +12,10 @@ import com.example.rrty6.vcardapp.data.storage.model.Card;
 import com.example.rrty6.vcardapp.data.storage.model.Group;
 import com.example.rrty6.vcardapp.data.storage.operation.DatabaseOperation;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.rrty6.vcardapp.utils.Const.HandlerConstants.*;
+import static com.example.rrty6.vcardapp.utils.UIHandler.WhatValue.*;
 
 public class MainOperations {
     private static final String TAG = "MainOperations";

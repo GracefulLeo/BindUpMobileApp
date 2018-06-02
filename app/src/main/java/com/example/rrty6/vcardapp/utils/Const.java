@@ -87,10 +87,4 @@ public interface Const {
         String GROUP_REMOTE_ID = "GROUP_REMOTE_ID";
         String GROUP_CONTACTS_IDS = "GROUP_CONTACTS_IDS";
     }
-
-    interface HandlerConstants {
-        int methodStart = 1;
-        int methodEnd = 2;
-    }
-
 }
