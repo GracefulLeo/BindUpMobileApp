@@ -71,6 +71,16 @@ public class DatabaseOperation {
         DATA_MANAGER.addSocialLinks(card.getSocialLinks());
     }
 
+    public static void updateCard(Card card) {
+        if (card.getLogo() != null && card.getLogo().getId() != null) {
+            DATA_MANAGER.addLogo(card.getLogo());
+        }
+        if (card.getBase() != null) {
+            DATA_MANAGER.addBase64(card.getBase());
+        }
+        DATA_MANAGER.updateCard(card);
+    }
+
     public static void createGroup(Group group, @Nullable List<Card> contacts) {
         if (group.getLogo() != null) {
             DATA_MANAGER.addLogo(group.getLogo());
@@ -111,7 +121,7 @@ public class DatabaseOperation {
         DATA_MANAGER.deleteGroup(group);
     }
 
-    public static void clearDb(){
+    public static void clearDb() {
         for (Card card : DATA_MANAGER.getAllCardsFromDB()) {
             DATA_MANAGER.deleteCard(card);
         }
@@ -144,6 +154,6 @@ public class DatabaseOperation {
 //    }
 
     public static Group getGroup(Long id) {
-            return DATA_MANAGER.getGroup(id);
+        return DATA_MANAGER.getGroup(id);
     }
 }

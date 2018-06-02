@@ -11,53 +11,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateCardReq {
+    @SerializedName("id")
+    @Expose
+    private String id;
     @SerializedName("type")
     @Expose
-    public String type;
+    private String type;
     @SerializedName("title")
     @Expose
-    public String title;
+    private String title;
     @SerializedName("field_logotype")
     @Expose
-    public FieldLogotype fieldLogotype = null;
+    private FieldLogotype fieldLogotype = null;
     @SerializedName("name")
     @Expose
-    public String name = null;
+    private String name = null;
     @SerializedName("surname")
     @Expose
-    public String surname = null;
+    private String surname = null;
     @SerializedName("middle_name")
     @Expose
-    public String middleName = null;
+    private String middleName = null;
     @SerializedName("company")
     @Expose
-    public String company = null;
+    private String company = null;
     @SerializedName("position")
     @Expose
-    public String position = null;
+    private String position = null;
     @SerializedName("address")
     @Expose
-    public String address = null;
+    private String address = null;
     @SerializedName("phone")
     @Expose
-    public String phone = null;
+    private String phone = null;
     @SerializedName("email")
     @Expose
-    public String mail = null;
+    private String mail = null;
     @SerializedName("web_site")
     @Expose
-    public String webSite = null;
+    private String webSite = null;
     @SerializedName("social_links")
     @Expose
-    public String socialLinks = null;
+    private String socialLinks = null;
     @SerializedName("base64_vcard")
     @Expose
-    public String base64Vcard = null;
+    private String base64Vcard = null;
 
     public UpdateCardReq(Card card) {
         type = "vcard";
+        id = card.getRemoteId();
         title = card.getTitle();
-        fieldLogotype = new FieldLogotype(card.getLogo().getFid());
+        if (card.getLogo() != null) {
+            fieldLogotype = new FieldLogotype(card.getLogo().getFid());
+        }
         name = card.getName();
         surname = card.getSurname();
         middleName = card.getMidlename();

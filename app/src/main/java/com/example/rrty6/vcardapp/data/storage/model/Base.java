@@ -49,7 +49,6 @@ public class Base implements Serializable{
 
     //endregion===============================Setters=============================
 
-
     //region==================================Getters=============================
 
     public Long getId() {
@@ -61,5 +60,4 @@ public class Base implements Serializable{
     }
 
     //endregion===============================Getters=============================
-
 }

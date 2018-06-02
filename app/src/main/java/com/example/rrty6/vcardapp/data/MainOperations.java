@@ -176,7 +176,7 @@ public class MainOperations {
                 if (mDataManager.isAuthorized()) {
                     Log.i(TAG, "updateCard start for card: " + oldCard.getRemoteId());
                     oldCard.update(newCard);
-                    mDataManager.updateCard(oldCard);
+                    DatabaseOperation.updateCard(oldCard);
                     JobInitiation.updateCard(oldCard.getId());
                     handler.sendEmptyMessage(methodEnd);
                 } else {
