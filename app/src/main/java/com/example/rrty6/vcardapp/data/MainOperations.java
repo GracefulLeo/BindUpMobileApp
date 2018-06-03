@@ -11,6 +11,7 @@ import com.example.rrty6.vcardapp.data.operations.JobInitiation;
 import com.example.rrty6.vcardapp.data.storage.model.Card;
 import com.example.rrty6.vcardapp.data.storage.model.Group;
 import com.example.rrty6.vcardapp.data.storage.operation.DatabaseOperation;
+import com.example.rrty6.vcardapp.utils.App;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,6 @@ public class MainOperations {
     public MainOperations(Handler handler) {
         this.handler = handler;
         INSTANCE = this;
-//        networkOperations = new NetworkOperations(handler);
-//        databaseOperation = new DatabaseOperation(handler);
     }
 
     public static boolean isAuthorized() {
@@ -45,12 +44,17 @@ public class MainOperations {
             @Override
             public void run() {
                 Log.i(TAG, "register start");
-                if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "user is still authorized");
-                    DatabaseOperation.clearDb();
-                    mDataManager.getPreferenceManager().logoutUser();
+                if (App.hasConnection()) {
+                    if (mDataManager.isAuthorized()) {
+                        Log.i(TAG, "user is still authorized");
+                        DatabaseOperation.clearDb();
+                        mDataManager.getPreferenceManager().logoutUser();
+                    }
+                    networkOperations.register(handler, email, password, INSTANCE);
+                } else {
+                    Log.e(TAG, "There is no internet");
+                    handler.sendEmptyMessage(thereIsNoInternet);
                 }
-                networkOperations.register(handler, email, password, INSTANCE);
             }
         }).start();
     }
@@ -61,14 +65,15 @@ public class MainOperations {
             @Override
             public void run() {
                 Log.i(TAG, "login start");
-                if (mDataManager.isAuthorized()) {
-                    DatabaseOperation.clearDb();
-                    mDataManager.getPreferenceManager().logoutUser();
-                }
-                if (isValidEmail(email)) {
+                if (App.hasConnection()) {
+                    if (mDataManager.isAuthorized()) {
+                        DatabaseOperation.clearDb();
+                        mDataManager.getPreferenceManager().logoutUser();
+                    }
                     networkOperations.signIn(handler, email, password, INSTANCE);
                 } else {
-                    mDataManager.handleError(handler);
+                    Log.e(TAG, "There is no internet");
+                    handler.sendEmptyMessage(thereIsNoInternet);
                 }
             }
         }).start();
@@ -79,12 +84,17 @@ public class MainOperations {
         new Thread(new Runnable() {
             public void run() {
                 Log.i(TAG, "logout start");
-                if (mDataManager.isAuthorized()) {
-                    networkOperations.logOut();
-                    handler.sendEmptyMessage(logoutFinished);
+                if (App.hasConnection()) {
+                    if (mDataManager.isAuthorized()) {
+                        networkOperations.logOut();
+                        handler.sendEmptyMessage(logoutFinished);
+                    } else {
+                        Log.e(TAG, "User has not been authorized");
+                        handler.sendEmptyMessage(userHasNotBeenAuthorized);
+                    }
                 } else {
-                    Log.e(TAG, "User has not been authorized");
-                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
+                    Log.e(TAG, "There is no internet");
+                    handler.sendEmptyMessage(thereIsNoInternet);
                 }
             }
         }).start();
@@ -370,7 +380,7 @@ public class MainOperations {
         }
     }
 
-    //From DB //TODO:Change group to groupId
+    //From DB
     public List<Card> getGroupContacts(Group group) {
         Log.i(TAG, "getGroupContacts for group: " + group.getId());
         if (mDataManager.isAuthorized()) {

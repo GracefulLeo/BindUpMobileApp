@@ -30,6 +30,7 @@ public class UIHandler extends Handler {
     }
 
     public interface WhatValue {
+        int thereIsNoInternet = 26;
         int registerStart = 1;
         int alreadyUsedEmail = 2;
         int wrongUserNameOrPassword = 3;
