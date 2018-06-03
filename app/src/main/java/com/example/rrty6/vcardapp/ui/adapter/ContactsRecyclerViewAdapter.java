@@ -28,7 +28,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
     private static final String TAG = "ConnectionsAdapter";
 
     //vars
-    private List<Card> mMyContacts = new ArrayList<>();
+    private List<Card> mMyContacts;
     private Context mContext;
     private IMainActivity mInterface;
 

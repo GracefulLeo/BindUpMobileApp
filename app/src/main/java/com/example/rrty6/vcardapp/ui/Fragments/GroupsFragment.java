@@ -19,11 +19,9 @@ import android.view.ViewGroup;
 import com.example.rrty6.vcardapp.R;
 import com.example.rrty6.vcardapp.data.MainOperations;
 import com.example.rrty6.vcardapp.data.storage.model.Group;
-import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
 import com.example.rrty6.vcardapp.ui.adapter.GroupsRecyclerViewAdapter;
 import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
@@ -64,6 +62,7 @@ public class GroupsFragment extends Fragment {
             public void onClick(View v) {
                 if (v.getId() == R.id.fab_groups){
                     // Inflating GroupCreateFragment via interface here...
+                    mFab.hide();
                     mInterface.inflateGroupCreateFragment(mContext);
                 }
             }
@@ -75,7 +74,8 @@ public class GroupsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.top_navigation_menu_contacts, menu);
+        menu.clear();
+        inflater.inflate(R.menu.top_navigation_menu_contacts_and_groups, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -84,11 +84,9 @@ public class GroupsFragment extends Fragment {
             mGroups.clear();
         }
         mGroups = new MainOperations(new Handler()).getGroupList();
-            //@TODO put groups in bundle here and get bundle in MainActivity.Create if statement:
-            //@TODO if mGroups == empty then transfer to GroupNoGroupsFragment
-        if (mGroupsRecyclerViewAdapter == null) {
+//        if (mGroupsRecyclerViewAdapter == null) {
             initRecyclerView();
-        }
+//        }
         if(mGroups == null){
             // Inflating GroupsNoGroupFragment via interface here...
             mInterface.inflateGroupNoGroupsFragment(mContext);

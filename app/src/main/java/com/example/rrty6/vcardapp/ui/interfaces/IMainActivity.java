@@ -11,7 +11,9 @@ public interface IMainActivity   {
 
     void inflateViewContactProfileFragment (Card card);
 
-    void inflateViewGroupProfileGroups (Group group);
+    void inflateGroupPreviewFragment (Group group);
+
+    void inflateViewGroupsSingleContactPreview(Card card);
 
     void inflateMyVCardFragment (Context context);
 

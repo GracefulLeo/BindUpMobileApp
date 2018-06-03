@@ -52,7 +52,7 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
     private static final int PICK_PHOTO_REQUEST = 1;
 
     //widgets
-    private TextView mFragmentHeading, mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView,
+    private TextView mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView,
             mAdressTextView, mPositionTextView, mWebSiteTextView, mPhoneTextView, mEmailTextView;
     private EditText mCardIdText, mSurnameText, mNameText, mMiddleNameText, mCompanyText,
             mAdressText, mPositionText, mWebSiteText, mPhoneText, mEmailText;
@@ -94,7 +94,6 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
         mCardView = view.findViewById(R.id.edit_cardview_vcard);
 
         //        Text View INIT!!!!
-        mFragmentHeading = view.findViewById(R.id.edit_fragment_heading);
         mSurnameTextView = view.findViewById(R.id.edit_surname_text_view);
         mNameTextView = view.findViewById(R.id.edit_name_text_view);
         mMiddleNameTextView = view.findViewById(R.id.edit_middle_name_text_view);
@@ -127,6 +126,7 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.top_navigation_menu_my_vcards_edit,menu);
         setMenuVisibility(true);
         super.onCreateOptionsMenu(menu, inflater);
@@ -136,7 +136,6 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
         Log.d(TAG, "init: initializing " + getString(R.string.tag_fragment_preview_my_vcard));
 
         try {
-            mFragmentHeading.setText("Edit");
             List<Phone> phones = new ArrayList<>(mMyVcard.getPhones());
             List<Email> emails = new ArrayList<>(mMyVcard.getEmails());
             //@TODO Solve the problem with emails(if emails more then one add other field, same with phones

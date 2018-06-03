@@ -79,17 +79,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                     Log.d(TAG, "onCreate: Checking if this a first login....");
                     mainOperations.login(mEmailET.getText().toString(), mPasswordEditText.getText().toString());
-                    Toast toast = Toast.makeText(getApplicationContext(),"You are succesfully authorized!", Toast.LENGTH_LONG);
-                    toast.show();
-                    System.out.println(mEmailET.getText().toString() + " " + mPasswordEditText.getText().toString());
+//                    Toast toast = Toast.makeText(getApplicationContext(),"You are succesfully authorized!", Toast.LENGTH_LONG);
+//                    toast.show();
+//                    System.out.println(mEmailET.getText().toString() + " " + mPasswordEditText.getText().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 Log.d(TAG, "onClick: clicked...");
-                intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                finish();
+//                intent = new Intent(LoginActivity.this, MainActivity.class);
+//                startActivity(intent);
+//                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//                finish();
                 break;
 
         }

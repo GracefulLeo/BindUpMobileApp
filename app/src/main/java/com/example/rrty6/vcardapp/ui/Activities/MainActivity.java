@@ -28,9 +28,10 @@ import com.example.rrty6.vcardapp.data.storage.model.Group;
 import com.example.rrty6.vcardapp.ui.Fragments.ContactsFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.ContactsPreviewFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.GroupCreateFragment;
+import com.example.rrty6.vcardapp.ui.Fragments.GroupsPreviewFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.GroupsFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.GroupsNoGroupsFragment;
-import com.example.rrty6.vcardapp.ui.Fragments.GroupsPreviewFragment;
+import com.example.rrty6.vcardapp.ui.Fragments.GroupsSingleContactPreviewFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.MyVCardEditFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.MyVCardPreviewFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.MyVcardCreateCardFragment;
@@ -42,7 +43,6 @@ import com.example.rrty6.vcardapp.ui.model.FragmentTag;
 import com.example.rrty6.vcardapp.utils.App;
 import com.example.rrty6.vcardapp.utils.PreferenceKeys;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MainActivity";
 
     //vars
-    public FloatingActionButton mFab;
+    private FloatingActionButton mFab;
     private boolean mToolBarNavigationListenerIsRegistered = false;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
@@ -244,10 +244,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int mExitCount = 0;
 
     //Fragments
+    private GroupsPreviewFragment mGroupsPreviewFragment;
     private GroupsFragment mGroupsFragment;
     private GroupCreateFragment mGroupCreateFragment; //++++
     private GroupsNoGroupsFragment mGroupsNoGroupsFragment; //++++
-    private GroupsPreviewFragment mGroupsPreviewFragment;
+    private GroupsSingleContactPreviewFragment mGroupsSingleContactPreviewFragment;
     private MyVcardCreateCardFragment mMyVcardCreateCardFragment; //++++
     private MyVCardEditFragment mMyVcardEditFragment;
     private MyVcardFragment mMyVcardFragment; //++++
@@ -380,36 +381,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void inflateViewGroupProfileGroups(Group group) {
-        if (mGroupsPreviewFragment != null) {
-            getSupportFragmentManager().beginTransaction().remove(mGroupsPreviewFragment).commitAllowingStateLoss();
+    public void inflateViewGroupsSingleContactPreview(Card card) {
+        if (mGroupsSingleContactPreviewFragment == null) {
+            getSupportFragmentManager().beginTransaction().remove(mGroupsSingleContactPreviewFragment).commitAllowingStateLoss();
         }
-        mGroupsPreviewFragment = new GroupsPreviewFragment();
+        Log.d(TAG, "Inflating: GroupsCreateFragment...");
+        mGroupsSingleContactPreviewFragment = new GroupsSingleContactPreviewFragment();
+
         Bundle args = new Bundle();
-        args.putLong("groups id", group.getId());
-        mGroupsPreviewFragment.setArguments(args);
+        args.putLong("card id", card.getId());
+        mGroupsSingleContactPreviewFragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.main_content_frame, mGroupsPreviewFragment, getString(R.string.tag_fragment_preview_groups));
+        transaction.add(R.id.main_content_frame, mGroupsSingleContactPreviewFragment, getString(R.string.tag_fragment_group_preview_single_contact));
         transaction.commit();
-        mFragmentTags.add(getString(R.string.tag_fragment_preview_groups));
-        mFragments.add(new FragmentTag(mGroupsPreviewFragment, getString(R.string.tag_fragment_preview_groups)));
+        mFragmentTags.add(getString(R.string.tag_fragment_group_preview_single_contact));
+        mFragments.add(new FragmentTag(mGroupsSingleContactPreviewFragment, getString(R.string.tag_fragment_group_preview_single_contact)));
 
-        setFragmentVisibility(getString(R.string.tag_fragment_preview_groups));
+
+        setFragmentVisibility(getString(R.string.tag_fragment_group_preview_single_contact));
         enableViews(true);
     }
 
     @Override
     public void inflateMyVCardFragment(Context context) {
+        //clearing fragment stack
         if (mMyVcardCreateCardFragment != null) {
             mMyVcardCreateCardFragment = null;
         }
-        if (mFragmentTags !=null ){
+        if (mMyVcardEditFragment != null) {
+            mMyVcardEditFragment = null;
+        }
+        if (mMyVcardPreviewFragment != null) {
+            mMyVcardPreviewFragment = null;
+        }
+        //clearing fragment tags for backstack
+        if (mFragmentTags != null) {
             mFragmentTags.clear();
             if (mDrawerLayout != null) {
                 enableViews(false);
             }
         }
+
         if (mMyVcardFragment == null) {
             Log.d(TAG, "Inflating: My VCard...");
             mMyVcardFragment = new MyVcardFragment(this);
@@ -534,6 +547,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         enableViews(false);
     }
 
+    @Override
+    public void inflateGroupPreviewFragment(Group group) {
+        if (mGroupsPreviewFragment == null) {
+            Log.d(TAG, "onNavigationItemSelected: Groups...");
+            mGroupsPreviewFragment = new GroupsPreviewFragment();
+
+            Bundle args = new Bundle();
+            args.putLong("group id", group.getId());
+            mGroupsPreviewFragment.setArguments(args);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.main_content_frame, mGroupsPreviewFragment, getString(R.string.tag_fragment_groups_preview));
+            transaction.commit();
+            mFragmentTags.add(getString(R.string.tag_fragment_groups_preview));
+            mFragments.add(new FragmentTag(mGroupsPreviewFragment, getString(R.string.tag_fragment_groups_preview)));
+        } else {
+            mFragmentTags.remove(getString(R.string.tag_fragment_groups_preview));
+            mFragmentTags.add(getString(R.string.tag_fragment_groups_preview));
+        }
+        setFragmentVisibility(getString(R.string.tag_fragment_groups_preview));
+        enableViews(false);
+    }
+
     private void inflateMyVCardEditFragment() {
         if (mMyVcardEditFragment == null) {
             Log.d(TAG, "onMenuItemClick: Edit My VCard...");
@@ -575,7 +611,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             hideFloatingActionButton();
         } else if (tagname.equals(getString(R.string.tag_fragment_preview_contacts))) {
             hideFloatingActionButton();
-        } else if (tagname.equals(getString(R.string.tag_fragment_preview_groups))) {
+        } else if (tagname.equals(getString(R.string.tag_fragment_groups_preview))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_group_preview_single_contact))) {
             hideFloatingActionButton();
         } else if (tagname.equals(getString(R.string.tag_fragment_groups_create))) {
             hideFloatingActionButton();

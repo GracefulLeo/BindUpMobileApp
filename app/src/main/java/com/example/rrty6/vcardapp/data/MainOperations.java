@@ -370,7 +370,18 @@ public class MainOperations {
         }
     }
 
+    public Group getGroup(Long id) {
+        Log.i(TAG, "getGroup for card: " + id);
+        if (mDataManager.isAuthorized()) {
+            return DatabaseOperation.getGroup(id);
+        } else {
+            Log.e(TAG, "User has not been authorized");
+            handler.sendEmptyMessage(userHasNotBeenAuthorized);
+            return null;
+        }
+    }
     //From DB //TODO:Change group to groupId
+
     public List<Card> getGroupContacts(Group group) {
         Log.i(TAG, "getGroupContacts for group: " + group.getId());
         if (mDataManager.isAuthorized()) {

@@ -1,29 +1,44 @@
 package com.example.rrty6.vcardapp.utils;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
+import com.example.rrty6.vcardapp.ui.Activities.LoginActivity;
+import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
+import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
+
 import static com.example.rrty6.vcardapp.utils.UIHandler.WhatValue.*;
 
 public class UIHandler extends Handler {
-    private Context context;
+    private Activity activity;
+    private IMainActivity mInterface = null;
 
-    public UIHandler(Context context) {
-        this.context = context;
+    public UIHandler(Activity activity) {
+        this.activity = activity;
+        if (activity instanceof MainActivity) {
+            mInterface = (IMainActivity) activity.getApplicationContext();
+        }
     }
+
 
     @Override
     public void handleMessage(Message msg) {
         Toast toast;
         switch (msg.what) {
             case registerStart:
-                toast = Toast.makeText(context, "MEthod have been started", Toast.LENGTH_LONG);
+                toast = Toast.makeText(activity, "MEthod have been started", Toast.LENGTH_LONG);
                 toast.show();
                 break;
             case authorizationFinished:
-                toast = Toast.makeText(context, "MEthod have been ended", Toast.LENGTH_LONG);
+                Intent intent = new Intent(activity, MainActivity.class);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                activity.finish();
+//                mInterface.inflateMyVCardFragment(activity);
+                toast = Toast.makeText(activity, "MEthod have been ended", Toast.LENGTH_LONG);
                 toast.show();
                 break;
         }

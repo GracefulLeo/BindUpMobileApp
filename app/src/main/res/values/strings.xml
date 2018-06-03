@@ -56,7 +56,7 @@
     <string name="tag_fragment_my_vcard_create_card">My VCard Create Card</string>
     <string name="tag_fragment_preview_my_vcard">My VCard Preview</string>
     <string name="tag_fragment_preview_contacts">Contacts Preview</string>
-    <string name="tag_fragment_preview_groups">Groups Preview</string>
+    <string name="tag_fragment_group_preview_single_contact">Groups Preview Of The Single Contact</string>
     <string name="tag_fragment_groups_create">Groups Create</string>
     <string name="message_for_one_more_tap_to_exit">1 more click to exit</string>
     <string name="no_vcards_share_fragment">You don\'t have any vcards to share. Create one first.</string>
@@ -66,5 +66,7 @@
     <string name="create_groups_add_user_btn">Add users</string>
     <string name="add_users_group_create_btn">Add users</string>
     <string name="created_group_message">Group has been sucessfully created!</string>
+    <string name="contacts_preview_add_to_group_btn">Add to group</string>
+    <string name="tag_fragment_groups_preview">Groups Preview</string>
 
 </resources>

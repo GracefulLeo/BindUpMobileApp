@@ -16,10 +16,8 @@ import android.view.ViewGroup;
 import com.example.rrty6.vcardapp.R;
 import com.example.rrty6.vcardapp.data.MainOperations;
 import com.example.rrty6.vcardapp.data.storage.model.Card;
-import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
 import com.example.rrty6.vcardapp.ui.adapter.ContactsRecyclerViewAdapter;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class ContactsFragment extends Fragment {
@@ -40,9 +38,6 @@ public class ContactsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.contact_fragment, container, false);
         Log.d(TAG, "onCreateView: started.");
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).hideFloatingActionButton();
-        }
         setHasOptionsMenu(true);
         mRecyclerView = view.findViewById(R.id.recycler_view_container_contacts);
         mRecyclerView.setHasFixedSize(true);
@@ -53,7 +48,8 @@ public class ContactsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.top_navigation_menu_contacts, menu);
+        menu.clear();
+        inflater.inflate(R.menu.top_navigation_menu_contacts_and_groups, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -61,10 +57,10 @@ public class ContactsFragment extends Fragment {
         if (mCards != null) {
             mCards.clear();
         }
-            mCards = new MainOperations(new Handler()).getContacts();
-        if (mContactsRecyclerViewAdapter == null) {
-            initRecyclerView();
-        }
+        mCards = new MainOperations(new Handler()).getContacts();
+//        if (mContactsRecyclerViewAdapter == null) {
+        initRecyclerView();
+//        }
     }
 
     private void initRecyclerView() {

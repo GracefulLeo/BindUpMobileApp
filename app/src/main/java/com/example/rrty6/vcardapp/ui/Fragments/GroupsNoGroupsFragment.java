@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.rrty6.vcardapp.R;
-import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
 import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 
 @SuppressLint("ValidFragment")
@@ -19,10 +18,6 @@ public class GroupsNoGroupsFragment extends Fragment {
 
     //constants
     private static final String TAG = "MyVcardFragment";
-
-    //widgets
-    //@TODO check is there necessesary to have this crap here...
-    private FloatingActionButton mFabNoGroups;
 
     //Vars
     private IMainActivity mInterface;
@@ -41,17 +36,16 @@ public class GroupsNoGroupsFragment extends Fragment {
         View view = inflater.inflate(R.layout.groups_no_groups_view, container, false);
         Log.d(TAG, "onCreateView: MyVCard fragment started ...");
         mInterface = (IMainActivity) mContext;
-        mFabNoGroups = view.findViewById(R.id.fab_groups_no_groups);
+        FloatingActionButton mFabNoGroups = view.findViewById(R.id.fab_groups_no_groups);
         mFabNoGroups.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v.getId() == R.id.fab_groups_no_groups){
+                if (v.getId() == R.id.fab_groups_no_groups) {
                     // Inflating GroupCreateFragment via interface here...
                     mInterface.inflateGroupCreateFragment(mContext);
                 }
             }
         });
-//@todo checkout, if FAB is would work in the way i expect it should ....
         return view;
     }
 }

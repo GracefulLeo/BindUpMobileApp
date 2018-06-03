@@ -17,8 +17,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -42,14 +40,13 @@ import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
 import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
 @SuppressLint("ValidFragment")
-public class GroupCreateFragment extends Fragment implements View.OnClickListener{
+public class GroupCreateFragment extends Fragment implements View.OnClickListener {
 
     //constants
 
@@ -62,7 +59,7 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
     private TextView mFragmentHeading;
     private EditText mGroupNameEditText, mGroupDescriptionEditText;
     private ImageView mGroupCreateLogoImage;
-    private Button mBtnSaveData,mBtnUploadLogoGroup, mBtnAddUsersGroup;
+    private Button mBtnSaveData, mBtnUploadLogoGroup, mBtnAddUsersGroup;
 
     //vars
 
@@ -79,14 +76,10 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.group_view_edit_and_create_fragment, container, false);
         Log.d(TAG, "onCreateView: started.");
         mInterface = (IMainActivity) mContext;
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).hideFloatingActionButton();
-        }
-        setHasOptionsMenu(true);
 
         //       Picture init!
         mGroupCreateLogoImage = view.findViewById(R.id.create_group_logo);
@@ -111,23 +104,15 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
         return view;
     }
 
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.top_navigation_menu_registration,menu);
-        setMenuVisibility(true);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
     private void init() {
         Log.d(TAG, "init: initializing " + getString(R.string.tag_fragment_preview_my_vcard));
         mFragmentHeading.setText(R.string.tag_fragment_groups);
     }
 
-    public void uploadPhoto () {
+    public void uploadPhoto() {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent,PICK_PHOTO_REQUEST);
+        startActivityForResult(photoPickerIntent, PICK_PHOTO_REQUEST);
     }
 
     @Override
@@ -151,21 +136,24 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
                 }
         }
     }
+
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.create_save_btn:
                 Log.d(TAG, "onClick: save button clicked...");
                 try {
                     View view = getActivity().getCurrentFocus();
                     if (view != null) {
-                        InputMethodManager imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
-                    group = new Group(new Logo(null,bitmap), mGroupNameEditText.getText().toString(),mGroupDescriptionEditText.getText().toString());
-                    new MainOperations(new Handler()).createGroup(group,null);
-                    Snackbar.make(v,R.string.created_group_message,Snackbar.LENGTH_LONG).setAction("Action",null).show();
-                }catch (NullPointerException e) {e.getMessage();} catch (Exception e) {
+                    group = new Group(new Logo(null, bitmap), mGroupNameEditText.getText().toString(), mGroupDescriptionEditText.getText().toString());
+                    new MainOperations(new Handler()).createGroup(group, null);
+                    Snackbar.make(v, R.string.created_group_message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                } catch (NullPointerException e) {
+                    e.getMessage();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 //inflating MyVCardFragment via interface here...
@@ -178,7 +166,7 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
             case R.id.create_add_users_groups_btn:
                 Log.d(TAG, "onClick: add users button clicked...");
                 try {
-                    group = new Group(new Logo(null,bitmap), mGroupNameEditText.getText().toString(),mGroupDescriptionEditText.getText().toString());
+                    group = new Group(new Logo(null, bitmap), mGroupNameEditText.getText().toString(), mGroupDescriptionEditText.getText().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -197,13 +185,13 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
         builder.setPositiveButton(R.string.create_groups_add_user_btn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                    System.out.println(group ==null);
-                    try {
-                        group = new Group(new Logo(null,bitmap), mGroupNameEditText.getText().toString(),mGroupDescriptionEditText.getText().toString());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    new MainOperations(new Handler()).createGroup(group,selectedContacts);
+                System.out.println(group == null);
+                try {
+                    group = new Group(new Logo(null, bitmap), mGroupNameEditText.getText().toString(), mGroupDescriptionEditText.getText().toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                new MainOperations(new Handler()).createGroup(group, selectedContacts);
             }
         });
         final Dialog dialog = builder.create();
@@ -222,7 +210,7 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
     }
 
     // Adapter for alert dialog, to work properly with collection representing
-    private class MyAdapter extends BaseAdapter implements Checkable{
+    private class MyAdapter extends BaseAdapter implements Checkable {
         @Override
         public int getCount() {
             return contacts.size();

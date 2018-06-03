@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/contacts_preview_add_to_group_button"
+        android:title="@string/contacts_preview_add_to_group_btn"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_add_to_group"/>
+
+    <item
+        android:id="@+id/contacts_preview_delete_button"
+        android:title="@string/edit"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_delete"/>
+
+
+</menu>

@@ -35,11 +35,10 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
     private static final int PICK_PHOTO_REQUEST = 1;
 
     // widgets
-    private TextView mFragmentHeading, mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView,
+    private TextView mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView,
             mAdressTextView, mPositionTextView, mWebSiteTextView, mPhoneTextView, mEmailTextView,
             mCardIdText, mSurnameText, mNameText, mMiddleNameText, mCompanyText,
             mAdressText, mPositionText, mWebSiteText, mPhoneText, mEmailText;
-    private RelativeLayout mBackArrow;
     private ImageView mCompanyLogoImage;
     private Button mBackBtn;
 
@@ -54,6 +53,7 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         if (bundle != null) {
                 mMyVcard = new MainOperations(new Handler()).getCard(bundle.getLong("card id"));
         }
+
            setHasOptionsMenu(true);
 //           Log.d(TAG, "onCreate in MyVCardPreviewFragment: got incoming bundle: " + mMyVcard.getName());
         }
@@ -68,11 +68,7 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         //      View Init!!
         mCompanyLogoImage = view.findViewById(R.id.preview_logo);
 
-        //       Picture init!
-        mBackArrow = view.findViewById(R.id.back_arrow);
-
         //        Text View INIT!!!!
-        mFragmentHeading = view.findViewById(R.id.preview_fragment_heading);
         mSurnameTextView = view.findViewById(R.id.preview_surname_text_view);
         mNameTextView = view.findViewById(R.id.preview_name_text_view);
         mMiddleNameTextView = view.findViewById(R.id.preview_middle_name_text_view);
@@ -105,7 +101,7 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.d(TAG, "onCreateOptionsMenu:  IT WORK!!!");
-        setMenuVisibility(true);
+        menu.clear();
         inflater.inflate(R.menu.top_navigation_menu_my_vcards_preview,menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -113,7 +109,6 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
     private void init() {
         Log.d(TAG, "init: initializing " + getString(R.string.tag_fragment_preview_my_vcard));
         try {
-            mFragmentHeading.setText("Preview");
             List<Phone> phones = new ArrayList<>(mMyVcard.getPhones());
             List<Email> emails = new ArrayList<>(mMyVcard.getEmails());
             //@TODO Solve the problem with emails(if emails more then one add other field, same with phones
@@ -155,6 +150,8 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
                     .with(getActivity())
                     .load(mMyVcard.getLogo().getLogoBitmap())
                     .into(mCompanyLogoImage);
+        } else if (mMyVcard.getLogo() == null) {
+            mCompanyLogoImage.setImageResource(R.drawable.ic_person);
         }
     }
 
