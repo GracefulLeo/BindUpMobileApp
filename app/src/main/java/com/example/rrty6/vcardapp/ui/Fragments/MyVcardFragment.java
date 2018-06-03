@@ -51,13 +51,13 @@ public class MyVcardFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mInterface = (IMainActivity) mContext;
         List<Card> cards = new MainOperations(new Handler()).getCardList();
         if (cards == null) {
 //             Inflate MyVCardFirstLoginFragment via interface here...
             mInterface.inflateVCardFirstLoginFragment(mContext);
         }
         View view = inflater.inflate(R.layout.my_vcard_fragment, container, false);
-        mInterface = (IMainActivity) mContext;
         Log.d(TAG, "onCreateView: MyVCard fragment started ...");
         mRecyclerView = view.findViewById(R.id.my_vcard_recycler_view_container);
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_myvcard);

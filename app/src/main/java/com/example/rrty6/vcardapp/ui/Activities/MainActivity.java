@@ -27,6 +27,7 @@ import com.example.rrty6.vcardapp.data.storage.model.Card;
 import com.example.rrty6.vcardapp.data.storage.model.Group;
 import com.example.rrty6.vcardapp.ui.Fragments.ContactsFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.ContactsPreviewFragment;
+import com.example.rrty6.vcardapp.ui.Fragments.ContactsPreviewFragmentTest;
 import com.example.rrty6.vcardapp.ui.Fragments.GroupCreateFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.GroupsPreviewFragment;
 import com.example.rrty6.vcardapp.ui.Fragments.GroupsFragment;
@@ -255,7 +256,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MyVcardFirstLoginFragment mMyVcardFirstLoginFragment; //++++
     private MyVCardPreviewFragment mMyVcardPreviewFragment;
     private ContactsFragment mContactsFragment; //++++
-    private ContactsPreviewFragment mContactsPreviewFragment;
+//    private ContactsPreviewFragment mContactsPreviewFragment;
+    private ContactsPreviewFragmentTest mContactsPreviewFragmentTest;
     private ShareFragment mShareFragment;
 
     @Override
@@ -360,21 +362,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         enableViews(true);
     }
 
+//    @Override
+//    public void inflateViewContactProfileFragment(Card card) {
+//        if (mContactsPreviewFragment != null) {
+//            getSupportFragmentManager().beginTransaction().remove(mContactsPreviewFragment).commitAllowingStateLoss();
+//        }
+//        mContactsPreviewFragment = new ContactsPreviewFragment();
+//        Bundle args = new Bundle();
+//        args.putLong("card id", card.getId());
+//        mContactsPreviewFragment.setArguments(args);
+//
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.add(R.id.main_content_frame, mContactsPreviewFragment, getString(R.string.tag_fragment_preview_contacts));
+//        transaction.commit();
+//        mFragmentTags.add(getString(R.string.tag_fragment_preview_contacts));
+//        mFragments.add(new FragmentTag(mContactsPreviewFragment, getString(R.string.tag_fragment_preview_contacts)));
+//
+//        setFragmentVisibility(getString(R.string.tag_fragment_preview_contacts));
+//        enableViews(true);
+//    }
+
     @Override
     public void inflateViewContactProfileFragment(Card card) {
-        if (mContactsPreviewFragment != null) {
-            getSupportFragmentManager().beginTransaction().remove(mContactsPreviewFragment).commitAllowingStateLoss();
+        if (mContactsPreviewFragmentTest != null) {
+            getSupportFragmentManager().beginTransaction().remove(mContactsPreviewFragmentTest).commitAllowingStateLoss();
         }
-        mContactsPreviewFragment = new ContactsPreviewFragment();
+        mContactsPreviewFragmentTest = new ContactsPreviewFragmentTest();
         Bundle args = new Bundle();
         args.putLong("card id", card.getId());
-        mContactsPreviewFragment.setArguments(args);
+        mContactsPreviewFragmentTest.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.main_content_frame, mContactsPreviewFragment, getString(R.string.tag_fragment_preview_contacts));
+        transaction.add(R.id.main_content_frame, mContactsPreviewFragmentTest, getString(R.string.tag_fragment_preview_contacts));
         transaction.commit();
         mFragmentTags.add(getString(R.string.tag_fragment_preview_contacts));
-        mFragments.add(new FragmentTag(mContactsPreviewFragment, getString(R.string.tag_fragment_preview_contacts)));
+        mFragments.add(new FragmentTag(mContactsPreviewFragmentTest, getString(R.string.tag_fragment_preview_contacts)));
 
         setFragmentVisibility(getString(R.string.tag_fragment_preview_contacts));
         enableViews(true);
