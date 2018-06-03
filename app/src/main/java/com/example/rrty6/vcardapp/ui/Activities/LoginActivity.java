@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.rrty6.vcardapp.R;
 import com.example.rrty6.vcardapp.data.MainOperations;
@@ -23,12 +26,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     // widgets
 
+    private ProgressBar mProgressBar;
+    private TextView mProgressBarMessage;
+    private RelativeLayout mProgressBarContainer;
     private Button mLogin , mRegister;
     private EditText mEmailET, mPasswordEditText;
 
     // vars
 
-    private MainOperations mainOperations = new MainOperations(new UIHandler(this));
+    private MainOperations mainOperations = new MainOperations(new UIHandler(this,null));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mRegister = findViewById(R.id.btn_registration);
         mEmailET = findViewById(R.id.email_enter_for_login);
         mPasswordEditText = findViewById(R.id.password_enter_for_login);
+        mProgressBar = findViewById(R.id.progress_bar_login);
+        mProgressBarContainer = findViewById(R.id.progress_bar_login_container);
+        mProgressBarMessage = findViewById(R.id.progress_bar_login_text_view);
 
         mLogin.setOnClickListener(this);
         mRegister.setOnClickListener(this);
@@ -92,6 +101,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //                finish();
                 break;
 
+        }
+    }
+    public void progressBarChange(boolean change) {
+        if (change) {
+            mEmailET.setFocusable(false);
+            mPasswordEditText.setFocusable(false);
+            mProgressBarContainer.bringToFront();
+            mProgressBarContainer.setBackgroundColor(getResources().getColor(R.color.mainBackgroundblur));
+            mProgressBarContainer.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            mProgressBarContainer.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     }
 }
