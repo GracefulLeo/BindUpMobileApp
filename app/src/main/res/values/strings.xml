@@ -68,5 +68,11 @@
     <string name="created_group_message">Group has been sucessfully created!</string>
     <string name="contacts_preview_add_to_group_btn">Add to group</string>
     <string name="tag_fragment_groups_preview">Groups Preview</string>
+    <string name="registration_succesfully_finished_message">Registration is successful! Now login in progress, please wait...</string>
+    <string name="login_in_message">Login... Please wait</string>
+    <string name="registration_process_message">Registration in progress. Please wait...</string>
+    <string name="registration_already_used_email_message">This email is already in use.</string>
+    <string name="login_wrong_userdata_message">Wrong email or password.</string>
+    <string name="there_is_no_internet">No internet connection. Please, turn on internet.</string>
 
 </resources>

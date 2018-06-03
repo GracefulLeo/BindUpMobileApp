@@ -66,6 +66,7 @@ public class NetworkOperations {
         }
         if (response != null) {
             if (response.code() == 200) {
+                handler.sendEmptyMessage(registerFinished);
                 signIn(handler, email, password, mainOperations);
             } else {
                 if (response.code() == 406) {

@@ -3,6 +3,7 @@
     <color name="colorPrimary">#0097A7</color>
     <color name="colorPrimaryDark">#00838F</color>
     <color name="mainBackground">#e2e2e2</color>
+    <color name="mainBackgroundblur">#7f000000</color>
     <color name="colorWhite">#e2e2e2</color>
     <color name="colorBlack">#191919</color>
 
@@ -22,6 +23,12 @@
     <color name="lightGrey">#f2f2f2 </color>
     <color name="DarkGrey">#737373 </color>
     <color name="Black">#000 </color>
+
+    <!--preloaders-->
+
+    <color name="color_preloader_start">#000000</color>
+    <color name="color_preloader_center">#000000</color>
+    <color name="color_preloader_end">#ff56a9c7</color>
 </resources>
 
 

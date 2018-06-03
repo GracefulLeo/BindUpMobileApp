@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -18,7 +17,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rrty6.vcardapp.R;
@@ -42,6 +45,7 @@ import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 import com.example.rrty6.vcardapp.ui.model.FragmentTag;
 import com.example.rrty6.vcardapp.utils.App;
 import com.example.rrty6.vcardapp.utils.PreferenceKeys;
+import com.example.rrty6.vcardapp.utils.UIHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,11 +79,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                 }
                                 Toast toast = Toast.makeText(getApplicationContext(),
-                                        "Your card " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getSurname() + " " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getName() + " " + new MainOperations(new Handler()).getCard(args.getLong("card id")).getMidlename() + " has been succesfully deleted",
+                                        "Your card " + mainOperations.getCard(args.getLong("card id")).getSurname() + " " + mainOperations.getCard(args.getLong("card id")).getName() + " " + mainOperations.getCard(args.getLong("card id")).getMidlename() + " has been succesfully deleted",
                                         Toast.LENGTH_LONG);
                                 toast.show();
-                                System.out.println(new MainOperations(new Handler()).getCard(args.getLong("card id")));
-                                new MainOperations(new Handler()).deleteCard(new MainOperations(new Handler()).getCard(args.getLong("card id")));
+                                System.out.println(mainOperations.getCard(args.getLong("card id")));
+                                mainOperations.deleteCard(mainOperations.getCard(args.getLong("card id")));
                                 dialog.dismiss();
                                 mFragmentTags.clear();
                                 enableViews(false);
@@ -124,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         mFragmentTags.clear();
 //                      mFragmentTags = new ArrayList<>();
                         cards = new ArrayList<>();
-                        cards = new MainOperations(new Handler()).getCardList();
+                        cards = mainOperations.getCardList();
                         if (cards != null && cards.size() == 0) {
                             inflateVCardFirstLoginFragment(getApplicationContext());
                             break;
@@ -139,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     case R.id.groups_item: {
                         groups = new ArrayList<>();
-                        groups = new MainOperations(new Handler()).getGroupList();
+                        groups = mainOperations.getGroupList();
                         if (groups != null) {
                             if (groups.size() == 0) {
                                 inflateGroupNoGroupsFragment(getApplicationContext());
@@ -154,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.share_item:
                         Log.d(TAG, "onNavigationItemSelected: share item clicked...");
                         cards = new ArrayList<>();
-                        cards = new MainOperations(new Handler()).getCardList();
+                        cards = mainOperations.getCardList();
                         //@TODO Play around case:"there is no vcards" . For now it's just a mock dialog
                         if (cards.isEmpty()) {
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -177,12 +181,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.log_out_item:
                         Log.d(TAG, "onNavigationItemSelected: log out item clicked...");
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        intent.putExtra("logout", false);
-                        startActivity(intent);
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                        new MainOperations(new Handler()).logout();
-                        finish();
+                        mainOperations.logout();
                         break;
                 }
                 return true;
@@ -230,7 +229,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Constants
     private static final String TAG = "MainActivity";
 
+    // Widgets
+    private ProgressBar mProgressBar;
+    private TextView mProgressBarMessage;
+    private RelativeLayout mProgressBarContainer;
+
     //vars
+    private MainOperations mainOperations;
     private FloatingActionButton mFab;
     private boolean mToolBarNavigationListenerIsRegistered = false;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -263,6 +268,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTheme(R.style.AppDefault);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mProgressBar = findViewById(R.id.progress_bar_main);
+        mProgressBarContainer = findViewById(R.id.progress_bar_main_container);
+        mProgressBarMessage = findViewById(R.id.progress_bar_main_text_view);
+
         mFab = findViewById(R.id.fab);
         mFab.setOnClickListener(this);
         Bundle bundle = new Bundle();
@@ -284,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void firstCheck() {
         cards = new ArrayList<>();
-        cards = new MainOperations(new Handler()).getCardList();
+        cards = mainOperations.getCardList();
 
         if (cards != null) {
             if (cards.size() == 0) {
@@ -436,6 +446,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.add(getString(R.string.tag_fragment_my_vcard));
         }
         setFragmentVisibility(getString(R.string.tag_fragment_my_vcard));
+        mainOperations = new MainOperations(new UIHandler(this,this));
     }
 
     @Override
@@ -700,6 +711,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void hideFloatingActionButton() {
         mFab.hide();
+    }
+
+    public void progressBarChange(boolean change) {
+        if (change) {
+            mProgressBarMessage.setText("Logout in progress...");
+            mProgressBarContainer.bringToFront();
+            mProgressBarContainer.setBackgroundColor(getResources().getColor(R.color.mainBackgroundblur));
+            mProgressBarContainer.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            mProgressBarContainer.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+
     }
 
 }
