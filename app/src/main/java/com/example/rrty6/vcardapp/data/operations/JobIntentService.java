@@ -78,7 +78,7 @@ public class JobIntentService extends IntentService {
                 case ACTION_EXECUTE_CREATE_GROUP:
                     Log.i(TAG, "ACTION_EXECUTE_CREATE_GROUP begin");
                     group = DatabaseOperation.getGroup(intent.getLongExtra(GROUP_ID, 0));
-                    isSuccess = NetworkOperations.createGroup(group, intent.getStringArrayListExtra(GROUP_CONTACTS_IDS));
+                    isSuccess = NetworkOperations.createGroup(group);
                     successIntent = new Intent(MY_BC_RCVR + ACTION_EXECUTE_CREATE_GROUP);
                     successIntent.putExtra(IS_SUCCESS, isSuccess);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(successIntent);
