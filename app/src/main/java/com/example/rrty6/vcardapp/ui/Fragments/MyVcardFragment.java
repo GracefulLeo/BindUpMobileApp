@@ -1,9 +1,13 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -26,12 +30,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
-public class MyVcardFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class MyVcardFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     //constants
     private static final String TAG = "MyVcardFragment";
-    private static final  int NUM_COLUMNS = 1;
-    
+    private static final int NUM_COLUMNS = 1;
+
     //widgets
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -47,6 +51,7 @@ public class MyVcardFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public MyVcardFragment(Context context) {
         this.mContext = context;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,16 +71,20 @@ public class MyVcardFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mRecyclerView.setHasFixedSize(true);
 
         showCards();
+        mRecyclerViewAdapter.notifyDataSetChanged();
         return view;
     }
 
     private void showCards() {
-        if (mCards != null){
+        if (mCards != null) {
             mCards.clear();
         }
-            mCards = new MainOperations(new Handler()).getCardList();
+        if (mRecyclerViewAdapter != null){
+        mRecyclerViewAdapter.notifyDataSetChanged();
+        }
+        mCards = new MainOperations(new Handler()).getCardList();
 //        if (mRecyclerViewAdapter == null){
-            initRecyclerView();
+        initRecyclerView();
 //        }
     }
 
@@ -83,11 +92,11 @@ public class MyVcardFragment extends Fragment implements SwipeRefreshLayout.OnRe
         Log.d(TAG, "initRecyclerView: initiated...");
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
-        mRecyclerViewAdapter = new MyVCardsFragmentAdapter(getActivity(),mCards);
+        mRecyclerViewAdapter = new MyVCardsFragmentAdapter(getActivity(), mCards);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
     }
 
-    public void scrollToTop(){
+    public void scrollToTop() {
         mRecyclerView.smoothScrollToPosition(0);
     }
 
@@ -97,7 +106,8 @@ public class MyVcardFragment extends Fragment implements SwipeRefreshLayout.OnRe
         onItemsLoadComplete();
     }
 
-    void onItemsLoadComplete () {
+    public void onItemsLoadComplete() {
+        Log.d(TAG, "onItemsLoadComplete: complete...");
         mRecyclerViewAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
     }
