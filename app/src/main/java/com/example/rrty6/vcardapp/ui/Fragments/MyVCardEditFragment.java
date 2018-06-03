@@ -1,8 +1,10 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
@@ -35,6 +37,7 @@ import com.example.rrty6.vcardapp.data.storage.model.Email;
 import com.example.rrty6.vcardapp.data.storage.model.Logo;
 import com.example.rrty6.vcardapp.data.storage.model.Phone;
 import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
+import com.example.rrty6.vcardapp.ui.adapter.MyVCardsFragmentAdapter;
 import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 
 import java.io.IOException;
@@ -75,6 +78,7 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bundle bundle = this.getArguments();
         if (bundle != null) {
                 mMyVcard = new MainOperations(new Handler()).getCard(bundle.getLong("card id"));
@@ -261,6 +265,7 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
                 toast.show();
                 // Inflating MyVCardFragment via interface here...
                 mInterface.inflateMyVCardFragment(mContext);
+
                 break;
         }
     }
