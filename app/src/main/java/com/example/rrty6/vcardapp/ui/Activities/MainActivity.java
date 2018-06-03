@@ -256,7 +256,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MyVCardPreviewFragment mMyVcardPreviewFragment;
     private ContactsFragment mContactsFragment; //++++
     private ContactsPreviewFragment mContactsPreviewFragment;
-//    private ContactsPreviewFragmentTest mContactsPreviewFragmentTest;
     private ShareFragment mShareFragment;
 
     @Override
