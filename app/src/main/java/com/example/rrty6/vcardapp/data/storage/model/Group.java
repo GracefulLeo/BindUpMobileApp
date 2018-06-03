@@ -106,4 +106,15 @@ public class Group {
 
 
     //endregion========================Getters======================================
+
+
+    @Override
+    public String toString() {
+        return "Group{" + "\n" +
+                "id=" + id + ",\n" +
+                "remoteId='" + remoteId + '\'' + ",\n" +
+                "name='" + name + '\'' + ",\n" +
+                "description='" + description + '\'' + ",\n" +
+                '}';
+    }
 }

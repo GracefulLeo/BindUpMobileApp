@@ -315,7 +315,7 @@ public class NetworkOperations {
                         e.printStackTrace();
                     }
                     for (String s : existedGroups) {
-                        groups.add(getGroup(s));
+                        groups.add(dowloadGroup(s));
                     }
                 } else {
                     Log.e(TAG, "Null response body" + response.code() + "  " + response.message());
@@ -733,8 +733,8 @@ public class NetworkOperations {
         return card;
     }
 
-    private Group getGroup(String id) {
-        Log.i(TAG, "getGroup start");
+    private Group dowloadGroup(String id) {
+        Log.i(TAG, "dowloadGroup start");
         Call<GetGroupRes> call = mDataManager.getGroup(id);
         Group group = null;
         Response<GetGroupRes> response = null;
