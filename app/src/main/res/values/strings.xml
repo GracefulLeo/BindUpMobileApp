@@ -74,5 +74,8 @@
     <string name="registration_already_used_email_message">This email is already in use.</string>
     <string name="login_wrong_userdata_message">Wrong email or password.</string>
     <string name="there_is_no_internet">No internet connection. Please, turn on internet.</string>
+    <string name="myvcard_the_card_is_deleted_message">Card is deleted</string>
+    <string name="create_myvcard_save_btn">Save</string>
+    <string name="create_myvcard_upload_btn">Upload Logo</string>
 
 </resources>

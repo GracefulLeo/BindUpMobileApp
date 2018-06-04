@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -25,7 +26,7 @@ import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
-public class GroupsFragment extends Fragment {
+public class GroupsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     //constants
     private static final int NUM_COLUMNS = 1;
@@ -35,6 +36,7 @@ public class GroupsFragment extends Fragment {
     private RecyclerView mRecyclerView;
 
     //vars
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private GroupsRecyclerViewAdapter mGroupsRecyclerViewAdapter;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private List<Group> mGroups;
@@ -55,6 +57,9 @@ public class GroupsFragment extends Fragment {
         Log.d(TAG, "onCreateView: started.");
 
         mRecyclerView = view.findViewById(R.id.recycler_view_container_groups);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_groups);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setHasFixedSize(true);
         mFab = view.findViewById(R.id.fab_groups);
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -99,5 +104,17 @@ public class GroupsFragment extends Fragment {
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mGroupsRecyclerViewAdapter = new GroupsRecyclerViewAdapter(getActivity(), mGroups);
         mRecyclerView.setAdapter(mGroupsRecyclerViewAdapter);
+    }
+
+    @Override
+    public void onRefresh() {
+        getGroups();
+        onItemsLoadComplete();
+    }
+
+    public void onItemsLoadComplete() {
+        Log.d(TAG, "onItemsLoadComplete: complete...");
+        mGroupsRecyclerViewAdapter.notifyDataSetChanged();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

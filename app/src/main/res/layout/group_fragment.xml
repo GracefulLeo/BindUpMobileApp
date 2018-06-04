@@ -17,15 +17,18 @@
         android:layout_marginRight="@dimen/fab_margin"
         app:backgroundTint="@color/colorPrimary" />
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swipe_refresh_layout_groups">
+
           <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/recycler_view_container_groups"
             android:orientation="vertical">
-
-
-
         </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
 

@@ -191,8 +191,6 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.preview_btn_back:
-                break;
             case R.id.fab_call_contacts_preview:
                 phone(mPhoneText.getText().toString());
                 break;

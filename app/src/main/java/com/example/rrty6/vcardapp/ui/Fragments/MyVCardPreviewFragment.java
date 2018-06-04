@@ -1,5 +1,7 @@
 package com.example.rrty6.vcardapp.ui.Fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rrty6.vcardapp.GlideApp;
 import com.example.rrty6.vcardapp.R;
@@ -28,6 +31,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressLint("ValidFragment")
 public class MyVCardPreviewFragment extends Fragment implements View.OnClickListener{
 
     // constants
@@ -45,6 +49,12 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
     // vars
     private Card mMyVcard;
     private IMainActivity mInterface;
+    private Context mContext;
+
+    @SuppressLint("ValidFragment")
+    public MyVCardPreviewFragment(Context context) {
+        this.mContext = context;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,7 +63,6 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         if (bundle != null) {
                 mMyVcard = new MainOperations(new Handler()).getCard(bundle.getLong("card id"));
         }
-
            setHasOptionsMenu(true);
 //           Log.d(TAG, "onCreate in MyVCardPreviewFragment: got incoming bundle: " + mMyVcard.getName());
         }
@@ -63,6 +72,17 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState){
         final View view = inflater.inflate(R.layout.vcard_view_for_preview_fragment, container, false);
         Log.d(TAG, "onCreateView: started.");
+        if (mInterface == null){
+            mInterface = (IMainActivity) mContext;
+        }
+        System.out.println(mMyVcard == null);
+        if (mMyVcard == null) {
+//            mInterface = (IMainActivity) mContext;
+            mInterface.inflateMyVCardFragment(mContext);
+            Toast toast = Toast.makeText(getActivity(),R.string.myvcard_the_card_is_deleted_message, Toast.LENGTH_SHORT);
+            toast.show();
+            return null;
+        }
 //        ((MainActivity)getActivity()).hideFloatingActionButton();
 
         //      View Init!!
@@ -92,7 +112,7 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         mEmailText = view.findViewById(R.id.preview_email_text);
 
         //          Buttons INIT!!
-        mBackBtn = view.findViewById(R.id.preview_btn_back);
+
 
         init();
         return view;
@@ -157,11 +177,5 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.preview_btn_back:
-                // set some action on this button
-                //@TODO organize backstack already!!!
-                break;
-        }
     }
 }

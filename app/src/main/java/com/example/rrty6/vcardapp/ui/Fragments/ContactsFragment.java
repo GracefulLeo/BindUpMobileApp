@@ -3,6 +3,7 @@ package com.example.rrty6.vcardapp.ui.Fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -20,12 +21,13 @@ import com.example.rrty6.vcardapp.ui.adapter.ContactsRecyclerViewAdapter;
 
 import java.util.List;
 
-public class ContactsFragment extends Fragment {
+public class ContactsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     //constants
     private static final int NUM_COLUMNS = 1;
     private static final String TAG = "ContactsFragment";
 
     //widgets
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
 
     //vars
@@ -40,6 +42,9 @@ public class ContactsFragment extends Fragment {
         Log.d(TAG, "onCreateView: started.");
         setHasOptionsMenu(true);
         mRecyclerView = view.findViewById(R.id.recycler_view_container_contacts);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_contacts);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setHasFixedSize(true);
 
         getContacts();
@@ -58,9 +63,7 @@ public class ContactsFragment extends Fragment {
             mCards.clear();
         }
         mCards = new MainOperations(new Handler()).getContacts();
-//        if (mContactsRecyclerViewAdapter == null) {
         initRecyclerView();
-//        }
     }
 
     private void initRecyclerView() {
@@ -69,5 +72,17 @@ public class ContactsFragment extends Fragment {
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mContactsRecyclerViewAdapter = new ContactsRecyclerViewAdapter(getActivity(), mCards);
         mRecyclerView.setAdapter(mContactsRecyclerViewAdapter);
+    }
+
+    @Override
+    public void onRefresh() {
+        getContacts();
+        onItemsLoadComplete();
+    }
+
+    public void onItemsLoadComplete() {
+        Log.d(TAG, "onItemsLoadComplete: complete...");
+        mContactsRecyclerViewAdapter.notifyDataSetChanged();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

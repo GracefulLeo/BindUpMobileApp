@@ -463,10 +463,20 @@
 
                         <Button
                             android:id="@+id/edit_btn_update"
-                            android:layout_width="wrap_content"
+                            android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:background="@color/colorPrimary"
                             android:text="UPDATE"
+                            android:elevation="5dp"/>
+
+                        <Button
+                            android:id="@+id/edit_btn_change_logo"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:background="@color/colorPrimary"
+                            android:layout_toRightOf="@id/edit_btn_update"
+                            android:text="Change Logo"
                             android:elevation="5dp"/>
                     </RelativeLayout>
                 </RelativeLayout>

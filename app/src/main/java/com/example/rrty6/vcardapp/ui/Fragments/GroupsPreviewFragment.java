@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -22,13 +23,14 @@ import com.example.rrty6.vcardapp.ui.adapter.ContactsRecyclerViewAdapter;
 
 import java.util.List;
 
-public class GroupsPreviewFragment extends Fragment {
+public class GroupsPreviewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     //constants
     private static final int NUM_COLUMNS = 1;
     private static final String TAG = "ContactsFragment";
 
     //widgets
     private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     //vars
     private ContactsRecyclerViewAdapter mContactsRecyclerViewAdapter;
@@ -53,6 +55,9 @@ public class GroupsPreviewFragment extends Fragment {
         Log.d(TAG, "onCreateView: started.");
         setHasOptionsMenu(true);
         mRecyclerView = view.findViewById(R.id.recycler_view_container_contacts);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_contacts);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setHasFixedSize(true);
 
         getGroupContacts();
@@ -80,5 +85,17 @@ public class GroupsPreviewFragment extends Fragment {
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mContactsRecyclerViewAdapter = new ContactsRecyclerViewAdapter(getActivity(), mCards);
         mRecyclerView.setAdapter(mContactsRecyclerViewAdapter);
+    }
+
+    @Override
+    public void onRefresh() {
+        getGroupContacts();
+        onItemsLoadComplete();
+    }
+
+    public void onItemsLoadComplete() {
+        Log.d(TAG, "onItemsLoadComplete: complete...");
+        mContactsRecyclerViewAdapter.notifyDataSetChanged();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

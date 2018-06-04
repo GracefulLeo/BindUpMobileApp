@@ -354,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mMyVcardPreviewFragment != null) {
             getSupportFragmentManager().beginTransaction().remove(mMyVcardPreviewFragment).commitAllowingStateLoss();
         }
-        mMyVcardPreviewFragment = new MyVCardPreviewFragment();
+        mMyVcardPreviewFragment = new MyVCardPreviewFragment(this);
 
         args.clear();
         args.putLong("card id", card.getId());
@@ -436,6 +436,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void inflateMyVCardFragment(Context context) {
         //clearing fragment stack
+        System.out.println("BLOP!");
         if (mMyVcardCreateCardFragment != null) {
             mMyVcardCreateCardFragment = null;
         }

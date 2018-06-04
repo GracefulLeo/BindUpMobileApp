@@ -60,7 +60,7 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
     private EditText mCardIdText, mSurnameText, mNameText, mMiddleNameText, mCompanyText,
             mAdressText, mPositionText, mWebSiteText, mPhoneText, mEmailText;
     private ImageView mCompanyLogoImage;
-    private Button mUpdateBtn;
+    private Button mUpdateBtn, mChangeLogoBtn;
     private Bitmap bitmap = null;
     private Bitmap mCardBitmapForView;
     private CardView mCardView;
@@ -122,7 +122,9 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
 
         //          Buttons INIT!!
         mUpdateBtn = view.findViewById(R.id.edit_btn_update);
+        mChangeLogoBtn = view.findViewById(R.id.edit_btn_change_logo);
         mUpdateBtn.setOnClickListener(this);
+        mChangeLogoBtn.setOnClickListener(this);
 
         init();
         return view;
@@ -184,10 +186,11 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
                     .with(getActivity())
                     .load(mMyVcard.getLogo().getLogoBitmap())
                     .into(mCompanyLogoImage);
+        } else if (mMyVcard.getLogo() == null) {
+            mCompanyLogoImage.setImageResource(R.drawable.ic_person);
         }
     }
 
-    //@TODO are it needed here???
     public void uploadPhoto () {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
@@ -265,8 +268,10 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
                 toast.show();
                 // Inflating MyVCardFragment via interface here...
                 mInterface.inflateMyVCardFragment(mContext);
-
                 break;
+            case R.id.edit_btn_change_logo:
+                Log.d(TAG, "onClick: clicked upload button...");
+                uploadPhoto();
         }
     }
 }

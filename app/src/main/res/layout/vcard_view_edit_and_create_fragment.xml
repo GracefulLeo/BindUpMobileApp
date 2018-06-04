@@ -222,39 +222,6 @@
 
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize">
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true">
-
-                        <EditText
-                            android:id="@+id/create_logo_edit_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:background="@null"
-                            android:gravity="center_horizontal"
-                            android:hint="Upload logo of your company"
-                            android:textColor="@color/Black"
-                            android:textSize="16sp"
-                            />
-
-                        <Button
-                            android:id="@+id/create_upload_btn_my_vcard"
-                            android:layout_marginLeft="10dp"
-                            android:layout_height="30dp"
-                            android:layout_width="30dp"
-                            android:layout_toRightOf="@+id/create_logo_edit_text" />
-
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
@@ -499,10 +466,19 @@
 
                         <Button
                             android:id="@+id/create_save_btn"
-                            android:layout_width="wrap_content"
+                            android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:background="@color/colorPrimary"
-                            android:text="SAVE"
+                            android:text="@string/create_myvcard_save_btn"
+                            android:elevation="5dp"/>
+                        <Button
+                            android:id="@+id/create_upload_btn_my_vcard"
+                            android:layout_marginLeft="15dp"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:background="@color/colorPrimary"
+                            android:layout_toRightOf="@+id/create_save_btn"
+                            android:text="@string/create_myvcard_upload_btn"
                             android:elevation="5dp"/>
                     </RelativeLayout>
                 </RelativeLayout>
