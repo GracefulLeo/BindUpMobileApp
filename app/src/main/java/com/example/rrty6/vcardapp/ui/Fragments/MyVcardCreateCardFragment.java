@@ -35,6 +35,7 @@ import com.example.rrty6.vcardapp.data.storage.model.Logo;
 import com.example.rrty6.vcardapp.data.storage.model.Phone;
 import com.example.rrty6.vcardapp.ui.Activities.MainActivity;
 import com.example.rrty6.vcardapp.ui.interfaces.IMainActivity;
+import com.example.rrty6.vcardapp.utils.BitmapHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -152,6 +153,7 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        bitmap = BitmapHelper.getScaledBitmap(bitmap, 125, 60);
                         GlideApp
                                 .with(getActivity())
                                 .load(bitmap)
