@@ -315,7 +315,7 @@ public class NetworkOperations {
                         e.printStackTrace();
                     }
                     for (String s : existedGroups) {
-                        groups.add(getGroup(s));
+                        groups.add(dowloadGroup(s));
                     }
                 } else {
                     Log.e(TAG, "Null response body" + response.code() + "  " + response.message());
@@ -527,9 +527,13 @@ public class NetworkOperations {
         return false;
     }
 
-    public static boolean createGroup(Group group, List<String> contactsIds) {
+    public static boolean createGroup(Group group) {
         Log.i(TAG, "createGroup start");
-        CreateGroupReq createGroupReq = new CreateGroupReq(group, contactsIds);
+        List<String> contacts = new ArrayList<>();
+        for (Card card : DatabaseOperation.getGroupContacts(group)) {
+            contacts.add(card.getRemoteId());
+        }
+        CreateGroupReq createGroupReq = new CreateGroupReq(group, contacts);
         Call<CreateGroupRes> call = mDataManager.sendGroup(createGroupReq);
         Response<CreateGroupRes> response = null;
         try {
@@ -729,8 +733,8 @@ public class NetworkOperations {
         return card;
     }
 
-    private Group getGroup(String id) {
-        Log.i(TAG, "getGroup start");
+    private Group dowloadGroup(String id) {
+        Log.i(TAG, "dowloadGroup start");
         Call<GetGroupRes> call = mDataManager.getGroup(id);
         Group group = null;
         Response<GetGroupRes> response = null;

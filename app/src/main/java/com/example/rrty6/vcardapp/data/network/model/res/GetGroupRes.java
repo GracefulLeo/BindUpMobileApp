@@ -19,7 +19,7 @@ public class GetGroupRes {
     @SerializedName("description")
     @Expose
     private String description;
-    @SerializedName("group_name")
+    @SerializedName("name")
     @Expose
     private String groupName;
     @SerializedName("field_logotype")

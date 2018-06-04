@@ -12,7 +12,7 @@ public class CreateGroupReq {
     @SerializedName("type")
     @Expose
     public String type;
-    @SerializedName("group_name")
+    @SerializedName("name")
     @Expose
     public String groupName;
     @SerializedName("description")
