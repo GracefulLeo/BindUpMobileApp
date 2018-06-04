@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rrty6.vcardapp.GlideApp;
 import com.example.rrty6.vcardapp.R;
@@ -168,47 +169,57 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
         switch (v.getId()) {
             case R.id.create_save_btn:
                 Log.d(TAG, "onClick: save button clicked...");
-                try {
-                    View view = getActivity().getCurrentFocus();
-                    if (view != null) {
-                        InputMethodManager imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    }
-                    //@TODO Solve the problem with emails(if emails more then one add other field, same with phones
-                    mSurnameTextView.setText(mSurnameEditText.getText().toString());
-                    mNameTextView.setText(mNameEditText.getText().toString());
-                    mMiddleNameTextView.setText(mMiddleNameEditText.getText().toString());
-                    mCompanyNameTextView.setText(mCompanyEditText.getText().toString());
-                    mAdressTextView.setText(mAdressEditText.getText().toString());
-                    mPositionTextView.setText(mPositionEditText.getText().toString());
-                    mWebSiteTextView.setText(mWebSiteEditText.getText().toString());
-                    mPhoneTextView.setText(mPhoneEditText.getText().toString());
-                    String s = mPhoneEditText.getText().toString();
-                    if (s != null && s.trim().length() > 0) {
-                        phones = new ArrayList<>();
-                        phones.add(new Phone(s.trim()));
-                    }
-                    s = null;
-                    s = mEmailEditText.getText().toString();
-                    if (s != null && s.trim().length() > 0) {
-                        emails = new ArrayList<>();
-                        emails.add(new Email(s.trim()));
-                    }
-                    mEmailTextView.setText(mEmailEditText.getText().toString());
-                    loadView(mCardView);
-                    Card userCard = new Card(new Logo(null, bitmap), mCardIdEditText.getText().toString(),
-                            mNameEditText.getText().toString(), mSurnameEditText.getText().toString(),
-                            mMiddleNameEditText.getText().toString(),
-                            mCompanyEditText.getText().toString(), mAdressEditText.getText().toString(),
-                            mPositionEditText.getText().toString(), phones, emails, mWebSiteEditText.getText().toString(), null, new Base(mCardBitmapForView));
-//@TODO fix the field "SITE" above!!!!
-                    new MainOperations(new Handler()).createCard(userCard);
-                    Snackbar.make(v, "Saved", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                if (!mNameEditText.getText().toString().trim().isEmpty()) {
+                    if (!mSurnameEditText.getText().toString().trim().isEmpty()) {
+                        try {
+                            View view = getActivity().getCurrentFocus();
+                            if (view != null) {
+                                InputMethodManager imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                            }
+                            //@TODO Solve the problem with emails(if emails more then one add other field, same with phones
+                            mSurnameTextView.setText(mSurnameEditText.getText().toString());
+                            mNameTextView.setText(mNameEditText.getText().toString());
+                            mMiddleNameTextView.setText(mMiddleNameEditText.getText().toString());
+                            mCompanyNameTextView.setText(mCompanyEditText.getText().toString());
+                            mAdressTextView.setText(mAdressEditText.getText().toString());
+                            mPositionTextView.setText(mPositionEditText.getText().toString());
+                            mWebSiteTextView.setText(mWebSiteEditText.getText().toString());
+                            mPhoneTextView.setText(mPhoneEditText.getText().toString());
+                            String s = mPhoneEditText.getText().toString();
+                            if (s != null && s.trim().length() > 0) {
+                                phones = new ArrayList<>();
+                                phones.add(new Phone(s.trim()));
+                            }
+                            s = null;
+                            s = mEmailEditText.getText().toString();
+                            if (s != null && s.trim().length() > 0) {
+                                emails = new ArrayList<>();
+                                emails.add(new Email(s.trim()));
+                            }
+                            mEmailTextView.setText(mEmailEditText.getText().toString());
+                            loadView(mCardView);
+                            Card userCard = new Card(new Logo(null, bitmap), mCardIdEditText.getText().toString(),
+                                    mNameEditText.getText().toString(), mSurnameEditText.getText().toString(),
+                                    mMiddleNameEditText.getText().toString(),
+                                    mCompanyEditText.getText().toString(), mAdressEditText.getText().toString(),
+                                    mPositionEditText.getText().toString(), phones, emails, mWebSiteEditText.getText().toString(), null, new Base(mCardBitmapForView));
+        //@TODO fix the field "SITE" above!!!!
+                            new MainOperations(new Handler()).createCard(userCard);
+                            Snackbar.make(v, "Saved", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
-                } catch (NullPointerException e) {
-                    e.getMessage();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        } catch (NullPointerException e) {
+                            e.getMessage();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Field surname is required", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Field name is required", Toast.LENGTH_SHORT).show();
+                    break;
                 }
 
                 // Inflating MyVCardFragment via interface here...
