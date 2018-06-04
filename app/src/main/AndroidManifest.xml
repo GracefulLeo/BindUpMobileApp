@@ -28,13 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme">
 
-        <activity android:name=".ui.Activities.MainActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
+        <activity android:name=".ui.Activities.MainActivity"/>
         <activity android:name=".ui.Activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,9 +37,7 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.Activities.RegisterActivity">
-        </activity>
+        <activity android:name=".ui.Activities.RegisterActivity"/>
 
         <service
             android:name="com.example.rrty6.vcardapp.data.operations.MyJobService"
