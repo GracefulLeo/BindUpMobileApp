@@ -431,43 +431,59 @@ public class NetworkOperations {
 
     public static boolean deleteCard(final String remoteId) {
         Log.i(TAG, "deleteCard start");
-        Call<GetUserRes> call = mDataManager.getUser();
-        Response<GetUserRes> response = null;
+        Call<ResponseBody> call1 = mDataManager.deleteCard(remoteId);
+        Response<ResponseBody> responseBody = null;
         try {
-            response = call.execute();
+            responseBody = call1.execute();
         } catch (IOException e) {
             Log.e(TAG, "Call.execute", e);
             return false;
         }
-        if (response != null) {
-            if (response.code() == 200) {
-                if (response.body() != null) {
-                    List<SimpleUnd> existedCards = new ArrayList<>();
-                    try {
-                        List list = (List) ((Map) response.body().getFieldMyVcards())
-                                .get(((Map) response.body().getFieldMyVcards())
-                                        .keySet().iterator().next());
-                        for (int i = 0; i < list.size(); i++) {
-                            Map o = (Map) list.get(i);
-                            Set set = o.keySet();
-                            String s = o.get(set.iterator().next()).toString();
-                            existedCards.add(new SimpleUnd(s));
+        if (responseBody != null) {
+            if (responseBody.code() == 200) {
+                Call<GetUserRes> call = mDataManager.getUser();
+                Response<GetUserRes> response = null;
+                try {
+                    response = call.execute();
+                } catch (IOException e) {
+                    Log.e(TAG, "Call.execute", e);
+                    return false;
+                }
+                if (response != null) {
+                    if (response.code() == 200) {
+                        if (response.body() != null) {
+                            List<SimpleUnd> existedCards = new ArrayList<>();
+                            try {
+                                List list = (List) ((Map) response.body().getFieldMyVcards())
+                                        .get(((Map) response.body().getFieldMyVcards())
+                                                .keySet().iterator().next());
+                                for (int i = 0; i < list.size(); i++) {
+                                    Map o = (Map) list.get(i);
+                                    Set set = o.keySet();
+                                    String s = o.get(set.iterator().next()).toString();
+                                    existedCards.add(new SimpleUnd(s));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            for (int i = 0; i < existedCards.size(); i++) {
+                                if (existedCards.get(i).getTargetId().equals(remoteId)) {
+                                    existedCards.remove(i);
+                                    break;
+                                }
+                            }
+                            return updateUser(new UpdateCardsReq(existedCards));
+                        } else {
+                            Log.e(TAG, "Null response body" + response.code() + "  " + response.message());
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else {
+                        Log.e(TAG, "Unchecked response code" + response.code() + "  " + response.message());
                     }
-                    for (int i = 0; i < existedCards.size(); i++) {
-                        if (existedCards.get(i).getTargetId().equals(remoteId)) {
-                            existedCards.remove(i);
-                            break;
-                        }
-                    }
-                    return updateUser(new UpdateCardsReq(existedCards));
                 } else {
-                    Log.e(TAG, "Null response body" + response.code() + "  " + response.message());
+                    Log.e(TAG, "Null response");
                 }
             } else {
-                Log.e(TAG, "Unchecked response code" + response.code() + "  " + response.message());
+                Log.e(TAG, "Unchecked response code" + responseBody.code() + "  " + responseBody.message());
             }
         } else {
             Log.e(TAG, "Null response");

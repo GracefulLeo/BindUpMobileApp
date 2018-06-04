@@ -244,6 +244,15 @@ public class DataManager {
             return null;
         }
     }
+
+    public Call<ResponseBody> deleteCard(String cardId) {
+        if (isAuthorized()) {
+            return mRestService.deleteCard(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), cardId);
+        } else {
+            return null;
+        }
+    }
+
     public Call<ResponseBody> updateGroup(UpdateGroupReq req) {
         if (isAuthorized()) {
             return mRestService.updateGroup(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), req.getId(), req);

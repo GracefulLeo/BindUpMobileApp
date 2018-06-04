@@ -26,6 +26,7 @@ import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -56,6 +57,15 @@ public interface RestService {
     @Headers("Content-Type: application/json")
     @POST("entity_vcard")
     Call<CreateCardRes> createCard(@Header("Cookie") String cookie, @Header("X-CSRF-TOKEN") String token, @Body CreateCardReq req);
+
+    @Headers("Content-Type: application/json")
+    @PUT("entity_vcard/{nid}")
+    Call<ResponseBody> updateCard(@Header("Cookie") String cookie, @Header("X-CSRF-TOKEN") String token, @Path("nid") String cardId,
+                                  @Body UpdateCardReq req);
+
+    @Headers("Content-Type: application/json")
+    @DELETE("entity_vcard/{nid}")
+    Call<ResponseBody> deleteCard(@Header("Cookie") String cookie, @Header("X-CSRF-TOKEN") String token, @Path("nid") String cardId);
 
     @Headers("Content-Type: application/json")
     @POST("entity_group")
@@ -99,11 +109,6 @@ public interface RestService {
     @PUT("entity_user/{uid}")
     Call<ResponseBody> updateUser(@Header("Cookie") String cookie, @Header("X-CSRF-TOKEN") String token, @Path("uid") String userId,
                                   @Body UpdateGroupsReq req);
-
-    @Headers("Content-Type: application/json")
-    @PUT("entity_vcard/{nid}")
-    Call<ResponseBody> updateCard(@Header("Cookie") String cookie, @Header("X-CSRF-TOKEN") String token, @Path("nid") String cardId,
-                                   @Body UpdateCardReq req);
 
     @Headers("Content-Type: application/json")
     @PUT("entity_group/{fid}")
