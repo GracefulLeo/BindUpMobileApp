@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Toolbar initizialisation ...
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.app_name);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -640,11 +639,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             hideFloatingActionButton();
         } else if (tagname.equals(getString(R.string.tag_fragment_my_vcard_edit))) {
             hideFloatingActionButton();
-        } else if (tagname.equals(getString(R.string.tag_fragment_my_vcard_edit))) {
-            hideFloatingActionButton();
         } else if (tagname.equals(getString(R.string.tag_fragment_share))) {
             hideFloatingActionButton();
         }
+
+        // Toolbar Naming
+        // MYVCARD
+        if (tagname.equals(getString(R.string.tag_fragment_my_vcard))) {
+            this.setTitle(R.string.toolbar_name_MyVcards);
+        } else if (tagname.equals(getString(R.string.tag_fragment_preview_my_vcard))) {
+            this.setTitle(R.string.toolbar_name_MyVcards_preview);
+        } else if (tagname.equals(getString(R.string.tag_fragment_my_vcard_create_card))) {
+            this.setTitle(R.string.toolbar_name_MyVcards_create);
+        } else if (tagname.equals(getString(R.string.tag_fragment_my_vcard_edit))) {
+            this.setTitle(R.string.toolbar_name_MyVcards_edit);
+        } else if (tagname.equals(getString(R.string.tag_fragment_my_vcard_first_login))) {
+
+        }
+        //CONTACT
+        else if (tagname.equals(getString(R.string.tag_fragment_contacts))) {
+            this.setTitle(R.string.toolbar_name_Contacts);
+        } else if (tagname.equals(getString(R.string.tag_fragment_preview_contacts))) {
+            this.setTitle(R.string.toolbar_name_Contacts_preview);
+        }
+        //GROUP
+        else if (tagname.equals(getString(R.string.tag_fragment_groups))) {
+            this.setTitle(R.string.toolbar_name_Groups);
+        } else if (tagname.equals(getString(R.string.tag_fragment_groups_preview))) {
+            this.setTitle(R.string.toolbar_name_Groups_preview);
+        } else if (tagname.equals(getString(R.string.tag_fragment_groups_no_groups))) {
+            this.setTitle(R.string.toolbar_name_Groups);
+        } else if (tagname.equals(getString(R.string.tag_fragment_groups_create))) {
+            this.setTitle(R.string.toolbar_name_Groups_create);
+        } else if (tagname.equals(getString(R.string.tag_fragment_group_preview_single_contact))) {
+            this.setTitle(R.string.toolbar_name_Contacts_preview);
+        }
+        //SHARE
+        else if (tagname.equals(getString(R.string.tag_fragment_share))) {
+            this.setTitle(R.string.toolbar_name_Share);
+        }
+
+
+
 
         // Show FAB
 
