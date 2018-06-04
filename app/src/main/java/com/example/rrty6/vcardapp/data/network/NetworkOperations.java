@@ -403,7 +403,7 @@ public class NetworkOperations {
         Log.i(TAG, "updateCard start");
         if (card.isMy()) {
             if (card.getRemoteId() != null && !card.getRemoteId().isEmpty()) {
-                if (card.getLogo() != null) {
+                if (card.getLogo() != null && card.getLogo().getFid() == null) {
                     createLogo(card.getLogo(), Filepath.VCARDS);
                 }
                 UpdateCardReq updateCardReq = new UpdateCardReq(card);
@@ -592,7 +592,7 @@ public class NetworkOperations {
         for (Card card : DatabaseOperation.getGroupContacts(group)) {
             contacts.add(card.getRemoteId());
         }
-        UpdateGroupReq updateGroupReq = new UpdateGroupReq(group.getRemoteId() , contacts);
+        UpdateGroupReq updateGroupReq = new UpdateGroupReq(group.getRemoteId(), contacts);
         Call<ResponseBody> call = mDataManager.updateGroup(updateGroupReq);
         Response<ResponseBody> response = null;
         try {
