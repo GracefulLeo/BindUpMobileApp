@@ -57,9 +57,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
         }
         else if(mMyContacts.get(position).getLogo() == null) {
             holder.mCompanyLogo.setImageResource(R.drawable.ic_person);
-            System.out.println("empty...");
         }
-        System.out.println(mMyContacts.get(position).getSurname() == null);
         holder.mSurname.setText(mMyContacts.get(position).getSurname());
         holder.mName.setText(mMyContacts.get(position).getName());
         holder.mContactsPreviewContainer.setOnClickListener(new View.OnClickListener() {

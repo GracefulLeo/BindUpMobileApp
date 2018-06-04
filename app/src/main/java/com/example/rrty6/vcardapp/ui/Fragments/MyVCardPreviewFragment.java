@@ -75,7 +75,6 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         if (mInterface == null){
             mInterface = (IMainActivity) mContext;
         }
-        System.out.println(mMyVcard == null);
         if (mMyVcard == null) {
 //            mInterface = (IMainActivity) mContext;
             mInterface.inflateMyVCardFragment(mContext);

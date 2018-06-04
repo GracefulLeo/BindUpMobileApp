@@ -55,7 +55,6 @@ public class MyVCardsFragmentAdapter extends RecyclerView.Adapter<MyVCardsFragme
                     .into(holder.mCompanyLogo);
         }else if(mMyVcards.get(position).getLogo() == null) {
             holder.mCompanyLogo.setImageResource(R.drawable.ic_person);
-            System.out.println("empty...");
         }
         holder.mSurname.setText(mMyVcards.get(position).getSurname());
         holder.mName.setText(mMyVcards.get(position).getName());

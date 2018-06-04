@@ -90,7 +90,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     mainOperations.login(mEmailET.getText().toString(), mPasswordEditText.getText().toString());
 //                    Toast toast = Toast.makeText(getApplicationContext(),"You are succesfully authorized!", Toast.LENGTH_LONG);
 //                    toast.show();
-//                    System.out.println(mEmailET.getText().toString() + " " + mPasswordEditText.getText().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

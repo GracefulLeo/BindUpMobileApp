@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         "Your card " + mainOperations.getCard(args.getLong("card id")).getSurname() + " " + mainOperations.getCard(args.getLong("card id")).getName() + " " + mainOperations.getCard(args.getLong("card id")).getMidlename() + " has been succesfully deleted",
                                         Toast.LENGTH_LONG);
                                 toast.show();
-                                System.out.println(mainOperations.getCard(args.getLong("card id")));
                                 mainOperations.deleteCard(mainOperations.getCard(args.getLong("card id")));
                                 dialog.dismiss();
                                 mFragmentTags.clear();
@@ -416,7 +415,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void inflateMyVCardFragment(Context context) {
         //clearing fragment stack
-        System.out.println("BLOP!");
         if (mMyVcardCreateCardFragment != null) {
             mMyVcardCreateCardFragment = null;
         }

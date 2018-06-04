@@ -115,7 +115,6 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         modeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(cards.get(position));
                 Log.d(TAG, "onClick: clicked...");
                 mMyVcard = cards.get(position);
                 dialog.dismiss();
@@ -132,10 +131,8 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         } catch (Exception e) {
             arrayAdapter = PeerAdapter.getInstance();
         }
-        System.out.println(arrayAdapter == null);
         listViewPeers.setAdapter(arrayAdapter);
         listViewPeers.setOnItemClickListener((AdapterView.OnItemClickListener) arrayAdapter);
-        System.out.println(mMyVcard);
         initDiscover();
     }
 

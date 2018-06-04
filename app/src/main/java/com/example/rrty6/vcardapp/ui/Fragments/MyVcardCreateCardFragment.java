@@ -222,7 +222,6 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
     public void loadView(CardView cardView) {
         cardView.setDrawingCacheEnabled(true);
         mCardBitmapForView = loadBitmapFromView(cardView);
-        System.out.println(mCardBitmapForView == null);
     }
 
     public Bitmap loadBitmapFromView(View v) {

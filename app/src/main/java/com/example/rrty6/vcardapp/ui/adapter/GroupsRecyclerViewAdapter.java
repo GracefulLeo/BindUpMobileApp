@@ -52,7 +52,6 @@ public class GroupsRecyclerViewAdapter extends RecyclerView.Adapter<GroupsRecycl
                     .into(holder.mGroupImage);
         }else if(mGroups.get(position).getLogo() == null) {
             holder.mGroupImage.setImageResource(R.drawable.ic_person);
-            System.out.println("empty...");
         }
         holder.mGroupsDescription.setText(mGroups.get(position).getDescription());
         holder.mGroupName.setText(mGroups.get(position).getName());

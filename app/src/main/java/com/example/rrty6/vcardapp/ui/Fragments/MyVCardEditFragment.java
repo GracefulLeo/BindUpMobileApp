@@ -180,7 +180,6 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
         }catch (NullPointerException e) {e.getMessage();} catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(mMyVcard==null);
         if (mMyVcard.getLogo() != null) {
             GlideApp
                     .with(getActivity())
@@ -222,7 +221,6 @@ public class MyVCardEditFragment extends Fragment implements View.OnClickListene
     public void loadView(CardView cardView){
         cardView.setDrawingCacheEnabled(true);
         mCardBitmapForView =  loadBitmapFromView(cardView);
-        System.out.println(mCardBitmapForView==null);
     }
 
     public Bitmap loadBitmapFromView(View v) {

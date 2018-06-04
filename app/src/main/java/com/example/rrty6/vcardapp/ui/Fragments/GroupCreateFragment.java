@@ -185,7 +185,6 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
         builder.setPositiveButton(R.string.create_groups_add_user_btn, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                System.out.println(group == null);
                 try {
                     group = new Group(new Logo(null, bitmap), mGroupNameEditText.getText().toString(), mGroupDescriptionEditText.getText().toString());
                 } catch (Exception e) {
@@ -199,7 +198,6 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
         modeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(contacts.get(position));
                 Log.d(TAG, "onClick: clicked...");
                 selectedContacts.add(contacts.get(position));
                 getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
