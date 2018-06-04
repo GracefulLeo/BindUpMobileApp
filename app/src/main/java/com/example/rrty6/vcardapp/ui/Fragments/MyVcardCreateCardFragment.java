@@ -198,7 +198,7 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
                             mNameEditText.getText().toString(), mSurnameEditText.getText().toString(),
                             mMiddleNameEditText.getText().toString(),
                             mCompanyEditText.getText().toString(), mAdressEditText.getText().toString(),
-                            mPositionEditText.getText().toString(), phones, emails, "Site", null, new Base(mCardBitmapForView));
+                            mPositionEditText.getText().toString(), phones, emails, mWebSiteEditText.getText().toString(), null, new Base(mCardBitmapForView));
 //@TODO fix the field "SITE" above!!!!
                     new MainOperations(new Handler()).createCard(userCard);
                     Snackbar.make(v, "Saved", Snackbar.LENGTH_LONG).setAction("Action", null).show();
