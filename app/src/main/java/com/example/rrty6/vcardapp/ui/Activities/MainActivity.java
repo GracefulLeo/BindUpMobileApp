@@ -634,6 +634,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void inflateShareFragment() {
+        if (mShareFragment != null){
+            mShareFragment = null;
+            mFragmentTags.remove(getString(R.string.tag_fragment_share));
+        }
         if (mShareFragment == null) {
             Log.d(TAG, "onNavigationItemSelected: Share...");
             mShareFragment = new ShareFragment(this);
