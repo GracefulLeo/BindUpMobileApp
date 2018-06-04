@@ -95,6 +95,7 @@
     <string name="toolbar_name_Groups_create">Create group</string>
     <string name="toolbar_name_Groups_preview">Group preview</string>
     <string name="toolbar_name_Share">Share</string>
+    <string name="delete_message_contact">Are you sure you want to delete this contact?</string>
 
     <!--<string name="menu_item_History">History</string>-->
     <!--<string name="menu_item_LogOut">LogOut</string>-->

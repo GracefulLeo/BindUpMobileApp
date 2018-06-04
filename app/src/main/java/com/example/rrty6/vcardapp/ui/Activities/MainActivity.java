@@ -59,15 +59,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                AlertDialog.Builder alertDialogBuilder;
+                AlertDialog alertDialog;
                 switch (item.getItemId()) {
-
+                    case R.id.contacts_preview_delete_button:
+                        Log.d(TAG, "onMenuItemClick: Delete button clicked");
+                        alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                        alertDialogBuilder.setMessage(getString(R.string.delete_message_contact));
+                        alertDialogBuilder.setPositiveButton(R.string.delete_confirmation_button, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                View view = getCurrentFocus();
+                                if (view != null) {
+                                    InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                }
+                                Toast toast = Toast.makeText(getApplicationContext(),
+                                        "Contact " + mainOperations.getCard(args.getLong("card id")).getSurname() + " " + mainOperations.getCard(args.getLong("card id")).getName() + " " + mainOperations.getCard(args.getLong("card id")).getMidlename() + " has been succesfully deleted",
+                                        Toast.LENGTH_LONG);
+                                toast.show();
+                        mainOperations.deleteContact(mainOperations.getCard(args.getLong("card id")));
+                                dialog.dismiss();
+                                mFragmentTags.clear();
+                                enableViews(false);
+                                inflateContactFragment(getApplicationContext());
+                            }
+                        });
+                        alertDialogBuilder.setNegativeButton(R.string.delete_declining_button, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        alertDialogBuilder.setIcon(R.drawable.ic_warning);
+                        alertDialogBuilder.setTitle(" ");
+                        alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+                        break;
                     case R.id.edit_button_in_preview_fragment:
                         inflateMyVCardEditFragment();
                         break;
 
                     case R.id.edit_delete_button:
                         Log.d(TAG, "onMenuItemClick: Delete button clicked");
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                        alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                         alertDialogBuilder.setMessage(getString(R.string.delete_message));
                         alertDialogBuilder.setPositiveButton(R.string.delete_confirmation_button, new DialogInterface.OnClickListener() {
                             @Override
@@ -96,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         });
                         alertDialogBuilder.setIcon(R.drawable.ic_warning);
                         alertDialogBuilder.setTitle(" ");
-                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog = alertDialogBuilder.create();
                         alertDialog.show();
                         break;
                 }
@@ -375,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportFragmentManager().beginTransaction().remove(mContactsPreviewFragment).commitAllowingStateLoss();
         }
         mContactsPreviewFragment = new ContactsPreviewFragment();
-        Bundle args = new Bundle();
+        args.clear();
         args.putLong("card id", card.getId());
         mContactsPreviewFragment.setArguments(args);
 
@@ -397,7 +432,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(TAG, "Inflating: GroupsCreateFragment...");
         mGroupsSingleContactPreviewFragment = new GroupsSingleContactPreviewFragment();
 
-        Bundle args = new Bundle();
+        args.clear();
         args.putLong("card id", card.getId());
         mGroupsSingleContactPreviewFragment.setArguments(args);
 
@@ -764,5 +799,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public MainOperations getMainOperations() {
+        return mainOperations;
+    }
 }
 
