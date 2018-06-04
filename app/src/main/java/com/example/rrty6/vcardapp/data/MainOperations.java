@@ -180,7 +180,6 @@ public class MainOperations {
             public void run() {
                 if (mDataManager.isAuthorized()) {
                     Log.i(TAG, "updateCard start for card: " + oldCard.getRemoteId());
-                    System.out.println(newCard.getLogo() == null);
                     oldCard.update(newCard);
                     DatabaseOperation.updateCard(oldCard);
                     JobInitiation.updateCard(oldCard.getId());

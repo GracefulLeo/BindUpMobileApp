@@ -42,7 +42,6 @@ public class ServerThread implements Runnable {
                         serverSocket = new ServerSocket(mPort);
                         socket = serverSocket.accept();
                     }
-                    System.out.println("Start sending Server thread");
                     mOutputStream = socket.getOutputStream();
                     mInputStream = socket.getInputStream();
 

@@ -72,7 +72,7 @@ public class DatabaseOperation {
     }
 
     public static void updateCard(Card card) {
-        if (card.getLogo() != null && card.getLogo().getId() != null) {
+        if (card.getLogo() != null && card.getLogo().getId() == null) {
             DATA_MANAGER.addLogo(card.getLogo());
         }
         if (card.getBase() != null) {
