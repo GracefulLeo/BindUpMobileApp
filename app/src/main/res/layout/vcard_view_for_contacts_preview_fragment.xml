@@ -196,39 +196,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize">
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true">
-
-                        <TextView
-                            android:id="@+id/contacts_preview_vcard_id_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="5dp"
-                            android:background="@null"
-                            android:gravity="center_horizontal"
-                            android:textColor="@color/Black"
-                            android:textSize="16sp" />
-
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize">
-
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true">
-
-
 
                     <TextView
                         android:id="@+id/contacts_preview_surname_text"
@@ -272,6 +244,7 @@
 
 
                 <RelativeLayout
+                    android:id="@+id/contacts_preview_middle_name_container"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize">
 
@@ -298,6 +271,7 @@
 
 
                 <RelativeLayout
+                    android:id="@+id/contacts_preview_company_name_container"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize">
 
@@ -323,6 +297,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/contacts_preview_adress_container"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize">
 
@@ -348,6 +323,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/contacts_preview_position_container"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize">
 
@@ -373,6 +349,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/contacts_preview_website_container"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize">
 
@@ -398,6 +375,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/contacts_preview_phone_container"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize">
 
@@ -445,6 +423,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/contacts_preview_email_container"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize">
 

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.rrty6.vcardapp.GlideApp;
@@ -35,10 +36,11 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
     //widgets
     private TextView mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView,
             mAdressTextView, mPositionTextView, mWebSiteTextView, mPhoneTextView, mEmailTextView,
-            mCardIdText, mSurnameText, mNameText, mMiddleNameText, mCompanyText,
+            mSurnameText, mNameText, mMiddleNameText, mCompanyText,
             mAdressText, mPositionText, mWebSiteText, mPhoneText, mEmailText;
     private ImageView mCompanyLogoImage;
     private FloatingActionButton mFabForCall, mFabForSms, mFabForEmail;
+    private RelativeLayout mMiddleNameContainer, mCompanyContainer, mAdressContainer, mPositionContainer, mWebSiteContainer, mPhoneContainer, mEmailContainer;
 
     //vars
     private Card mMyVcard;
@@ -86,7 +88,6 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
         mEmailTextView = view.findViewById(R.id.contacts_preview_email_text_view);
 
         //          Edit Text INIT!!
-        mCardIdText = view.findViewById(R.id.contacts_preview_vcard_id_text);
         mSurnameText = view.findViewById(R.id.contacts_preview_surname_text);
         mNameText = view.findViewById(R.id.contacts_preview_name_text);
         mMiddleNameText = view.findViewById(R.id.contacts_preview_middle_name_text);
@@ -101,6 +102,15 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
         mFabForCall = view.findViewById(R.id.fab_call_contacts_preview);
         mFabForSms = view.findViewById(R.id.fab_sms_contacts_preview);
         mFabForEmail = view.findViewById(R.id.fab_email_contacts_preview);
+
+        // RelativeLayout INIT!
+        mMiddleNameContainer = view.findViewById(R.id.contacts_preview_middle_name_container);
+        mCompanyContainer = view.findViewById(R.id.contacts_preview_company_name_container);
+        mAdressContainer = view.findViewById(R.id.contacts_preview_adress_container);
+        mPositionContainer = view.findViewById(R.id.contacts_preview_position_container);
+        mWebSiteContainer = view.findViewById(R.id.contacts_preview_website_container);
+        mPhoneContainer = view.findViewById(R.id.contacts_preview_phone_container);
+        mEmailContainer = view.findViewById(R.id.contacts_preview_email_container);
 
 
         mFabForSms.setOnClickListener(this);
@@ -152,27 +162,45 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
 
             mSurnameText.setText(mMyVcard.getSurname());
             mNameText.setText(mMyVcard.getName());
-            mMiddleNameText.setText(mMyVcard.getMidlename());
-            mCompanyText.setText(mMyVcard.getCompany());
-            mAdressText.setText(mMyVcard.getAddress());
-            mPositionText.setText(mMyVcard.getPosition());
-            mWebSiteText.setText(mMyVcard.getSite());
+
+            if (mMyVcard.getMidlename() != null && !mMyVcard.getMidlename().trim().isEmpty()) {
+                mMiddleNameText.setText(mMyVcard.getMidlename());
+            } else {
+                mMiddleNameContainer.setVisibility(View.GONE);
+            }
+
+            if (mMyVcard.getCompany() != null && !mMyVcard.getCompany().trim().isEmpty()) {
+                mCompanyText.setText(mMyVcard.getCompany());
+            } else {
+                mCompanyContainer.setVisibility(View.GONE);
+            }
+
+            if (mMyVcard.getAddress() != null && !mMyVcard.getAddress().trim().isEmpty()) {
+                mAdressText.setText(mMyVcard.getAddress());
+            } else {
+                mAdressContainer.setVisibility(View.GONE);
+            }
+
+            if (mMyVcard.getPosition() != null && !mMyVcard.getPosition().trim().isEmpty()) {
+                mPositionText.setText(mMyVcard.getPosition());
+            } else {
+                mPositionContainer.setVisibility(View.GONE);
+            }
+
+            if (mMyVcard.getSite() != null && !mMyVcard.getSite().trim().isEmpty()) {
+                mWebSiteText.setText(mMyVcard.getSite());
+            } else {
+                mWebSiteContainer.setVisibility(View.GONE);
+            }
             if (phones.size() > 0) {
                 mPhoneText.setText(phones.get(0).getPhone());
             } else {
-                mPhoneText.setVisibility(View.INVISIBLE);
+                mPhoneContainer.setVisibility(View.GONE);
             }
             if (emails.size() > 0) {
                 mEmailText.setText(emails.get(0).getEmail());
             } else {
-                mEmailText.setVisibility(View.INVISIBLE);
-            }
-            if (mEmailText.getText().toString().isEmpty()) {
-                mFabForEmail.setVisibility(View.GONE);
-            }
-            if (mPhoneText.getText().toString().isEmpty()) {
-                mFabForCall.setVisibility(View.GONE);
-                mFabForSms.setVisibility(View.GONE);
+                mEmailContainer.setVisibility(View.GONE);
             }
         } catch (NullPointerException e) {
             e.getMessage();
