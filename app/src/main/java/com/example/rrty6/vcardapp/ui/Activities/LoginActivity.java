@@ -112,6 +112,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } else {
+            mEmailET.setFocusable(true);
+            mPasswordEditText.setFocusable(true);
             mProgressBarContainer.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
