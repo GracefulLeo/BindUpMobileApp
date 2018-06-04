@@ -83,7 +83,7 @@ public class UIHandler extends Handler {
                 break;
             case wrongUserNameOrPassword:
                 loginActivity.progressBarChange(false);
-                toast = Toast.makeText(registerActivity, R.string.login_wrong_userdata_message,Toast.LENGTH_LONG);
+                toast = Toast.makeText(loginActivity, loginActivity.getResources().getString(R.string.login_wrong_userdata_message),Toast.LENGTH_LONG);
                 toast.show();
                 break;
             case authorizationFinished:
