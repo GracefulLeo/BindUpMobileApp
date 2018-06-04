@@ -7,6 +7,6 @@
         android:id="@+id/edit_button_in_preview_fragment"
         android:title="@string/edit"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_edit"/>
+        android:icon="@drawable/ic_edit_black_24dp"/>
 
 </menu>

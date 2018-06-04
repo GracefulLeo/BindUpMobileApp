@@ -7,6 +7,6 @@
         android:id="@+id/edit_delete_button"
         android:title="@string/edit"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_delete"/>
+        android:icon="@drawable/ic_delete_black_24dp"/>
 
 </menu>
