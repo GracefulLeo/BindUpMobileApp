@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
-public class MyVCardPreviewFragment extends Fragment implements View.OnClickListener{
+public class MyVCardPreviewFragment extends Fragment implements View.OnClickListener {
 
     // constants
     private static final String TAG = "ViewProfileFragment";
@@ -41,10 +41,11 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
     // widgets
     private TextView mSurnameTextView, mNameTextView, mMiddleNameTextView, mCompanyNameTextView,
             mAdressTextView, mPositionTextView, mWebSiteTextView, mPhoneTextView, mEmailTextView,
-            mCardIdText, mSurnameText, mNameText, mMiddleNameText, mCompanyText,
+            mSurnameText, mNameText, mMiddleNameText, mCompanyText,
             mAdressText, mPositionText, mWebSiteText, mPhoneText, mEmailText;
     private ImageView mCompanyLogoImage;
     private Button mBackBtn;
+    private RelativeLayout mMiddleNameContainer, mCompanyContainer, mAdressContainer, mPositionContainer, mWebSiteContainer, mPhoneContainer, mEmailContainer;
 
     // vars
     private Card mMyVcard;
@@ -61,24 +62,24 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-                mMyVcard = new MainOperations(new Handler()).getCard(bundle.getLong("card id"));
+            mMyVcard = new MainOperations(new Handler()).getCard(bundle.getLong("card id"));
         }
-           setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 //           Log.d(TAG, "onCreate in MyVCardPreviewFragment: got incoming bundle: " + mMyVcard.getName());
-        }
+    }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.vcard_view_for_preview_fragment, container, false);
         Log.d(TAG, "onCreateView: started.");
-        if (mInterface == null){
+        if (mInterface == null) {
             mInterface = (IMainActivity) mContext;
         }
         if (mMyVcard == null) {
 //            mInterface = (IMainActivity) mContext;
             mInterface.inflateMyVCardFragment(mContext);
-            Toast toast = Toast.makeText(getActivity(),R.string.myvcard_the_card_is_deleted_message, Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getActivity(), R.string.myvcard_the_card_is_deleted_message, Toast.LENGTH_SHORT);
             toast.show();
             return null;
         }
@@ -99,18 +100,24 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
         mEmailTextView = view.findViewById(R.id.preview_email_text_view);
 
         //          Edit Text INIT!!
-        mCardIdText = view.findViewById(R.id.preview_vcard_id_text);
         mSurnameText = view.findViewById(R.id.preview_surname_text);
         mNameText = view.findViewById(R.id.preview_name_text);
         mMiddleNameText = view.findViewById(R.id.preview_middle_name_text);
-        mCompanyText =  view.findViewById(R.id.preview_company_name_text);
+        mCompanyText = view.findViewById(R.id.preview_company_name_text);
         mAdressText = view.findViewById(R.id.preview_adress_text);
         mPositionText = view.findViewById(R.id.preview_position_text);
         mWebSiteText = view.findViewById(R.id.preview_website_text);
         mPhoneText = view.findViewById(R.id.preview_phone_text);
         mEmailText = view.findViewById(R.id.preview_email_text);
 
-        //          Buttons INIT!!
+        //          RelativeLayout INIT!!
+        mMiddleNameContainer = view.findViewById(R.id.preview_middle_name_container);
+        mCompanyContainer = view.findViewById(R.id.preview_company_name_container);
+        mAdressContainer = view.findViewById(R.id.preview_adress_container);
+        mPositionContainer = view.findViewById(R.id.preview_position_container);
+        mWebSiteContainer = view.findViewById(R.id.preview_website_container);
+        mPhoneContainer = view.findViewById(R.id.preview_phone_container);
+        mEmailContainer = view.findViewById(R.id.preview_email_container);
 
 
         init();
@@ -121,7 +128,7 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.d(TAG, "onCreateOptionsMenu:  IT WORK!!!");
         menu.clear();
-        inflater.inflate(R.menu.top_navigation_menu_my_vcards_preview,menu);
+        inflater.inflate(R.menu.top_navigation_menu_my_vcards_preview, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -138,30 +145,61 @@ public class MyVCardPreviewFragment extends Fragment implements View.OnClickList
             mAdressTextView.setText(mMyVcard.getAddress());
             mPositionTextView.setText(mMyVcard.getPosition());
             mWebSiteTextView.setText(mMyVcard.getSite());
-            if (phones.size()>0) {
+            if (phones.size() > 0) {
                 mPhoneTextView.setText(phones.get(0).getPhone());
-            } else { mPhoneTextView.setVisibility(View.INVISIBLE);
+            } else {
+                mPhoneTextView.setVisibility(View.INVISIBLE);
             }
-            if (emails.size()>0) {
+            if (emails.size() > 0) {
                 mEmailTextView.setText(emails.get(0).getEmail());
-            } else { mEmailTextView.setVisibility(View.INVISIBLE);
+            } else {
+                mEmailTextView.setVisibility(View.INVISIBLE);
             }
             mSurnameText.setText(mMyVcard.getSurname());
             mNameText.setText(mMyVcard.getName());
-            mMiddleNameText.setText(mMyVcard.getMidlename());
-            mCompanyText.setText(mMyVcard.getCompany());
-            mAdressText.setText(mMyVcard.getAddress());
-            mPositionText.setText(mMyVcard.getPosition());
-            mWebSiteText.setText(mMyVcard.getSite());
-            if (phones.size()>0) {
+
+            if (mMyVcard.getMidlename() != null && !mMyVcard.getMidlename().trim().isEmpty()) {
+                mMiddleNameText.setText(mMyVcard.getMidlename());
+            } else {
+                mMiddleNameContainer.setVisibility(View.GONE);
+            }
+
+            if (mMyVcard.getCompany() != null && !mMyVcard.getCompany().trim().isEmpty()) {
+                mCompanyText.setText(mMyVcard.getCompany());
+            } else {
+                mCompanyContainer.setVisibility(View.GONE);
+            }
+
+            if (mMyVcard.getAddress() != null && !mMyVcard.getAddress().trim().isEmpty()) {
+                mAdressText.setText(mMyVcard.getAddress());
+            } else {
+                mAdressContainer.setVisibility(View.GONE);
+            }
+
+            if (mMyVcard.getPosition() != null && !mMyVcard.getPosition().trim().isEmpty()) {
+                mPositionText.setText(mMyVcard.getPosition());
+            } else {
+                mPositionContainer.setVisibility(View.GONE);
+            }
+
+            if (mMyVcard.getSite() != null && !mMyVcard.getSite().trim().isEmpty()) {
+                mWebSiteText.setText(mMyVcard.getSite());
+            } else {
+                mWebSiteContainer.setVisibility(View.GONE);
+            }
+            if (phones.size() > 0) {
                 mPhoneText.setText(phones.get(0).getPhone());
-            } else { mPhoneText.setVisibility(View.INVISIBLE);
+            } else {
+                mPhoneContainer.setVisibility(View.GONE);
             }
-            if (emails.size()>0) {
+            if (emails.size() > 0) {
                 mEmailText.setText(emails.get(0).getEmail());
-            } else { mEmailText.setVisibility(View.INVISIBLE);
+            } else {
+                mEmailContainer.setVisibility(View.GONE);
             }
-        }catch (NullPointerException e) {e.getMessage();} catch (Exception e) {
+        } catch (NullPointerException e) {
+            e.getMessage();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (mMyVcard.getLogo() != null) {
