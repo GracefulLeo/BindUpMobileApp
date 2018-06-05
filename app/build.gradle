@@ -4,9 +4,9 @@ android {
     signingConfigs {
         config {
             keyAlias 'bindupkey'
-            keyPassword 'QuiewAz13XxdsaqwWer '
-            storeFile file('/home/adventurer/KeyForBindUp/bind_up_key.jks')
-            storePassword 'QuiewAz13XxdsaqwWer '
+            keyPassword 'QuiewAz13XxdsaqwWer'
+            storeFile file('/home/adventurer/keyforbindup/bindupkey.jks')
+            storePassword 'QuiewAz13XxdsaqwWer'
         }
     }
     compileSdkVersion 27
@@ -14,21 +14,27 @@ android {
         applicationId "com.bindup.vcard.vcardapp"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionName '1.1.2'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 5
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
             proguardFile '/home/adventurer/AndroidStudioProjects/Bind-up Project/Bind-Up Project/BACKUP VCARD APP/VCardApp/app/proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
     buildToolsVersion '27.0.3'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
+    }
+    productFlavors {
     }
 }
 
