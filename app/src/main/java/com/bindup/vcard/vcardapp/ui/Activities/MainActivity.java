@@ -2,7 +2,6 @@ package com.bindup.vcard.vcardapp.ui.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,12 +27,13 @@ import com.bindup.vcard.vcardapp.R;
 import com.bindup.vcard.vcardapp.data.MainOperations;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
+import com.bindup.vcard.vcardapp.ui.Fragments.AgreementFragment;
 import com.bindup.vcard.vcardapp.ui.Fragments.ContactsFragment;
 import com.bindup.vcard.vcardapp.ui.Fragments.ContactsPreviewFragment;
 import com.bindup.vcard.vcardapp.ui.Fragments.GroupCreateFragment;
-import com.bindup.vcard.vcardapp.ui.Fragments.GroupsPreviewFragment;
 import com.bindup.vcard.vcardapp.ui.Fragments.GroupsFragment;
 import com.bindup.vcard.vcardapp.ui.Fragments.GroupsNoGroupsFragment;
+import com.bindup.vcard.vcardapp.ui.Fragments.GroupsPreviewFragment;
 import com.bindup.vcard.vcardapp.ui.Fragments.GroupsSingleContactPreviewFragment;
 import com.bindup.vcard.vcardapp.ui.Fragments.MyVCardEditFragment;
 import com.bindup.vcard.vcardapp.ui.Fragments.MyVCardPreviewFragment;
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         "Contact " + mainOperations.getCard(args.getLong("card id")).getSurname() + " " + mainOperations.getCard(args.getLong("card id")).getName() + " " + mainOperations.getCard(args.getLong("card id")).getMidlename() + " has been succesfully deleted",
                                         Toast.LENGTH_LONG);
                                 toast.show();
-                        mainOperations.deleteContact(mainOperations.getCard(args.getLong("card id")));
+                                mainOperations.deleteContact(mainOperations.getCard(args.getLong("card id")));
                                 dialog.dismiss();
                                 mFragmentTags.clear();
                                 enableViews(false);
@@ -213,6 +213,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             inflateShareFragment();
                         }
                         break;
+                    case R.id.agreement_item:
+                        inflateAgreementFragment();
+                        break;
                     case R.id.log_out_item:
                         Log.d(TAG, "onNavigationItemSelected: log out item clicked...");
                         mainOperations.logout();
@@ -283,6 +286,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int mExitCount = 0;
 
     //Fragments
+    private AgreementFragment mAgreementFragment;
     private GroupsPreviewFragment mGroupsPreviewFragment;
     private GroupsFragment mGroupsFragment;
     private GroupCreateFragment mGroupCreateFragment; //++++
@@ -480,7 +484,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.add(getString(R.string.tag_fragment_my_vcard));
         }
         setFragmentVisibility(getString(R.string.tag_fragment_my_vcard));
-        mainOperations = new MainOperations(new UIHandler(this,this));
+        mainOperations = new MainOperations(new UIHandler(this, this));
     }
 
     @Override
@@ -634,7 +638,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void inflateShareFragment() {
-        if (mShareFragment != null){
+        if (mShareFragment != null) {
             mShareFragment = null;
             mFragmentTags.remove(getString(R.string.tag_fragment_share));
         }
@@ -652,6 +656,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         setFragmentVisibility(getString(R.string.tag_fragment_share));
         enableViews(false);
+    }
+
+    private void inflateAgreementFragment() {
+        if (mAgreementFragment == null) {
+            Log.d(TAG, "Inflating: CreateCardFragment...");
+            mAgreementFragment = new AgreementFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.main_content_frame, mAgreementFragment, getString(R.string.tag_fragment_agreement));
+            transaction.commit();
+            mFragmentTags.add(getString(R.string.tag_fragment_agreement));
+            mFragments.add(new FragmentTag(mAgreementFragment, getString(R.string.tag_fragment_agreement)));
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        } else {
+            mFragmentTags.remove(getString(R.string.tag_fragment_agreement));
+            mFragmentTags.add(getString(R.string.tag_fragment_agreement));
+        }
+        setFragmentVisibility(getString(R.string.tag_fragment_agreement));
+        enableViews(true);
     }
 
     private void setFragmentVisibility(String tagname) {
@@ -678,7 +700,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             hideFloatingActionButton();
         } else if (tagname.equals(getString(R.string.tag_fragment_my_vcard_edit))) {
             hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_my_vcard))) {
+            showFloatingActionButton();
         } else if (tagname.equals(getString(R.string.tag_fragment_share))) {
+            hideFloatingActionButton();
+        } else if (tagname.equals(getString(R.string.tag_fragment_agreement))) {
             hideFloatingActionButton();
         }
 
@@ -713,13 +739,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (tagname.equals(getString(R.string.tag_fragment_group_preview_single_contact))) {
             this.setTitle(R.string.toolbar_name_Contacts_preview);
         }
+
         //SHARE
         else if (tagname.equals(getString(R.string.tag_fragment_share))) {
             this.setTitle(R.string.toolbar_name_Share);
         }
 
-
-
+        //AGREEMENT
+        else if (tagname.equals(getString(R.string.tag_fragment_agreement))) {
+            this.setTitle(R.string.toolbar_name_agreement);
+        }
 
         // Show FAB
 

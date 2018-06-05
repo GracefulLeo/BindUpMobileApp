@@ -37,6 +37,12 @@
         android:visible="false"/>
 
     <item
+        android:id="@+id/agreement_item"
+        android:icon="@drawable/ic_agreement"
+        android:orderInCategory="1"
+        android:title="@string/menu_item_agreement" />
+
+    <item
         android:id="@+id/log_out_item"
         android:icon="@drawable/ic_exit_to_app_black_24dp"
         android:orderInCategory="1"

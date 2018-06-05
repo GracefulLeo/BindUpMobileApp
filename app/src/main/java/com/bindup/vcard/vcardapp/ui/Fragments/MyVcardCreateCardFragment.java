@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,7 @@ import com.bindup.vcard.vcardapp.ui.Activities.MainActivity;
 import com.bindup.vcard.vcardapp.ui.interfaces.IMainActivity;
 import com.bindup.vcard.vcardapp.utils.BitmapHelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -154,7 +157,15 @@ public class MyVcardCreateCardFragment extends Fragment implements View.OnClickL
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        bitmap = BitmapHelper.getScaledBitmap(bitmap, 125, 60);
+                        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+                        BitmapFactory.Options options=new BitmapFactory.Options();
+                        options.inSampleSize=1;
+                        final float scale=getResources().getDisplayMetrics().density;
+                        Display dis= getActivity().getWindowManager().getDefaultDisplay();
+                        int width=dis.getWidth();
+                        bitmap = Bitmap.createScaledBitmap(bitmap,125,125, true);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bao);
+//                        bitmap = BitmapHelper.getScaledBitmap(bitmap, 125, 125);
                         GlideApp
                                 .with(getActivity())
                                 .load(bitmap)
