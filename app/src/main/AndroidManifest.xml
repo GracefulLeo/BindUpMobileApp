@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.rrty6.vcardapp">
+    package="com.bindup.vcard.vcardapp">
 
     <uses-permission android:name="android.permission.WAKE_LOCK"/><!--needed for jobService-->
     <uses-permission android:name="android.permission.INTERNET"
@@ -40,16 +40,16 @@
         <activity android:name=".ui.Activities.RegisterActivity"/>
 
         <service
-            android:name="com.example.rrty6.vcardapp.data.operations.MyJobService"
+            android:name="com.bindup.vcard.vcardapp.data.operations.MyJobService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name="com.example.rrty6.vcardapp.data.operations.JobIntentService"
+            android:name="com.bindup.vcard.vcardapp.data.operations.JobIntentService"
             android:enabled="true" />
 
         <receiver
-            android:name="com.example.rrty6.vcardapp.data.operations.JobBroadcastReceiver"
+            android:name="com.bindup.vcard.vcardapp.data.operations.JobBroadcastReceiver"
             android:exported="false">
             <!--<intent-filter>-->
             <!--<action android:name="dima.example.com.jobtest.STATE_CHANGE" />-->
