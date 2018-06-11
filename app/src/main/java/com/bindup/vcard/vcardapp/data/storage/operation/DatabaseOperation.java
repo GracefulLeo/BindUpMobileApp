@@ -176,6 +176,10 @@ public class DatabaseOperation {
         DATA_MANAGER.deleteContactFromGroup(group, contact);
     }
 
+    public static List<Group> getGroupsWhereContact(Card contact) {
+        return DATA_MANAGER.getGroupsWhereContact(contact);
+    }
+
     public static List<Group> getGroupList() {
         return DATA_MANAGER.getGroupList();
     }

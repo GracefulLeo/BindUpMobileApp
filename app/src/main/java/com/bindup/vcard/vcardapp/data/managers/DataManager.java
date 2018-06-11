@@ -599,9 +599,9 @@ public class DataManager {
 
     public List<Card> getGroupContacts(Group group) {
         try {
-            PreparedQuery<Card> cardsForGroupQuery = makeCardsForGroupQuery();
-            cardsForGroupQuery.setArgumentHolderValue(0, group);
-            return cardDao.query(cardsForGroupQuery);
+            PreparedQuery<Card> cardPreparedQuery = makeCardsForGroupQuery();
+            cardPreparedQuery.setArgumentHolderValue(0, group);
+            return cardDao.query(cardPreparedQuery);
         } catch (SQLException e) {
             handleException();
             return null;
@@ -624,22 +624,6 @@ public class DataManager {
         }
     }
 
-    private PreparedQuery<Card> makeCardsForGroupQuery() throws SQLException {
-        // build our inner query for GroupCard objects
-        QueryBuilder<GroupCard, Long> groupCardQb = groupCardDao.queryBuilder();
-        // just select the card-id field
-        groupCardQb.selectColumns("card_id");
-        SelectArg userSelectArg = new SelectArg();
-
-        groupCardQb.where().eq("group_id", userSelectArg);
-
-        // build our outer query for Card objects
-        QueryBuilder<Card, Long> cardQb = cardDao.queryBuilder();
-        // where the id matches in the card-id from the inner query
-        cardQb.where().in("id", groupCardQb);
-        return cardQb.prepare();
-    }
-
     public Group getGroup(Long id) {
         try {
             return groupDao.queryForId(id);
@@ -659,6 +643,49 @@ public class DataManager {
             handleException();
             return null;
         }
+    }
+
+    public List<Group> getGroupsWhereContact(Card contact) {
+        try {
+            PreparedQuery<Group> groupPreparedQuery = makeGroupsForCardQuery();
+            groupPreparedQuery.setArgumentHolderValue(0, contact);
+            return groupDao.query(groupPreparedQuery);
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
+    }
+
+    private PreparedQuery<Card> makeCardsForGroupQuery() throws SQLException {
+        // build our inner query for GroupCard objects
+        QueryBuilder<GroupCard, Long> groupCardQb = groupCardDao.queryBuilder();
+        // just select the card-id field
+        groupCardQb.selectColumns("card_id");
+        SelectArg userSelectArg = new SelectArg();
+
+        groupCardQb.where().eq("group_id", userSelectArg);
+
+        // build our outer query for Card objects
+        QueryBuilder<Card, Long> cardQb = cardDao.queryBuilder();
+        // where the id matches in the card-id from the inner query
+        cardQb.where().in("id", groupCardQb);
+        return cardQb.prepare();
+    }
+
+    private PreparedQuery<Group> makeGroupsForCardQuery() throws SQLException {
+        // build our inner query for GroupCard objects
+        QueryBuilder<GroupCard, Long> groupCardQb = groupCardDao.queryBuilder();
+        // just select the group-id field
+        groupCardQb.selectColumns("group_id");
+        SelectArg userSelectArg = new SelectArg();
+
+        groupCardQb.where().eq("card_id", userSelectArg);
+
+        // build our outer query for Group objects
+        QueryBuilder<Group, Long> groupQb = groupDao.queryBuilder();
+        // where the id matches in the group-id from the inner query
+        groupQb.where().in("id", groupCardQb);
+        return groupQb.prepare();
     }
     //endregion=====================================Group=====================================
 

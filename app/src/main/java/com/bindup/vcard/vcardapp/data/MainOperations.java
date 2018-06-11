@@ -236,6 +236,13 @@ public class MainOperations {
             public void run() {
                 if (mDataManager.isAuthorized()) {
                     Log.i(TAG, "deleteContact");
+                    List<Group> groups = DatabaseOperation.getGroupsWhereContact(card);
+                    if (groups != null && !groups.isEmpty()) {
+                        for (Group group : groups) {
+                            JobInitiation.deleteContactFromGroup(group.getRemoteId(), card.getRemoteId());
+                            DatabaseOperation.deleteContactFromGroup(group, card);
+                        }
+                    }
                     JobInitiation.deleteContact(card.getRemoteId());
                     DatabaseOperation.deleteCard(card);
                     handler.sendEmptyMessage(deleteContactFinished);
