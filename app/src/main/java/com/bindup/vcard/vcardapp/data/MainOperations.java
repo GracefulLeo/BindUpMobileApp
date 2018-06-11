@@ -105,16 +105,16 @@ public class MainOperations {
             @Override
             public void run() {
                 Log.i(TAG, "downloadUserData");
-                for (Card card : networkOperations.downloadMyCards()) {
+                for (Card card : NetworkOperations.downloadMyCards()) {
                     DatabaseOperation.saveCard(card);
                 }
-                for (Card card : networkOperations.downloadMyContacts()) {
+                for (Card card : NetworkOperations.downloadMyContacts()) {
                     DatabaseOperation.saveCard(card);
                 }
-                for (Group group : networkOperations.getMyGroups()) {
+                for (Group group : NetworkOperations.getMyGroups()) {
                     DatabaseOperation.createGroup(group, null);
-                    for (String cardRemoteId : networkOperations.getGroupContacts(group.getRemoteId())) {
-                        DatabaseOperation.addContactToGroup(group, cardRemoteId);
+                    for (String cardRemoteId : NetworkOperations.getGroupContacts(group.getRemoteId())) {
+                        DatabaseOperation.addContactToGroupDownloadin(group, cardRemoteId);
                     }
                 }
                 handler.sendEmptyMessage(authorizationFinished);
@@ -147,7 +147,7 @@ public class MainOperations {
 //                if (!strings.contains(group.getRemoteId())) {
 //                    DatabaseOperation.createGroup(group, null);
 //                    for (String cardRemoteId : NetworkOperations.getGroupContacts(group.getRemoteId())) {
-//                        mDataManager.addContactToGroup(group, mDataManager.getCardFromDB(cardRemoteId));
+//                        mDataManager.addContactToGroupDownloadin(group, mDataManager.getCardFromDB(cardRemoteId));
 //                    }
 //                }
 //            }
@@ -306,6 +306,44 @@ public class MainOperations {
                     }
                     JobInitiation.updateGroupContacts(group.getRemoteId(), ids);
                     handler.sendEmptyMessage(updateGroupContactsFinished);
+                } else {
+                    Log.e(TAG, "User has not been authorized");
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
+                }
+            }
+        }).start();
+    }
+
+    public void addContactToGroup(final Group group, final Card contact) {
+        handler.sendEmptyMessage(addContactToGroupStart);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mDataManager.isAuthorized()) {
+                    Log.i(TAG, "addContactToGroupDownloadin start");
+                    DatabaseOperation.addContactToGroup(group, contact);
+
+                    JobInitiation.addContactToGroup(group.getRemoteId(), contact.getRemoteId());
+                    handler.sendEmptyMessage(addContactToGroupFinished);
+                } else {
+                    Log.e(TAG, "User has not been authorized");
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
+                }
+            }
+        }).start();
+    }
+
+    public void deleteContactFromGroup(final Group group, final Card contact) {
+        handler.sendEmptyMessage(deleteContactFromGroupStart);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mDataManager.isAuthorized()) {
+                    Log.i(TAG, "deleteContactFromGroup start");
+                    DatabaseOperation.deleteContactFromGroup(group, contact);
+
+                    JobInitiation.deleteContactFromGroup(group.getRemoteId(), contact.getRemoteId());
+                    handler.sendEmptyMessage(deleteContactFromGroupFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);

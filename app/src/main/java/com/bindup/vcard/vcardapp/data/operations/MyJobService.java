@@ -99,6 +99,22 @@ public class MyJobService extends JobService {
                 intent.setAction(ACTION_EXECUTE_UPDATE_GROUP_CONTACTS);
                 App.getContext().startService(intent);
                 return false;
+            case ACTION_ADD_CONTACT_TO_GROUP:
+                Log.i(TAG, "ACTION_ADD_CONTACT_TO_GROUP");
+                LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter(MY_BC_RCVR + ACTION_EXECUTE_ADD_CONTACT_TO_GROUP));
+                intent.putExtra(GROUP_REMOTE_ID, bundle.getString(GROUP_REMOTE_ID));
+                intent.putExtra(CONTACT_REMOTE_ID, bundle.getString(CONTACT_REMOTE_ID));
+                intent.setAction(ACTION_EXECUTE_ADD_CONTACT_TO_GROUP);
+                App.getContext().startService(intent);
+                return false;
+            case ACTION_DELETE_CONTACT_FROM_GROUP:
+                Log.i(TAG, "ACTION_DELETE_CONTACT_FROM_GROUP");
+                LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter(MY_BC_RCVR + ACTION_EXECUTE_DELETE_CONTACT_FROM_GROUP));
+                intent.putExtra(GROUP_REMOTE_ID, bundle.getString(GROUP_REMOTE_ID));
+                intent.putExtra(CONTACT_REMOTE_ID, bundle.getString(CONTACT_REMOTE_ID));
+                intent.setAction(ACTION_EXECUTE_DELETE_CONTACT_FROM_GROUP);
+                App.getContext().startService(intent);
+                return false;
             case ACTION_DELETE_GROUP:
                 Log.i(TAG, "ACTION_DELETE_GROUP");
                 LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter(MY_BC_RCVR + ACTION_EXECUTE_DELETE_GROUP));

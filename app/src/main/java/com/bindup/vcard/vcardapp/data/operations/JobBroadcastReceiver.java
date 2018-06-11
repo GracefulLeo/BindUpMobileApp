@@ -82,6 +82,22 @@ public class JobBroadcastReceiver extends BroadcastReceiver {
                 exerciseJobBuilder.setExtras(bundle);
                 jobScheduler.schedule(exerciseJobBuilder.build());
                 break;
+            case ACTION_PERFORM_ADD_CONTACT_TO_GROUP:
+                Log.i(TAG, "ACTION_PERFORM_ADD_CONTACT_TO_GROUP");
+                bundle.putString(ACTION, ACTION_ADD_CONTACT_TO_GROUP);
+                bundle.putString(GROUP_REMOTE_ID, intent.getStringExtra(GROUP_REMOTE_ID));
+                bundle.putString(CONTACT_REMOTE_ID, intent.getStringExtra(CONTACT_REMOTE_ID));
+                exerciseJobBuilder.setExtras(bundle);
+                jobScheduler.schedule(exerciseJobBuilder.build());
+                break;
+            case ACTION_PERFORM_DELETE_CONTACT_FROM_GROUP:
+                Log.i(TAG, "ACTION_PERFORM_DELETE_CONTACT_FROM_GROUP");
+                bundle.putString(ACTION, ACTION_DELETE_CONTACT_FROM_GROUP);
+                bundle.putString(GROUP_REMOTE_ID, intent.getStringExtra(GROUP_REMOTE_ID));
+                bundle.putString(CONTACT_REMOTE_ID, intent.getStringExtra(CONTACT_REMOTE_ID));
+                exerciseJobBuilder.setExtras(bundle);
+                jobScheduler.schedule(exerciseJobBuilder.build());
+                break;
             case ACTION_PERFORM_DELETE_GROUP:
                 Log.i(TAG, "ACTION_PERFORM_DELETE_GROUP");
                 bundle.putString(ACTION, ACTION_DELETE_GROUP);

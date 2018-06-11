@@ -180,7 +180,7 @@ public class NetworkOperations {
         return false;
     }
 
-    public Logo getLogo(String fid) {
+    public static Logo getLogo(String fid) {
         Call<GetFileRes> call = mDataManager.getLogo(fid);
         Logo logo = null;
         Response<GetFileRes> response = null;
@@ -205,7 +205,7 @@ public class NetworkOperations {
         return logo;
     }
 
-    public List<Card> downloadMyCards() {
+    public static List<Card> downloadMyCards() {
         Log.i(TAG, "downloadMyCards start");
         Call<GetUserRes> call = mDataManager.getUser();
         List<Card> cards = new ArrayList<>();
@@ -246,7 +246,7 @@ public class NetworkOperations {
         return cards;
     }
 
-    public List<Card> downloadMyContacts() {
+    public static List<Card> downloadMyContacts() {
         Log.i(TAG, "downloadMyContacts start");
         Call<GetUserRes> call = mDataManager.getUser();
         List<Card> cards = new ArrayList<>();
@@ -287,7 +287,7 @@ public class NetworkOperations {
         return cards;
     }
 
-    public List<Group> getMyGroups() {
+    public static List<Group> getMyGroups() {
         Log.i(TAG, "getMyGroups start");
         Call<GetUserRes> call = mDataManager.getUser();
         List<Group> groups = new ArrayList<>();
@@ -328,10 +328,10 @@ public class NetworkOperations {
         return groups;
     }
 
-    public List<String> getGroupContacts(String group) {
-        Log.i(TAG, "getGroupContacts start for group: " + group);
-        Call<GetGroupRes> call = mDataManager.getGroup(group);
-        List<String> strings = new ArrayList<>();
+    public static List<String> getGroupContacts(String groupRemoteId) {
+        Log.i(TAG, "getGroupContacts start for group: " + groupRemoteId);
+        Call<GetGroupRes> call = mDataManager.getGroup(groupRemoteId);
+        List<String> contactsRemoteIds = new ArrayList<>();
         Response<GetGroupRes> response = null;
         try {
             response = call.execute();
@@ -348,7 +348,7 @@ public class NetworkOperations {
                         for (int i = 0; i < list.size(); i++) {
                             Map o = (Map) list.get(i);
                             Set set = o.keySet();
-                            strings.add(o.get(set.iterator().next()).toString());
+                            contactsRemoteIds.add(o.get(set.iterator().next()).toString());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -362,7 +362,7 @@ public class NetworkOperations {
         } else {
             Log.e(TAG, "Null response");
         }
-        return strings;
+        return contactsRemoteIds;
     }
 
     public static boolean createCard(Card card) {
@@ -496,7 +496,7 @@ public class NetworkOperations {
         return addUserGoods(ListRole.contact, new SimpleUnd(remoteId));
     }
 
-    public static boolean deleteContact(final String remoteId) {
+    public static boolean deleteContact(String remoteId) {
         Log.i(TAG, "deleteContact start");
         Call<GetUserRes> call = mDataManager.getUser();
         Response<GetUserRes> response = null;
@@ -629,6 +629,71 @@ public class NetworkOperations {
         return false;
     }
 
+    public static boolean addContactToGroup(String groupRemoteId, String contactRemoteId) {
+        Log.i(TAG, "addContactToGroup start");
+        if (groupRemoteId != null && !groupRemoteId.trim().isEmpty() &&
+                contactRemoteId != null && !contactRemoteId.trim().isEmpty()) {
+            List<String> contacts = getGroupContacts(groupRemoteId);
+            if (contacts == null) {
+                contacts = new ArrayList<>();
+            }
+            contacts.add(contactRemoteId);
+            UpdateGroupReq updateGroupReq = new UpdateGroupReq(groupRemoteId, contacts);
+            Call<ResponseBody> call = mDataManager.updateGroup(updateGroupReq);
+            Response<ResponseBody> response = null;
+            try {
+                response = call.execute();
+            } catch (IOException e) {
+                Log.e(TAG, "Call.execute", e);
+                return false;
+            }
+            if (response != null) {
+                if (response.code() == 200) {
+                    return true;
+                } else {
+                    Log.e(TAG, "Unchecked response code" + response.code() + "  " + response.message());
+                }
+            } else {
+                Log.e(TAG, "Null response");
+            }
+        } else {
+            Log.e(TAG, "Null method parameter");
+        }
+        return false;
+    }
+
+    public static boolean deleteContactFromGroup(String groupRemoteId, String contactRemoteId) {
+        Log.i(TAG, "deleteContactFromGroup start");
+        if (groupRemoteId != null && !groupRemoteId.trim().isEmpty() &&
+                contactRemoteId != null && !contactRemoteId.trim().isEmpty()) {
+            List<String> contacts = getGroupContacts(groupRemoteId);
+            if (contacts != null && !contacts.isEmpty() && contacts.contains(contactRemoteId)) {
+                contacts.remove(contactRemoteId);
+            }
+            UpdateGroupReq updateGroupReq = new UpdateGroupReq(groupRemoteId, contacts);
+            Call<ResponseBody> call = mDataManager.updateGroup(updateGroupReq);
+            Response<ResponseBody> response = null;
+            try {
+                response = call.execute();
+            } catch (IOException e) {
+                Log.e(TAG, "Call.execute", e);
+                return false;
+            }
+            if (response != null) {
+                if (response.code() == 200) {
+                    return true;
+                } else {
+                    Log.e(TAG, "Unchecked response code" + response.code() + "  " + response.message());
+                }
+            } else {
+                Log.e(TAG, "Null response");
+            }
+        } else {
+            Log.e(TAG, "Null method parameter");
+        }
+        return false;
+    }
+
     public static boolean deleteGroup(final String remoteId) {
         Log.i(TAG, "deleteGroup start");
         Call<GetUserRes> call = mDataManager.getUser();
@@ -675,7 +740,7 @@ public class NetworkOperations {
         return false;
     }
 
-    private Card downloadCard(String cardId, boolean isMy) {
+    private static Card downloadCard(String cardId, boolean isMy) {
         Log.i(TAG, "downloadCard start for card: " + cardId);
         Call<GetCardRes> call = mDataManager.getCard(cardId);
         Card card = null;
@@ -748,7 +813,7 @@ public class NetworkOperations {
         return card;
     }
 
-    private Group dowloadGroup(String id) {
+    private static Group dowloadGroup(String id) {
         Log.i(TAG, "dowloadGroup start");
         Call<GetGroupRes> call = mDataManager.getGroup(id);
         Group group = null;

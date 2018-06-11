@@ -101,6 +101,22 @@ public class JobIntentService extends IntentService {
                     LocalBroadcastManager.getInstance(this).sendBroadcast(successIntent);
                     Log.i(TAG, "ACTION_EXECUTE_UPDATE_GROUP_CONTACTS end");
                     break;
+                case ACTION_EXECUTE_ADD_CONTACT_TO_GROUP:
+                    Log.i(TAG, "ACTION_EXECUTE_ADD_CONTACT_TO_GROUP begin");
+                    isSuccess = NetworkOperations.addContactToGroup(intent.getStringExtra(GROUP_REMOTE_ID),intent.getStringExtra(CONTACT_REMOTE_ID));
+                    successIntent = new Intent(MY_BC_RCVR + ACTION_EXECUTE_ADD_CONTACT_TO_GROUP);
+                    successIntent.putExtra(IS_SUCCESS, isSuccess);
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(successIntent);
+                    Log.i(TAG, "ACTION_EXECUTE_ADD_CONTACT_TO_GROUP end");
+                    break;
+                case ACTION_EXECUTE_DELETE_CONTACT_FROM_GROUP:
+                    Log.i(TAG, "ACTION_EXECUTE_DELETE_CONTACT_FROM_GROUP begin");
+                    isSuccess = NetworkOperations.deleteContactFromGroup(intent.getStringExtra(GROUP_REMOTE_ID),intent.getStringExtra(CONTACT_REMOTE_ID));
+                    successIntent = new Intent(MY_BC_RCVR + ACTION_EXECUTE_DELETE_CONTACT_FROM_GROUP);
+                    successIntent.putExtra(IS_SUCCESS, isSuccess);
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(successIntent);
+                    Log.i(TAG, "ACTION_EXECUTE_DELETE_CONTACT_FROM_GROUP end");
+                    break;
                 case ACTION_EXECUTE_DELETE_GROUP:
                     Log.i(TAG, "ACTION_EXECUTE_DELETE_GROUP begin");
                     isSuccess = NetworkOperations.deleteGroup(intent.getStringExtra(GROUP_REMOTE_ID));

@@ -172,9 +172,9 @@ public class DataManager {
         }
     }
 
-    public Call<GetGroupRes> getGroup(String id) {
+    public Call<GetGroupRes> getGroup(String groupRemoteId) {
         if (isAuthorized()) {
-            return mRestService.downloadGroup(mPreferenceManager.loadCookie(), id);
+            return mRestService.downloadGroup(mPreferenceManager.loadCookie(), groupRemoteId);
         } else {
             return null;
         }

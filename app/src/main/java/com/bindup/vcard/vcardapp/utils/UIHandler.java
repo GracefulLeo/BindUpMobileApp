@@ -142,6 +142,10 @@ public class UIHandler extends Handler {
         int updateGroupFinished = 21;
         int updateGroupContactsStart = 22;
         int updateGroupContactsFinished = 23;
+        int addContactToGroupStart = 28;
+        int addContactToGroupFinished = 29;
+        int deleteContactFromGroupStart = 30;
+        int deleteContactFromGroupFinished = 31;
         int deleteGroupStart = 24;
         int deleteGroupFinished = 25;
     }

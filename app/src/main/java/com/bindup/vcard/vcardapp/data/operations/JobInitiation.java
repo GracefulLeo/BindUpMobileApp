@@ -72,18 +72,36 @@ public class JobInitiation {
         App.getContext().sendBroadcast(updateCardIntentForBroadcast);
     }
 
-    public static void updateGroupContacts(String remoteId, List<String> cardList) {
+    public static void updateGroupContacts(String groupRemoteId, List<String> cardList) {
         Log.i(TAG, "updateGroupContacts");
         Intent createGroupIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
-        createGroupIntentForBroadcast.putExtra(GROUP_ID, remoteId);
+        createGroupIntentForBroadcast.putExtra(GROUP_ID, groupRemoteId);
         createGroupIntentForBroadcast.setAction(ACTION_PERFORM_UPDATE_GROUP_CONTACTS);
         App.getContext().sendBroadcast(createGroupIntentForBroadcast);
     }
 
-    public static void deleteGroup(String remoteId) {
+    public static void addContactToGroup(String groupRemoteId, String contactRemoteId) {
+        Log.i(TAG, "addContactToGroup");
+        Intent createGroupIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
+        createGroupIntentForBroadcast.putExtra(GROUP_REMOTE_ID, groupRemoteId);
+        createGroupIntentForBroadcast.putExtra(CONTACT_REMOTE_ID, contactRemoteId);
+        createGroupIntentForBroadcast.setAction(ACTION_PERFORM_ADD_CONTACT_TO_GROUP);
+        App.getContext().sendBroadcast(createGroupIntentForBroadcast);
+    }
+
+    public static void deleteContactFromGroup(String groupRemoteId, String contactRemoteId) {
+        Log.i(TAG, "deleteContactFromGroup");
+        Intent createGroupIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
+        createGroupIntentForBroadcast.putExtra(GROUP_REMOTE_ID, groupRemoteId);
+        createGroupIntentForBroadcast.putExtra(CONTACT_REMOTE_ID, contactRemoteId);
+        createGroupIntentForBroadcast.setAction(ACTION_PERFORM_DELETE_CONTACT_FROM_GROUP);
+        App.getContext().sendBroadcast(createGroupIntentForBroadcast);
+    }
+
+    public static void deleteGroup(String groupRemoteId) {
         Log.i(TAG, "deleteGroup");
         Intent deleteCardIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
-        deleteCardIntentForBroadcast.putExtra(GROUP_REMOTE_ID, remoteId);
+        deleteCardIntentForBroadcast.putExtra(GROUP_REMOTE_ID, groupRemoteId);
         deleteCardIntentForBroadcast.setAction(ACTION_PERFORM_DELETE_GROUP);
         App.getContext().sendBroadcast(deleteCardIntentForBroadcast);
     }

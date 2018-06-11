@@ -157,7 +157,7 @@ public class DatabaseOperation {
         return DATA_MANAGER.getGroup(id);
     }
 
-    public static void addContactToGroup(Group group, String cardRemoteId) {
+    public static void addContactToGroupDownloadin(Group group, String cardRemoteId) {
         DATA_MANAGER.addContactToGroup(group, DATA_MANAGER.getCardFromDB(cardRemoteId));
     }
 
@@ -166,6 +166,14 @@ public class DatabaseOperation {
             DATA_MANAGER.addLogo(group.getLogo());
         }
         DATA_MANAGER.updateGroup(group);
+    }
+
+    public static void addContactToGroup(Group group, Card contact) {
+        DATA_MANAGER.addContactToGroup(group, contact);
+    }
+
+    public static void deleteContactFromGroup(Group group, Card contact) {
+        DATA_MANAGER.deleteContactFromGroup(group, contact);
     }
 
     public static List<Group> getGroupList() {
