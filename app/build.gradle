@@ -5,8 +5,8 @@ android {
         config {
             keyAlias 'bindupkey'
             keyPassword 'QuiewAz13XxdsaqwWer'
-//            storeFile file('/home/adventurer/keyforbindup/bindupkey.jks')
-            storeFile file('/home/dima/AndroidStudioProjects/test/keyforbindup/bindupkey.jks')
+            storeFile file('/home/adventurer/keyforbindup/bindupkey.jks')
+//            storeFile file('/home/dima/AndroidStudioProjects/test/keyforbindup/bindupkey.jks')
             storePassword 'QuiewAz13XxdsaqwWer'
         }
     }
@@ -25,8 +25,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
-//            proguardFile '/home/adventurer/AndroidStudioProjects/Bind-up Project/Bind-Up Project/BACKUP VCARD APP/VCardApp/app/proguard-rules.pro'
-            proguardFile '/home/dima/AndroidStudioProjects/test/BindUpMobileApp/app/proguard-rules.pro'
+            proguardFile '/home/adventurer/AndroidStudioProjects/Bind-up Project/Bind-Up Project/BACKUP VCARD APP/VCardApp/app/proguard-rules.pro'
+//            proguardFile '/home/dima/AndroidStudioProjects/test/BindUpMobileApp/app/proguard-rules.pro'
         }
         debug {
             signingConfig signingConfigs.config

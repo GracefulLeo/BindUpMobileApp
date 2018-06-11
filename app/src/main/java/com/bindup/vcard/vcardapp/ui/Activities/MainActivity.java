@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 AlertDialog.Builder alertDialogBuilder;
                 AlertDialog alertDialog;
                 switch (item.getItemId()) {
+                    // Contact delete button ...
                     case R.id.contacts_preview_delete_button:
                         Log.d(TAG, "onMenuItemClick: Delete button clicked");
                         alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
