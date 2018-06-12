@@ -49,7 +49,7 @@ public class GroupsSingleContactPreviewFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.top_navigation_menu_groups_preview, menu);
+        inflater.inflate(R.menu.top_navigation_menu_contacts_and_groups_preview, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

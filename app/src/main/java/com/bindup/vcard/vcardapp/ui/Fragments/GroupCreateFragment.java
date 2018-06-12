@@ -176,7 +176,8 @@ public class GroupCreateFragment extends Fragment implements View.OnClickListene
 
     public void usersSelector() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Select VCard you want to share");
+        //@TODO Change harcoded phrase to string value ...
+        builder.setTitle("Select contact you want to add to this group");
         ListView modeList = new ListView(getActivity());
         contacts = new MainOperations(new Handler()).getContacts();
         modeList.setAdapter(new GroupCreateFragment.MyAdapter());
