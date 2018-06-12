@@ -34,13 +34,6 @@ public class DatabaseOperation {
 
         DATA_MANAGER.addCard(card);
 
-        if (card.getSocialLinks() != null && card.getSocialLinks().size() > 0) {
-            for (SocialLink link : card.getSocialLinks()) {
-                link.setCard(card);
-                DATA_MANAGER.addSocialLink(link);
-            }
-        }
-
         if (card.getEmails() != null && card.getEmails().size() > 0) {
             for (Email email : card.getEmails()) {
                 email.setCard(card);
@@ -52,6 +45,13 @@ public class DatabaseOperation {
             for (Phone phone : card.getPhones()) {
                 phone.setCard(card);
                 DATA_MANAGER.addPhone(phone);
+            }
+        }
+
+        if (card.getSocialLinks() != null && card.getSocialLinks().size() > 0) {
+            for (SocialLink link : card.getSocialLinks()) {
+                link.setCard(card);
+                DATA_MANAGER.addSocialLink(link);
             }
         }
     }

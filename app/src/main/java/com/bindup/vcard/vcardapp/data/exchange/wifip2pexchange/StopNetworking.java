@@ -14,7 +14,7 @@ public class StopNetworking extends BroadcastReceiver {
         String action = intent.getAction();
         if (action.equals(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION)) {
             WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            Log.d("YAZAN", ">>>>SUPPLICANT_STATE_CHANGED_ACTION<<<<<<");
+//            Log.d("YAZAN", ">>>>SUPPLICANT_STATE_CHANGED_ACTION<<<<<<");
             SupplicantState supl_state = ((SupplicantState) intent.getParcelableExtra(WifiManager.EXTRA_NEW_STATE));
             switch (supl_state) {
 //                case ASSOCIATED:
