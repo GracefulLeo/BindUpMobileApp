@@ -10,10 +10,8 @@ public class Phone implements Serializable{
 
     @DatabaseField(generatedId = true)
     private long id;
-
     @DatabaseField(foreign = true)
     private transient Card card;
-
     @DatabaseField
     private String phone;
 

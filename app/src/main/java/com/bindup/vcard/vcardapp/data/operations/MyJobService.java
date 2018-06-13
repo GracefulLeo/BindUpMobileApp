@@ -122,6 +122,13 @@ public class MyJobService extends JobService {
                 intent.setAction(ACTION_EXECUTE_DELETE_GROUP);
                 App.getContext().startService(intent);
                 return false;
+            case ACTION_UPDATE_CONTACT_COMMENT:
+                Log.i(TAG, "ACTION_UPDATE_CONTACT_COMMENT");
+                LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter(MY_BC_RCVR + ACTION_EXECUTE_UPDATE_CONTACT_COMMENT));
+                intent.putExtra(CONTACT_COMMENT_ID, bundle.getLong(CONTACT_COMMENT_ID));
+                intent.setAction(ACTION_EXECUTE_UPDATE_CONTACT_COMMENT);
+                App.getContext().startService(intent);
+                return false;
         }
         return false;
     }

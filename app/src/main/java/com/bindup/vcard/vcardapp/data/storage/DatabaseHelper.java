@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.bindup.vcard.vcardapp.data.storage.model.Base;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
+import com.bindup.vcard.vcardapp.data.storage.model.Comment;
 import com.bindup.vcard.vcardapp.data.storage.model.Email;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
 import com.bindup.vcard.vcardapp.data.storage.model.GroupCard;
@@ -32,6 +33,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<Base, Long> baseDao = null;
     private Dao<Group, Long> groupDao = null;
     private Dao<GroupCard, Long> groupCardDao = null;
+    private Dao<Comment, Long> commentDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, AppConfig.DB_NAME, null, AppConfig.DB_VERSION);
@@ -51,7 +53,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, Base.class);
             TableUtils.createTableIfNotExists(connectionSource, Group.class);
             TableUtils.createTableIfNotExists(connectionSource, GroupCard.class);
-
+            TableUtils.createTableIfNotExists(connectionSource, Comment.class);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
             e.printStackTrace();
@@ -159,6 +161,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return groupCardDao;
     }
+
+    public Dao<Comment, Long> getCommentDao() {
+        if (commentDao == null) {
+            try {
+                commentDao = getDao(Comment.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return commentDao;
+    }
     //endregion================================GetDao=============================================
 
     public Context getContext() {
@@ -177,6 +190,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         baseDao = null;
         groupDao = null;
         groupCardDao = null;
-//        groupLogoDao = null;
+        commentDao = null;
     }
 }

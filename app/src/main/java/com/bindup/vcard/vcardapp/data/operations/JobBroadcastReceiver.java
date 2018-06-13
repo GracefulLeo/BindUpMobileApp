@@ -105,6 +105,13 @@ public class JobBroadcastReceiver extends BroadcastReceiver {
                 exerciseJobBuilder.setExtras(bundle);
                 jobScheduler.schedule(exerciseJobBuilder.build());
                 break;
+            case ACTION_PERFORM_UPDATE_CONTACT_COMMENT:
+                Log.i(TAG, "ACTION_PERFORM_UPDATE_CONTACT_COMMENT");
+                bundle.putString(ACTION, ACTION_UPDATE_CONTACT_COMMENT);
+                bundle.putLong(CONTACT_COMMENT_ID, intent.getLongExtra(CONTACT_COMMENT_ID, 0));
+                exerciseJobBuilder.setExtras(bundle);
+                jobScheduler.schedule(exerciseJobBuilder.build());
+                break;
             default:
                 Log.e(TAG, "Unknown action: " + intent.getAction());
         }

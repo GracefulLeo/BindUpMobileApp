@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.bindup.vcard.vcardapp.data.network.NetworkOperations;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
+import com.bindup.vcard.vcardapp.data.storage.model.Comment;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
 import com.bindup.vcard.vcardapp.data.storage.operation.DatabaseOperation;
 
@@ -124,6 +125,15 @@ public class JobIntentService extends IntentService {
                     successIntent.putExtra(IS_SUCCESS, isSuccess);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(successIntent);
                     Log.i(TAG, "ACTION_EXECUTE_DELETE_GROUP end");
+                    break;
+                case ACTION_EXECUTE_UPDATE_CONTACT_COMMENT:
+                    Log.i(TAG, "ACTION_EXECUTE_UPDATE_CONTACT_COMMENT begin");
+                    Comment comment = DatabaseOperation.getComment(intent.getLongExtra(CONTACT_COMMENT_ID, 0));
+                    isSuccess = NetworkOperations.updateContactComment(comment);
+                    successIntent = new Intent(MY_BC_RCVR + ACTION_EXECUTE_UPDATE_CONTACT_COMMENT);
+                    successIntent.putExtra(IS_SUCCESS, isSuccess);
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(successIntent);
+                    Log.i(TAG, "ACTION_EXECUTE_UPDATE_CONTACT_COMMENT end");
                     break;
             }
         }

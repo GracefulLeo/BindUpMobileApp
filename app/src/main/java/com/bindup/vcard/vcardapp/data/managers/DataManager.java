@@ -27,6 +27,7 @@ import com.bindup.vcard.vcardapp.data.network.model.req.UserLoginReq;
 import com.bindup.vcard.vcardapp.data.network.model.res.UploadLogoRes;
 import com.bindup.vcard.vcardapp.data.storage.model.Base;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
+import com.bindup.vcard.vcardapp.data.storage.model.Comment;
 import com.bindup.vcard.vcardapp.data.storage.model.Email;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
 import com.bindup.vcard.vcardapp.data.storage.model.GroupCard;
@@ -63,7 +64,7 @@ public class DataManager {
     private Dao<Base, Long> baseDao;
     private Dao<Group, Long> groupDao;
     private Dao<GroupCard, Long> groupCardDao;
-
+    private Dao<Comment, Long> commentDao;
     //endregion========================DAO Declaration============================
 
     private DataManager() {
@@ -79,6 +80,7 @@ public class DataManager {
         this.baseDao = App.getBaseDao();
         this.groupDao = App.getGroupDao();
         this.groupCardDao = App.getGroupCardDao();
+        this.commentDao = App.getCommentDao();
         //endregion========================DAO init============================
     }
 
@@ -93,7 +95,7 @@ public class DataManager {
 
     public boolean isAuthorized() {
         return mPreferenceManager.loadCookie() != null && !mPreferenceManager.loadCookie().isEmpty() &&
-                mPreferenceManager.loadToken() != null && !mPreferenceManager.loadToken().isEmpty() &&
+                mPreferenceManager.loadXCSRFToken() != null && !mPreferenceManager.loadXCSRFToken().isEmpty() &&
                 mPreferenceManager.loadUserID() != null && !mPreferenceManager.loadUserID().isEmpty();
     }
 
@@ -136,7 +138,7 @@ public class DataManager {
 
     public Call<ResponseBody> logOut() {
         if (isAuthorized()) {
-            Call<ResponseBody> call = mRestService.logOut(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken());
+            Call<ResponseBody> call = mRestService.logOut(mPreferenceManager.loadCookie(), mPreferenceManager.loadXCSRFToken());
 //            mPreferenceManager.logoutUser();
             return call;
         } else {
@@ -183,7 +185,7 @@ public class DataManager {
     //Sends logo for card or group (defined by filepath in request model)
     public Call<UploadLogoRes> sendLogo(UploadLogoReq uploadLogoReq) {
         if (isAuthorized()) {
-            return mRestService.uploadLogo(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), uploadLogoReq);
+            return mRestService.uploadLogo(mPreferenceManager.loadCookie(), mPreferenceManager.loadXCSRFToken(), uploadLogoReq);
         } else {
             return null;
         }
@@ -191,7 +193,7 @@ public class DataManager {
 
     public Call<CreateCardRes> sendCard(CreateCardReq createCardReq) {
         if (isAuthorized()) {
-            return mRestService.createCard(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), createCardReq);
+            return mRestService.createCard(mPreferenceManager.loadCookie(), mPreferenceManager.loadXCSRFToken(), createCardReq);
         } else {
             return null;
         }
@@ -199,7 +201,7 @@ public class DataManager {
 
     public Call<CreateGroupRes> sendGroup(CreateGroupReq createGroupReq) {
         if (isAuthorized()) {
-            return mRestService.createGroup(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), createGroupReq);
+            return mRestService.createGroup(mPreferenceManager.loadCookie(), mPreferenceManager.loadXCSRFToken(), createGroupReq);
         } else {
             return null;
         }
@@ -207,7 +209,7 @@ public class DataManager {
 
     public Call<GetUserRes> getUser() {
         if (isAuthorized()) {
-            return mRestService.getUser(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), mPreferenceManager.loadUserID());
+            return mRestService.getUser(mPreferenceManager.loadCookie(), mPreferenceManager.loadXCSRFToken(), mPreferenceManager.loadUserID());
         } else {
             return null;
         }
@@ -215,7 +217,7 @@ public class DataManager {
 
     public Call<ResponseBody> updateUser(UpdateCardsReq req) {
         if (isAuthorized()) {
-            return mRestService.updateUser(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), mPreferenceManager.loadUserID(), req);
+            return mRestService.updateUser(mPreferenceManager.loadCookie(), mPreferenceManager.loadXCSRFToken(), mPreferenceManager.loadUserID(), req);
         } else {
             return null;
         }
@@ -223,7 +225,7 @@ public class DataManager {
 
     public Call<ResponseBody> updateUser(UpdateContactsReq req) {
         if (isAuthorized()) {
-            return mRestService.updateUser(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), mPreferenceManager.loadUserID(), req);
+            return mRestService.updateUser(mPreferenceManager.loadCookie(), mPreferenceManager.loadXCSRFToken(), mPreferenceManager.loadUserID(), req);
         } else {
             return null;
         }
@@ -231,7 +233,7 @@ public class DataManager {
 
     public Call<ResponseBody> updateUser(UpdateGroupsReq req) {
         if (isAuthorized()) {
-            return mRestService.updateUser(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), mPreferenceManager.loadUserID(), req);
+            return mRestService.updateUser(mPreferenceManager.loadCookie(), mPreferenceManager.loadXCSRFToken(), mPreferenceManager.loadUserID(), req);
         } else {
             return null;
         }
@@ -239,7 +241,7 @@ public class DataManager {
 
     public Call<ResponseBody> updateCard(UpdateCardReq req, String cardId) {
         if (isAuthorized()) {
-            return mRestService.updateCard(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), cardId, req);
+            return mRestService.updateCard(mPreferenceManager.loadCookie(), mPreferenceManager.loadXCSRFToken(), cardId, req);
         } else {
             return null;
         }
@@ -247,7 +249,7 @@ public class DataManager {
 
     public Call<ResponseBody> deleteCard(String cardId) {
         if (isAuthorized()) {
-            return mRestService.deleteCard(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), cardId);
+            return mRestService.deleteCard(mPreferenceManager.loadCookie(), mPreferenceManager.loadXCSRFToken(), cardId);
         } else {
             return null;
         }
@@ -255,7 +257,7 @@ public class DataManager {
 
     public Call<ResponseBody> updateGroup(UpdateGroupReq req) {
         if (isAuthorized()) {
-            return mRestService.updateGroup(mPreferenceManager.loadCookie(), mPreferenceManager.loadToken(), req.getId(), req);
+            return mRestService.updateGroup(mPreferenceManager.loadCookie(), mPreferenceManager.loadXCSRFToken(), req.getId(), req);
         } else {
             return null;
         }
@@ -286,9 +288,27 @@ public class DataManager {
         }
     }
 
+    //Saves Logo(only "fid" yet)TODO: download logo
+    //NEEDED FOR SAVING CARD
+    public void addLogo(Logo logo) {
+        try {
+            logoDao.create(logo);
+        } catch (SQLException e) {
+            handleException();
+        }
+    }
+
     public void updateLogo(Logo logo) {
         try {
             logoDao.update(logo);
+        } catch (SQLException e) {
+            handleException();
+        }
+    }
+
+    public void deleteLogo(Logo logo) {
+        try {
+            logoDao.delete(logo);
         } catch (SQLException e) {
             handleException();
         }
@@ -480,26 +500,6 @@ public class DataManager {
         }
     }
 
-    //Saves Logo(only "fid" yet)TODO: download logo
-    //NEEDED FOR SAVING CARD
-    public void addLogo(Logo logo) {
-        try {
-            logoDao.create(logo);
-        } catch (SQLException e) {
-            handleException();
-        }
-    }
-
-//    }
-
-    public void deleteLogo(Logo logo) {
-        try {
-            logoDao.delete(logo);
-        } catch (SQLException e) {
-            handleException();
-        }
-    }
-
     public void addSocialLink(SocialLink link) {
         try {
             socialLinkDao.create(link);
@@ -548,6 +548,39 @@ public class DataManager {
                 }
             }
             return ecept;
+        } catch (SQLException e) {
+            handleException();
+            return null;
+        }
+    }
+
+    public void addComment(Comment comment) {
+        try {
+            commentDao.create(comment);
+        } catch (SQLException e) {
+            handleException();
+        }
+    }
+
+    public void updateComment(Comment comment) {
+        try {
+            commentDao.update(comment);
+        } catch (SQLException e) {
+            handleException();
+        }
+    }
+
+    public void deleteComment(Comment comment) {
+        try {
+            commentDao.delete(comment);
+        } catch (SQLException e) {
+            handleException();
+        }
+    }
+
+    public Comment getComment(Long commentId) {
+        try {
+            return commentDao.queryForId(commentId);
         } catch (SQLException e) {
             handleException();
             return null;

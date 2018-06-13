@@ -9,6 +9,7 @@ import com.bindup.vcard.vcardapp.data.managers.DataManager;
 import com.bindup.vcard.vcardapp.data.network.NetworkOperations;
 import com.bindup.vcard.vcardapp.data.operations.JobInitiation;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
+import com.bindup.vcard.vcardapp.data.storage.model.Comment;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
 import com.bindup.vcard.vcardapp.data.storage.operation.DatabaseOperation;
 import com.bindup.vcard.vcardapp.utils.App;
@@ -221,6 +222,24 @@ public class MainOperations {
                     DatabaseOperation.createCard(card);
                     JobInitiation.addContact(card.getRemoteId());
                     handler.sendEmptyMessage(createContactFinished);
+                } else {
+                    Log.e(TAG, "User has not been authorized");
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
+                }
+            }
+        }).start();
+    }
+
+    public void updateContactComment(final Comment comment) {
+        handler.sendEmptyMessage(updateContactCommentStart);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mDataManager.isAuthorized()) {
+                    Log.i(TAG, "updateContactComment start");
+                    DatabaseOperation.updateContactComment(comment);
+                    JobInitiation.updateContactComment(comment.getId());
+                    handler.sendEmptyMessage(updateContactCommentFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
                     handler.sendEmptyMessage(userHasNotBeenAuthorized);

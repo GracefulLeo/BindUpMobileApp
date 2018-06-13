@@ -105,4 +105,12 @@ public class JobInitiation {
         deleteCardIntentForBroadcast.setAction(ACTION_PERFORM_DELETE_GROUP);
         App.getContext().sendBroadcast(deleteCardIntentForBroadcast);
     }
+
+    public static void updateContactComment(Long commentId) {
+        Log.i(TAG, "updateContactComment");
+        Intent deleteCardIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
+        deleteCardIntentForBroadcast.putExtra(CONTACT_COMMENT_ID, commentId);
+        deleteCardIntentForBroadcast.setAction(ACTION_PERFORM_UPDATE_CONTACT_COMMENT);
+        App.getContext().sendBroadcast(deleteCardIntentForBroadcast);
+    }
 }

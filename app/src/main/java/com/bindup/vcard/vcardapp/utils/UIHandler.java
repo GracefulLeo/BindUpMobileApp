@@ -134,6 +134,8 @@ public class UIHandler extends Handler {
         int deleteCardFinished = 13;
         int createContactStart = 14;
         int createContactFinished = 15;
+        int updateContactCommentStart = 32;
+        int updateContactCommentFinished = 33;
         int deleteContactStart = 16;
         int deleteContactFinished = 17;
         int createGroupStart = 18;

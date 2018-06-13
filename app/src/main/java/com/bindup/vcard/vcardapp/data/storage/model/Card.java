@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @DatabaseTable(tableName = "CARDS")
 //Entity for DB
@@ -25,6 +26,12 @@ public class Card implements Serializable {
 
     @DatabaseField//true is for MyCards, false for MyContacts for dividing in one db table
     private boolean isMy;
+
+    @DatabaseField
+    private UUID uuid;
+
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    private Comment comment;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Logo logo = null;
@@ -63,6 +70,8 @@ public class Card implements Serializable {
         if (name != null && !name.isEmpty()) {
             //Checkout field surname shouldn't be null
             if (surname != null && !surname.isEmpty()) {
+                this.uuid = UUID.randomUUID();
+
                 if (logo != null && logo.getLogo() != null && !logo.getLogo().isEmpty()) {
                     this.logo = logo;
                 }
@@ -120,7 +129,6 @@ public class Card implements Serializable {
             throw new Exception("Invalid method parameter: Card's String Name can't be null or empty");
         }
     }
-
 
     public void update(Card card) {
 //        if (card.getLogo() != null && !card.getLogo().getLogo().isEmpty()) {
@@ -190,7 +198,13 @@ public class Card implements Serializable {
     }
 
     //region===========================Setters==================================
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
 
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -259,7 +273,13 @@ public class Card implements Serializable {
     //endregion========================Setters==================================
 
     //region===========================Getters==================================
+    public UUID getUuid() {
+        return uuid;
+    }
 
+    public Comment getComment() {
+        return comment;
+    }
 
     public String getTitle() {
         return title;
@@ -327,12 +347,12 @@ public class Card implements Serializable {
 
     //endregion========================Getters======================================
 
-
     @Override
     public String toString() {
         return "Card{" + '\n' +
                 "id=" + id + ",\n" +
                 "remoteId='" + remoteId + ",\n" +
+                "uuid=" + uuid + ",\n" +
                 "logo=" + logo + ",\n" +
                 "name='" + name + ",\n" +
                 "surname='" + surname + ",\n" +
