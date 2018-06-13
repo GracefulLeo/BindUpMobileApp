@@ -288,8 +288,8 @@ public class NetworkOperations {
         return cards;
     }
 
-    public static List<Group> getMyGroups() {
-        Log.i(TAG, "getMyGroups start");
+    public static List<Group> dowloadMyGroups() {
+        Log.i(TAG, "dowloadMyGroups start");
         Call<GetUserRes> call = mDataManager.getUser();
         List<Group> groups = new ArrayList<>();
         Response<GetUserRes> response = null;

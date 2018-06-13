@@ -2,6 +2,7 @@ package com.bindup.vcard.vcardapp.data.storage.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -27,11 +28,11 @@ public class Card implements Serializable {
     @DatabaseField//true is for MyCards, false for MyContacts for dividing in one db table
     private boolean isMy;
 
-    @DatabaseField
-    private UUID uuid;
+    @DatabaseField(dataType = DataType.UUID)
+    private UUID uuid = null;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
-    private Comment comment;
+    private Comment comment = null;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Logo logo = null;

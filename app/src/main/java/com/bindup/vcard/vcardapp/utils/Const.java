@@ -7,6 +7,32 @@ public interface Const {
     String USER_TOKEN = "USER_TOKEN";
     String COOKIE = "COOKIE";
 
+    enum CardFields{
+        LOGO(""),
+        TITLE(""),
+        NAME(""),
+        SURNAME(""),
+        MIDLENAME(""),
+        COMPANY(""),
+        ADDRESS(""),
+        PHONES(""),
+        EMAILS(""),
+        SOCIAL_LINKS(""),
+        SITE("");
+
+
+        private String text;
+
+        CardFields(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
+
     enum ListRole {
         card,
         contact,

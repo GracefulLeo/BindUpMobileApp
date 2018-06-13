@@ -9,7 +9,7 @@ public class Comment {
     @DatabaseField(generatedId = true)
     private Long id;
     @DatabaseField(foreign = true, columnName = "CONTACT")
-    private Card contact;
+    private transient Card contact;
     @DatabaseField
     private String comment;
 

@@ -112,7 +112,7 @@ public class MainOperations {
                 for (Card card : NetworkOperations.downloadMyContacts()) {
                     DatabaseOperation.saveCard(card);
                 }
-                for (Group group : NetworkOperations.getMyGroups()) {
+                for (Group group : NetworkOperations.dowloadMyGroups()) {
                     DatabaseOperation.createGroup(group, null);
                     for (String cardRemoteId : NetworkOperations.getGroupContacts(group.getRemoteId())) {
                         DatabaseOperation.addContactToGroupDownloadin(group, cardRemoteId);
@@ -144,7 +144,7 @@ public class MainOperations {
 //            for (Group group : DATA_MANAGER.getGroupList()) {
 //                strings.add(group.getRemoteId());
 //            }
-//            for (Group group : NetworkOperations.getMyGroups()) {
+//            for (Group group : NetworkOperations.dowloadMyGroups()) {
 //                if (!strings.contains(group.getRemoteId())) {
 //                    DatabaseOperation.createGroup(group, null);
 //                    for (String cardRemoteId : NetworkOperations.getGroupContacts(group.getRemoteId())) {
