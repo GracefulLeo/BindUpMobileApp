@@ -44,10 +44,10 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG, "register start");
+                Log.d(TAG, "register start");
                 if (App.hasConnection()) {
                     if (mDataManager.isAuthorized()) {
-                        Log.i(TAG, "user is still authorized");
+                        Log.d(TAG, "user is still authorized");
                         DatabaseOperation.clearDb();
                         mDataManager.getPreferenceManager().logoutUser();
                     }
@@ -65,7 +65,7 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG, "login start");
+                Log.d(TAG, "login start");
                 if (App.hasConnection()) {
                     if (mDataManager.isAuthorized()) {
                         DatabaseOperation.clearDb();
@@ -84,7 +84,7 @@ public class MainOperations {
         handler.sendEmptyMessage(logoutStart);
         new Thread(new Runnable() {
             public void run() {
-                Log.i(TAG, "logout start");
+                Log.d(TAG, "logout start");
                 if (App.hasConnection()) {
                     if (mDataManager.isAuthorized()) {
                         networkOperations.logOut();
@@ -105,7 +105,7 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG, "downloadUserData");
+                Log.d(TAG, "downloadUserData");
                 for (Card card : NetworkOperations.downloadMyCards()) {
                     DatabaseOperation.saveCard(card);
                 }
@@ -160,8 +160,8 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "createCard start");
                 if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "createCard start");
                     card.setMy(true);
                     DatabaseOperation.createCard(card);
                     JobInitiation.createCard(card.getId());
@@ -179,8 +179,8 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "updateCard start for card: " + oldCard.getRemoteId());
                 if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "updateCard start for card: " + oldCard.getRemoteId());
                     oldCard.update(newCard);
                     DatabaseOperation.updateCard(oldCard);
                     JobInitiation.updateCard(oldCard.getId());
@@ -198,8 +198,8 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "deleteCard start for card: " + card.getRemoteId());
                 if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "deleteCard start for card: " + card.getRemoteId());
                     JobInitiation.deleteCard(card.getRemoteId());
                     DatabaseOperation.deleteCard(card);
                     handler.sendEmptyMessage(deleteCardFinished);
@@ -216,7 +216,7 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG, "createContact for contact: " + card.getRemoteId());
+                Log.d(TAG, "createContact for contact: " + card.getRemoteId());
                 if (mDataManager.isAuthorized()) {
                     card.setMy(false);
                     DatabaseOperation.createCard(card);
@@ -235,8 +235,8 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "updateContactComment start");
                 if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "updateContactComment start");
                     DatabaseOperation.updateContactComment(comment);
                     JobInitiation.updateContactComment(comment.getId());
                     handler.sendEmptyMessage(updateContactCommentFinished);
@@ -253,8 +253,8 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "deleteContact");
                 if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "deleteContact");
                     List<Group> groups = DatabaseOperation.getGroupsWhereContact(card);
                     if (groups != null && !groups.isEmpty()) {
                         for (Group group : groups) {
@@ -278,8 +278,8 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "createGroup start");
                 if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "createGroup start");
                     DatabaseOperation.createGroup(group, contacts);
                     List<String> ids = new ArrayList<>();
                     if (contacts != null && contacts.size() > 0) {
@@ -302,8 +302,8 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "updateGroup start");
                 if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "updateGroup start");
                     oldGroup.update(newGroup);
                     DatabaseOperation.updateGroup(oldGroup);
                     JobInitiation.updateGroup(oldGroup.getId());
@@ -321,8 +321,8 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "updateGroupContacts start");
                 if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "updateGroupContacts start");
                     DatabaseOperation.updateGroupContacts(group, contacts);
                     List<String> ids = new ArrayList<>();
                     if (contacts != null && contacts.size() > 0) {
@@ -345,11 +345,31 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "addContactToGroup start");
                 if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "addContactToGroupDownloadin start");
                     DatabaseOperation.addContactToGroup(group, contact);
 
                     JobInitiation.addContactToGroup(group.getRemoteId(), contact.getRemoteId());
+                    handler.sendEmptyMessage(addContactToGroupFinished);
+                } else {
+                    Log.e(TAG, "User has not been authorized");
+                    handler.sendEmptyMessage(userHasNotBeenAuthorized);
+                }
+            }
+        }).start();
+    }
+
+    public void addContactsToGroup(final Group group, final List<Card> contacts) {
+        handler.sendEmptyMessage(addContactToGroupStart);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "addContactsToGroup start");
+                if (mDataManager.isAuthorized()) {
+                    for (Card contact : contacts) {
+                        DatabaseOperation.addContactToGroup(group, contact);
+                        JobInitiation.addContactToGroup(group.getRemoteId(), contact.getRemoteId());
+                    }
                     handler.sendEmptyMessage(addContactToGroupFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
@@ -364,8 +384,8 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "deleteContactFromGroup start");
                 if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "deleteContactFromGroup start");
                     DatabaseOperation.deleteContactFromGroup(group, contact);
 
                     JobInitiation.deleteContactFromGroup(group.getRemoteId(), contact.getRemoteId());
@@ -383,8 +403,8 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, "deleteGroup start");
                 if (mDataManager.isAuthorized()) {
-                    Log.i(TAG, "deleteGroup start");
                     JobInitiation.deleteGroup(group.getRemoteId());
                     DatabaseOperation.deleteGroup(group);
                     handler.sendEmptyMessage(deleteGroupFinished);
@@ -398,7 +418,7 @@ public class MainOperations {
 
     //From DB
     public List<Card> getCardList() {
-        Log.i(TAG, "getCardList");
+        Log.d(TAG, "getCardList");
         if (mDataManager.isAuthorized()) {
             return mDataManager.getCardList();
         } else {
@@ -410,7 +430,7 @@ public class MainOperations {
 
     //From DB
     public Card getCard(Long id) {
-        Log.i(TAG, "getCard for card: " + id);
+        Log.d(TAG, "getCard for card: " + id);
         if (mDataManager.isAuthorized()) {
             return DatabaseOperation.getCard(id);
         } else {
@@ -422,7 +442,7 @@ public class MainOperations {
 
     //From DB
     public List<Group> getGroupList() {
-        Log.i(TAG, "getGroupList");
+        Log.d(TAG, "getGroupList");
         if (mDataManager.isAuthorized()) {
             return DatabaseOperation.getGroupList();
         } else {
@@ -434,7 +454,7 @@ public class MainOperations {
 
     //From DB
     public List<Card> getContacts() {
-        Log.i(TAG, "getContacts");
+        Log.d(TAG, "getContacts");
         if (mDataManager.isAuthorized()) {
             return DatabaseOperation.getContactList();
         } else {
@@ -446,7 +466,7 @@ public class MainOperations {
 
     //From DB
     public Group getGroup(Long id) {
-        Log.i(TAG, "getGroup for card: " + id);
+        Log.d(TAG, "getGroup for card: " + id);
         if (mDataManager.isAuthorized()) {
             return DatabaseOperation.getGroup(id);
         } else {
@@ -458,7 +478,7 @@ public class MainOperations {
 
     //From DB
     public List<Card> getGroupContacts(Group group) {
-        Log.i(TAG, "getGroupContacts for group: " + group.getId());
+        Log.d(TAG, "getGroupContacts for group: " + group.getId());
         if (mDataManager.isAuthorized()) {
             return DatabaseOperation.getGroupContacts(group);
         } else {
