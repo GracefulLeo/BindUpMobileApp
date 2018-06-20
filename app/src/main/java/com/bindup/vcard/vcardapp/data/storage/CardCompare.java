@@ -1,111 +1,234 @@
 package com.bindup.vcard.vcardapp.data.storage;
 
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
+import com.bindup.vcard.vcardapp.data.storage.model.Change;
 import com.bindup.vcard.vcardapp.data.storage.model.Email;
+import com.bindup.vcard.vcardapp.data.storage.model.History;
 import com.bindup.vcard.vcardapp.data.storage.model.Phone;
 import com.bindup.vcard.vcardapp.data.storage.model.SocialLink;
+import com.bindup.vcard.vcardapp.utils.Const;
+import com.bindup.vcard.vcardapp.utils.Const.CardFields;
 
+import java.util.Date;
 import java.util.Iterator;
 
-public class CardCompare {
+import static com.bindup.vcard.vcardapp.utils.Const.CardFields.*;
 
-    public boolean title = true;
-    public boolean fieldLogotype = true;
-    public boolean fieldName = true;
-    public boolean fieldSurname = true;
-    public boolean fieldMiddleName = true;
-    public boolean fieldCompanyName = true;
-    public boolean fieldPosition = true;
-    public boolean fieldAddress = true;
-    public boolean fieldPhone = true;
-    public boolean fieldMail = true;
-    public boolean fieldWebSite = true;
-    public boolean fieldSocialLinks = true;
-    public boolean fieldBase64Vcard = true;
+public class CardCompare {//true - for changed field, false - for unchanged fields
 
-    public CardCompare(Card card1, Card card2) {
-        if (card1.getTitle() == null && card2.getTitle() == null ||
-                card1.getTitle() != null && card2.getTitle() != null && card1.getTitle().equals(card2.getTitle())) {
-            title = false;
+    private History history;
+    private boolean title = false;
+    private boolean fieldLogotype = false;
+    private boolean fieldName = false;
+    private boolean fieldSurname = false;
+    private boolean fieldMiddleName = false;
+    private boolean fieldCompanyName = false;
+    private boolean fieldPosition = false;
+    private boolean fieldAddress = false;
+    private boolean fieldPhone = false;
+    private boolean fieldMail = false;
+    private boolean fieldWebSite = false;
+    private boolean fieldSocialLinks = false;
+    private boolean fieldBase64Vcard = false;
+
+    public CardCompare(Card previousCard, Card newCard) {
+        history = new History(previousCard.getRemoteId());
+        if (newCard.getTitle() != null && !previousCard.getTitle().equals(newCard.getTitle())) {
+            title = true;
         }
-        if (card1.getLogo() == null && card2.getLogo() == null ||
-                card1.getLogo() != null && card2.getLogo() != null && (card1.getLogo().getLogo() == null && card2.getLogo().getLogo() == null ||
-                card1.getLogo() != null && card2.getLogo() != null && card1.getLogo().getLogo().equals(card2.getLogo().getLogo()))) {
-            fieldLogotype = false;
+        if (previousCard.getLogo() == null && newCard.getLogo() != null ||
+                previousCard.getLogo() != null && !previousCard.getLogo().equals(newCard.getLogo())) {
+            fieldLogotype = true;
+            history.addChange(new Change(LOGO, null, null));//TODO: think about adding small logos just for history
         }
-        if (card1.getName() == null && card2.getName() == null ||
-                card1.getName() != null && card2.getName() != null && card1.getName().equals(card2.getName())) {
-            fieldName = false;
+        if (!previousCard.getName().equals(newCard.getName())) {
+            fieldName = true;
+            history.addChange(new Change(NAME, previousCard.getName(), newCard.getName()));
         }
-        if (card1.getSurname() == null && card2.getSurname() == null ||
-                card1.getSurname() != null && card2.getSurname() != null && card1.getSurname().equals(card2.getSurname())) {
-            fieldSurname = false;
+        if (!previousCard.getSurname().equals(newCard.getSurname())) {
+            fieldSurname = true;
+            history.addChange(new Change(SURNAME, previousCard.getSurname(), newCard.getSurname()));
         }
-        if (card1.getMidlename() == null && card2.getMidlename() == null ||
-                card1.getMidlename() != null && card2.getMidlename() != null && card1.getMidlename().equals(card2.getMidlename())) {
-            fieldMiddleName = false;
+        if (previousCard.getMidlename() == null && newCard.getMidlename() != null ||
+                previousCard.getMidlename() != null && !previousCard.getMidlename().equals(newCard.getMidlename())) {
+            fieldMiddleName = true;
+            history.addChange(new Change(MIDDLENAME, previousCard.getMidlename(), newCard.getMidlename()));
         }
-        if (card1.getCompany() == null && card2.getCompany() == null ||
-                card1.getCompany() != null && card2.getCompany() != null && card1.getCompany().equals(card2.getCompany())) {
-            fieldCompanyName = false;
+        if (previousCard.getCompany() == null && newCard.getCompany() != null ||
+                previousCard.getCompany() != null && !previousCard.getCompany().equals(newCard.getCompany())) {
+            fieldCompanyName = true;
+            history.addChange(new Change(COMPANY, previousCard.getCompany(), newCard.getCompany()));
         }
-        if (card1.getPosition() == null && card2.getPosition() == null ||
-                card1.getPosition() != null && card2.getPosition() != null && card1.getPosition().equals(card2.getPosition())) {
-            fieldPosition = false;
+        if (previousCard.getPosition() == null && newCard.getPosition() != null ||
+                previousCard.getPosition() != null && !previousCard.getPosition().equals(newCard.getPosition())) {
+            fieldPosition = true;
+            history.addChange(new Change(POSITION, previousCard.getPosition(), newCard.getPosition()));
         }
-        if (card1.getAddress() == null && card2.getAddress() == null ||
-                card1.getAddress() != null && card2.getAddress() != null && card1.getAddress().equals(card2.getAddress())) {
-            fieldAddress = false;
+        if (previousCard.getAddress() == null && newCard.getAddress() != null ||
+                previousCard.getAddress() != null && !previousCard.getAddress().equals(newCard.getAddress())) {
+            fieldAddress = true;
+            history.addChange(new Change(ADDRESS, previousCard.getAddress(), newCard.getAddress()));
         }
-        if (card1.getPhones() == null && card2.getPhones() == null ||
-                card1.getPhones() != null && card2.getPhones() != null && card1.getPhones().size() == card2.getPhones().size()) {
-            fieldPhone = false;
-            Iterator iterator1 = card1.getPhones().iterator();
-            Iterator iterator2 = card2.getPhones().iterator();
-            while (iterator1.hasNext() && iterator2.hasNext() && !fieldPhone) {
-                Phone phone1 = (Phone) iterator1.next();
-                Phone phone2 = (Phone) iterator2.next();
-                if (!phone1.getPhone().equals(phone2.getPhone())) {
-                    fieldPhone = true;
+        if (previousCard.getSite() == null && newCard.getSite() != null ||
+                previousCard.getSite() != null && !previousCard.getSite().equals(newCard.getSite())) {
+            fieldWebSite = true;
+            history.addChange(new Change(SITE, previousCard.getSite(), newCard.getSite()));
+        }
+        if (previousCard.getPhones() == null && newCard.getPhones() != null ||
+                previousCard.getPhones() != null && !previousCard.getPhones().equals(newCard.getPhones())) {
+            fieldPhone = true;
+            Iterator iterator1 = previousCard.getPhones().iterator();
+            Iterator iterator2 = newCard.getPhones().iterator();
+            while (iterator1.hasNext() || iterator2.hasNext()) {
+                Phone phone1;
+                if (iterator1.hasNext()) {
+                    phone1 = (Phone) iterator1.next();
+                } else {
+                    phone1 = null;
+                }
+                Phone phone2;
+                if (iterator2.hasNext()) {
+                    phone2 = (Phone) iterator2.next();
+                } else {
+                    phone2 = null;
+                }
+                if (phone1 != null) {
+                    if (phone2 == null) {
+                        history.addChange(new Change(PHONES, phone1.getPhone(), null));
+                    } else if (!phone1.equals(phone2)) {
+                        history.addChange(new Change(PHONES, phone1.getPhone(), phone2.getPhone()));
+                    }
+                } else if (phone2 != null) {
+                    history.addChange(new Change(PHONES, null, phone2.getPhone()));
                 }
             }
         }
-        if (card1.getEmails() == null && card2.getEmails() == null ||
-                card1.getEmails() != null && card2.getEmails() != null && card1.getEmails().size() == card2.getEmails().size()) {
-            fieldMail = false;
-            Iterator iterator1 = card1.getEmails().iterator();
-            Iterator iterator2 = card2.getEmails().iterator();
+        if (previousCard.getEmails() == null && newCard.getEmails() != null ||
+                previousCard.getEmails() != null && !previousCard.getEmails().equals(newCard.getEmails())) {
+            fieldMail = true;
+            Iterator iterator1 = previousCard.getEmails().iterator();
+            Iterator iterator2 = newCard.getEmails().iterator();
             while (iterator1.hasNext() && iterator2.hasNext() && !fieldMail) {
-                Email email1 = (Email) iterator1.next();
-                Email email2 = (Email) iterator2.next();
-                if (!email1.getEmail().equals(email2.getEmail())) {
-                    fieldMail = true;
+                Email email1;
+                if (iterator1.hasNext()) {
+                    email1 = (Email) iterator1.next();
+                } else {
+                    email1 = null;
+                }
+                Email email2;
+                if (iterator2.hasNext()) {
+                    email2 = (Email) iterator2.next();
+                } else {
+                    email2 = null;
+                }
+                if (email1 != null) {
+                    if (email2 == null) {
+                        history.addChange(new Change(EMAILS, email1.getEmail(), null));
+                    } else if (!email1.equals(email2)) {
+                        history.addChange(new Change(EMAILS, email1.getEmail(), email2.getEmail()));
+                    }
+                } else if (email2 != null) {
+                    history.addChange(new Change(EMAILS, null, email2.getEmail()));
                 }
             }
         }
-        if (card1.getSocialLinks() == null && card2.getSocialLinks() == null ||
-                card1.getSocialLinks() != null && card2.getSocialLinks() != null && card1.getSocialLinks().size() == card2.getSocialLinks().size()) {
-            fieldSocialLinks = false;
-            for (SocialLink socialLink1 : card1.getSocialLinks()) {
-                for (SocialLink socialLink2 : card2.getSocialLinks()) {
+        if (previousCard.getSocialLinks() == null && newCard.getSocialLinks() != null ||
+                previousCard.getSocialLinks() != null && !previousCard.getSocialLinks().equals(newCard.getSocialLinks())) {
+            fieldSocialLinks = true;
+            if (newCard.getSocialLinks() == null) {
+                for (SocialLink socialLink : previousCard.getSocialLinks()) {
+                    history.addChange(new Change(CardFields.getField(socialLink.getType()), socialLink.getValue(), null));
+                }
+            }
+            boolean isExist = false;
+            for (SocialLink socialLink1 : previousCard.getSocialLinks()) {
+                for (SocialLink socialLink2 : newCard.getSocialLinks()) {
                     if (socialLink1.getType() == socialLink2.getType() && !socialLink1.getValue().equals(socialLink2.getValue())) {
-                        fieldSocialLinks = true;
+                        history.addChange(new Change(CardFields.getField(socialLink1.getType()), socialLink1.getValue(), socialLink2.getValue()));
+                        isExist = true;
                         break;
                     }
                 }
-                if (fieldSocialLinks) {
-                    break;
+                if (!isExist) {
+                    history.addChange(new Change(CardFields.getField(socialLink1.getType()), socialLink1.getValue(), null));
+                    isExist = false;
+                }
+            }
+            for (SocialLink socialLink2 : newCard.getSocialLinks()) {
+                for (SocialLink socialLink1 : previousCard.getSocialLinks()) {
+                    if (socialLink2.getType() == socialLink1.getType()) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    history.addChange(new Change(CardFields.getField(socialLink2.getType()), null, socialLink2.getValue()));
                 }
             }
         }
-        if (card1.getSite() == null && card2.getSite() == null ||
-                card1.getSite() != null && card2.getSite() != null && card1.getSite().equals(card2.getSite())) {
-            fieldWebSite = false;
-        }
-        if (card1.getBase() == null && card2.getBase() == null ||
-                card1.getBase() != null && card2.getBase() != null && (card1.getBase().getBase64() == null && card2.getBase().getBase64() == null ||
-                card1.getBase().getBase64() != null && card2.getBase().getBase64() != null && card1.getBase().getBase64().equals(card2.getBase().getBase64()))) {
-            fieldBase64Vcard = false;
+        if (previousCard.getBase().getBase64().equals(newCard.getBase().getBase64())) {
+            fieldBase64Vcard = true;
         }
     }
+
+    //region==================================Getters=============================
+
+    public History getHistory() {
+        return history;
+    }
+
+    public boolean isTitle() {
+        return title;
+    }
+
+    public boolean isFieldLogotype() {
+        return fieldLogotype;
+    }
+
+    public boolean isFieldName() {
+        return fieldName;
+    }
+
+    public boolean isFieldSurname() {
+        return fieldSurname;
+    }
+
+    public boolean isFieldMiddleName() {
+        return fieldMiddleName;
+    }
+
+    public boolean isFieldCompanyName() {
+        return fieldCompanyName;
+    }
+
+    public boolean isFieldPosition() {
+        return fieldPosition;
+    }
+
+    public boolean isFieldAddress() {
+        return fieldAddress;
+    }
+
+    public boolean isFieldPhone() {
+        return fieldPhone;
+    }
+
+    public boolean isFieldMail() {
+        return fieldMail;
+    }
+
+    public boolean isFieldWebSite() {
+        return fieldWebSite;
+    }
+
+    public boolean isFieldSocialLinks() {
+        return fieldSocialLinks;
+    }
+
+    public boolean isFieldBase64Vcard() {
+        return fieldBase64Vcard;
+    }
+
+
+    //endregion===============================Getters=============================
 }

@@ -60,7 +60,7 @@ public class MyJobService extends JobService {
             case ACTION_DELETE_CARD:
                 Log.i(TAG, "ACTION_DELETE_CARD");
                 LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter(MY_BC_RCVR + ACTION_EXECUTE_DELETE_CARD));
-                intent.putExtra(CARD_REMOTE_ID, bundle.getString(CARD_REMOTE_ID));
+                intent.putExtra(CARD_ID, bundle.getLong(CARD_ID));
                 intent.setAction(ACTION_EXECUTE_DELETE_CARD);
                 App.getContext().startService(intent);
                 return false;
@@ -127,6 +127,13 @@ public class MyJobService extends JobService {
                 LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter(MY_BC_RCVR + ACTION_EXECUTE_UPDATE_CONTACT_COMMENT));
                 intent.putExtra(CONTACT_COMMENT_ID, bundle.getLong(CONTACT_COMMENT_ID));
                 intent.setAction(ACTION_EXECUTE_UPDATE_CONTACT_COMMENT);
+                App.getContext().startService(intent);
+                return false;
+            case ACTION_ADD_HISTORY:
+                Log.i(TAG, "ACTION_ADD_HISTORY");
+                LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter(MY_BC_RCVR + ACTION_EXECUTE_ADD_HISTORY));
+                intent.putExtra(HISTORY_ID, bundle.getLong(HISTORY_ID));
+                intent.setAction(ACTION_EXECUTE_ADD_HISTORY);
                 App.getContext().startService(intent);
                 return false;
         }

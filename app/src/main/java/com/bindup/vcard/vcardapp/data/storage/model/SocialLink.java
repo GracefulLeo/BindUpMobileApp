@@ -10,6 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @DatabaseTable(tableName = "SOCIALLINK")
 public class SocialLink implements Serializable{
@@ -74,4 +75,20 @@ public class SocialLink implements Serializable{
     }
 
     //endregion===============================Getters=============================
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SocialLink that = (SocialLink) o;
+        return getType() == that.getType() &&
+                Objects.equals(getValue(), that.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getType(), getValue());
+    }
 }

@@ -31,6 +31,7 @@ import com.bindup.vcard.vcardapp.data.storage.model.Card;
 import com.bindup.vcard.vcardapp.data.storage.model.Comment;
 import com.bindup.vcard.vcardapp.data.storage.model.Email;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
+import com.bindup.vcard.vcardapp.data.storage.model.History;
 import com.bindup.vcard.vcardapp.data.storage.model.Logo;
 import com.bindup.vcard.vcardapp.data.storage.model.Phone;
 import com.bindup.vcard.vcardapp.data.storage.model.SocialLink;
@@ -288,6 +289,11 @@ public class NetworkOperations {
         return cards;
     }
 
+    //TODO: Complete method
+    public static List<History> downloadHistories() {
+        return null;
+    }
+
     public static List<Group> dowloadMyGroups() {
         Log.i(TAG, "dowloadMyGroups start");
         Call<GetUserRes> call = mDataManager.getUser();
@@ -430,9 +436,14 @@ public class NetworkOperations {
         return false;
     }
 
-    public static boolean deleteCard(final String remoteId) {
+    //TODO: complete method
+    public static boolean addHistory(History history) {
+        return false;
+    }
+
+    public static boolean deleteCard(final Card card) {
         Log.i(TAG, "deleteCard start");
-        Call<ResponseBody> call1 = mDataManager.deleteCard(remoteId);
+        Call<ResponseBody> call1 = mDataManager.deleteCard(card.getRemoteId());
         Response<ResponseBody> responseBody = null;
         try {
             responseBody = call1.execute();
@@ -468,7 +479,7 @@ public class NetworkOperations {
                                 e.printStackTrace();
                             }
                             for (int i = 0; i < existedCards.size(); i++) {
-                                if (existedCards.get(i).getTargetId().equals(remoteId)) {
+                                if (existedCards.get(i).getTargetId().equals(card.getRemoteId())) {
                                     existedCards.remove(i);
                                     break;
                                 }

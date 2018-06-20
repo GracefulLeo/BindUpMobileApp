@@ -31,6 +31,7 @@ import com.bindup.vcard.vcardapp.data.storage.model.Comment;
 import com.bindup.vcard.vcardapp.data.storage.model.Email;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
 import com.bindup.vcard.vcardapp.data.storage.model.GroupCard;
+import com.bindup.vcard.vcardapp.data.storage.model.History;
 import com.bindup.vcard.vcardapp.data.storage.model.Logo;
 import com.bindup.vcard.vcardapp.data.storage.model.Phone;
 import com.bindup.vcard.vcardapp.data.storage.model.SocialLink;
@@ -65,6 +66,7 @@ public class DataManager {
     private Dao<Group, Long> groupDao;
     private Dao<GroupCard, Long> groupCardDao;
     private Dao<Comment, Long> commentDao;
+    private Dao<History, Long> historyDao;
     //endregion========================DAO Declaration============================
 
     private DataManager() {
@@ -81,6 +83,7 @@ public class DataManager {
         this.groupDao = App.getGroupDao();
         this.groupCardDao = App.getGroupCardDao();
         this.commentDao = App.getCommentDao();
+        this.historyDao = App.getHistoryDao();
         //endregion========================DAO init============================
     }
 
@@ -285,6 +288,23 @@ public class DataManager {
             } catch (SQLException e) {
                 handleException();
             }
+        }
+    }
+
+    public void addHistory(History history) {
+        try {
+            historyDao.create(history);
+        } catch (SQLException e) {
+            handleException();
+        }
+    }
+
+    public History getHistory(Long historyId) {
+        try {
+            return historyDao.queryForId(historyId);
+        } catch (SQLException e) {
+            handleException();
+            return null;
         }
     }
 

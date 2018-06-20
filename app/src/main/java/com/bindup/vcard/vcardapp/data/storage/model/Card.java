@@ -1,5 +1,7 @@
 package com.bindup.vcard.vcardapp.data.storage.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.j256.ormlite.field.DataType;
@@ -13,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @DatabaseTable(tableName = "CARDS")
@@ -65,7 +68,7 @@ public class Card implements Serializable {
     }
 
     //Constructor for UI
-    public Card(Logo logo, String title, String name, String surname, String midlename, String company, String address, String position,
+    public Card(Logo logo, String title, @NonNull String name, @NonNull String surname, String midlename, String company, String address, String position,
                 Collection<Phone> phones, Collection<Email> emails, String site, Collection<SocialLink> socialLinks, Base base) throws Exception {
         //Checkout field name shouldn't be null
         if (name != null && !name.isEmpty()) {
@@ -347,6 +350,33 @@ public class Card implements Serializable {
     }
 
     //endregion========================Getters======================================
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return isMy() == card.isMy() &&
+                Objects.equals(getLogo(), card.getLogo()) &&
+                Objects.equals(getTitle(), card.getTitle()) &&
+                Objects.equals(getName(), card.getName()) &&
+                Objects.equals(getSurname(), card.getSurname()) &&
+                Objects.equals(getMidlename(), card.getMidlename()) &&
+                Objects.equals(getCompany(), card.getCompany()) &&
+                Objects.equals(getAddress(), card.getAddress()) &&
+                Objects.equals(getPosition(), card.getPosition()) &&
+                Objects.equals(getPhones(), card.getPhones()) &&
+                Objects.equals(getEmails(), card.getEmails()) &&
+                Objects.equals(getSocialLinks(), card.getSocialLinks()) &&
+                Objects.equals(getSite(), card.getSite()) &&
+                Objects.equals(getBase(), card.getBase());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isMy(), getLogo(), getTitle(), getName(), getSurname(), getMidlename(), getCompany(), getAddress(), getPosition(), getPhones(), getEmails(), getSocialLinks(), getSite(), getBase());
+    }
 
     @Override
     public String toString() {

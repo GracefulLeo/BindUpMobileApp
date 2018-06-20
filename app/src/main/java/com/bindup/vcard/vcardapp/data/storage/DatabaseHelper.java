@@ -10,6 +10,7 @@ import com.bindup.vcard.vcardapp.data.storage.model.Comment;
 import com.bindup.vcard.vcardapp.data.storage.model.Email;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
 import com.bindup.vcard.vcardapp.data.storage.model.GroupCard;
+import com.bindup.vcard.vcardapp.data.storage.model.History;
 import com.bindup.vcard.vcardapp.data.storage.model.Logo;
 import com.bindup.vcard.vcardapp.data.storage.model.Phone;
 import com.bindup.vcard.vcardapp.data.storage.model.SocialLink;
@@ -34,6 +35,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<Group, Long> groupDao = null;
     private Dao<GroupCard, Long> groupCardDao = null;
     private Dao<Comment, Long> commentDao = null;
+    private Dao<History, Long> historyDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, AppConfig.DB_NAME, null, AppConfig.DB_VERSION);
@@ -54,6 +56,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, Group.class);
             TableUtils.createTableIfNotExists(connectionSource, GroupCard.class);
             TableUtils.createTableIfNotExists(connectionSource, Comment.class);
+            TableUtils.createTableIfNotExists(connectionSource, History.class);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
             e.printStackTrace();
@@ -172,6 +175,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return commentDao;
     }
+
+    public Dao<History, Long> getHistoryDao() {
+        if (historyDao == null) {
+            try {
+                historyDao = getDao(History.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return historyDao;
+    }
+
     //endregion================================GetDao=============================================
 
     public Context getContext() {

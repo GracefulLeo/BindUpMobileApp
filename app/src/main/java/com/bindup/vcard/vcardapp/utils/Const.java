@@ -8,23 +8,43 @@ public interface Const {
     String COOKIE = "COOKIE";
 
     enum CardFields{
-        LOGO(""),
-        TITLE(""),
-        NAME(""),
-        SURNAME(""),
-        MIDLENAME(""),
-        COMPANY(""),
-        ADDRESS(""),
-        PHONES(""),
-        EMAILS(""),
-        SOCIAL_LINKS(""),
-        SITE("");
-
+        LOGO("logo"),
+        NAME("name"),
+        SURNAME("surname"),
+        MIDDLENAME("middle name"),
+        POSITION("position"),
+        COMPANY("company mane"),
+        ADDRESS("company address"),
+        PHONES("phone"),
+        EMAILS("email"),
+//        SOCIAL_LINKS("social link"),
+        SITE("web-site"),
+        VIBER("Viber"),
+        WHATSAPP("WhatsApp"),
+        SKYPE("Skype"),
+        FACEBOOK_MESSENGER("Facebook messenger"),
+        TELEGRAM("Telegram"),
+        FACEBOOK("Facebook"),
+        TWITTER("Twitter"),
+        GOOGLE_PLUS("Google+"),
+        LINKEDIN("LinkedIn"),
+        YOUTUBE("YouTube"),
+        INSTAGRAM("Instagram"),
+        VK("VKontakte");
 
         private String text;
 
         CardFields(String text) {
             this.text = text;
+        }
+
+        public static CardFields getField(LinkType linkType) {
+            for (CardFields field : CardFields.values()) {
+                if (field.text.equalsIgnoreCase(linkType.toString())) {
+                    return field;
+                }
+            }
+            return null;
         }
 
         @Override
@@ -79,6 +99,7 @@ public interface Const {
 
         String ACTION_PERFORM_CREATE_CARD = "bind-up.ACTION_PERFORM_CREATE_CARD";
         String ACTION_PERFORM_UPDATE_CARD = "bind-up.ACTION_PERFORM_UPDATE_CARD";
+        String ACTION_PERFORM_ADD_HISTORY = "bind-up.ACTION_PERFORM_ADD_HISTORY";
         String ACTION_PERFORM_DELETE_CARD = "bind-up.ACTION_PERFORM_DELETE_CARD";
         String ACTION_PERFORM_ADD_CONTACT = "bind-up.ACTION_PERFORM_ADD_CONTACT";
         String ACTION_PERFORM_UPDATE_CONTACT_COMMENT = "bind-up.ACTION_PERFORM_UPDATE_CONTACT_COMMENT";
@@ -92,6 +113,7 @@ public interface Const {
 
         String ACTION_CREATE_CARD = "bind-up.ACTION_CREATE_CARD";
         String ACTION_UPDATE_CARD = "bind-up.ACTION_UPDATE_CARD";
+        String ACTION_ADD_HISTORY = "bind-up.ACTION_ADD_HISTORY";
         String ACTION_DELETE_CARD = "bind-up.ACTION_DELETE_CARD";
         String ACTION_ADD_CONTACT = "bind-up.ACTION_ADD_CONTACT";
         String ACTION_UPDATE_CONTACT_COMMENT = "bind-up.ACTION_UPDATE_CONTACT_COMMENT";
@@ -105,6 +127,7 @@ public interface Const {
 
         String ACTION_EXECUTE_CREATE_CARD = "bind-up.ACTION_EXECUTE_CREATE_CARD";
         String ACTION_EXECUTE_UPDATE_CARD = "bind-up.ACTION_EXECUTE_UPDATE_CARD";
+        String ACTION_EXECUTE_ADD_HISTORY = "bind-up.ACTION_EXECUTE_ADD_HISTORY";
         String ACTION_EXECUTE_DELETE_CARD = "bind-up.ACTION_EXECUTE_DELETE_CARD";
         String ACTION_EXECUTE_ADD_CONTACT = "bind-up.ACTION_EXECUTE_ADD_CONTACT";
         String ACTION_EXECUTE_UPDATE_CONTACT_COMMENT = "bind-up.ACTION_EXECUTE_UPDATE_CONTACT_COMMENT";
@@ -117,6 +140,7 @@ public interface Const {
         String ACTION_EXECUTE_DELETE_GROUP = "bind-up.ACTION_EXECUTE_DELETE_GROUP";
 
         String CARD_ID = "CARD_ID";
+        String HISTORY_ID = "HISTORY_ID";
         String CARD_REMOTE_ID = "CARD_REMOTE_ID";
         String CONTACT_REMOTE_ID = "CONTACT_REMOTE_ID";
         String CONTACT_COMMENT_ID = "CONTACT_COMMENT_ID";

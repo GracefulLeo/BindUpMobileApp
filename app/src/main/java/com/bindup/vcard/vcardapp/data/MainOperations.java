@@ -11,6 +11,7 @@ import com.bindup.vcard.vcardapp.data.operations.JobInitiation;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
 import com.bindup.vcard.vcardapp.data.storage.model.Comment;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
+import com.bindup.vcard.vcardapp.data.storage.model.History;
 import com.bindup.vcard.vcardapp.data.storage.operation.DatabaseOperation;
 import com.bindup.vcard.vcardapp.utils.App;
 
@@ -179,11 +180,16 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "updateCard start for card: " + oldCard.getRemoteId());
+                Log.d(TAG, "updateCard start");
                 if (mDataManager.isAuthorized()) {
-                    oldCard.update(newCard);
-                    DatabaseOperation.updateCard(oldCard);
-                    JobInitiation.updateCard(oldCard.getId());
+                    if (!oldCard.equals(newCard)) {
+                        oldCard.update(newCard);
+                        DatabaseOperation.updateCard(oldCard);
+                        History history = new History(oldCard, newCard);
+                        DatabaseOperation.saveHistory(history);
+                        JobInitiation.addHistory(history.getId());
+                        JobInitiation.updateCard(oldCard.getId());
+                    }
                     handler.sendEmptyMessage(updateCardFinished);
                 } else {
                     Log.e(TAG, "User has not been authorized");
@@ -198,9 +204,9 @@ public class MainOperations {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "deleteCard start for card: " + card.getRemoteId());
+                Log.d(TAG, "deleteCard start");
                 if (mDataManager.isAuthorized()) {
-                    JobInitiation.deleteCard(card.getRemoteId());
+                    JobInitiation.deleteCard(card.getId());
                     DatabaseOperation.deleteCard(card);
                     handler.sendEmptyMessage(deleteCardFinished);
                 } else {
@@ -348,7 +354,6 @@ public class MainOperations {
                 Log.d(TAG, "addContactToGroup start");
                 if (mDataManager.isAuthorized()) {
                     DatabaseOperation.addContactToGroup(group, contact);
-
                     JobInitiation.addContactToGroup(group.getRemoteId(), contact.getRemoteId());
                     handler.sendEmptyMessage(addContactToGroupFinished);
                 } else {
@@ -420,7 +425,7 @@ public class MainOperations {
     public List<Card> getCardList() {
         Log.d(TAG, "getCardList");
         if (mDataManager.isAuthorized()) {
-            return mDataManager.getCardList();
+            return DatabaseOperation.getCardList();
         } else {
             Log.e(TAG, "User has not been authorized");
             handler.sendEmptyMessage(userHasNotBeenAuthorized);
@@ -481,6 +486,19 @@ public class MainOperations {
         Log.d(TAG, "getGroupContacts for group: " + group.getId());
         if (mDataManager.isAuthorized()) {
             return DatabaseOperation.getGroupContacts(group);
+        } else {
+            Log.e(TAG, "User has not been authorized");
+            handler.sendEmptyMessage(userHasNotBeenAuthorized);
+            return null;
+        }
+    }
+
+    public List<Card> getContactsForGroup(Group group) {
+        Log.d(TAG, "getContactsForGroup for group: " + group.getId());
+        if (mDataManager.isAuthorized()) {
+            List<Card> allContacts = DatabaseOperation.getContactList();
+            allContacts.removeAll(DatabaseOperation.getGroupContacts(group));
+            return allContacts;
         } else {
             Log.e(TAG, "User has not been authorized");
             handler.sendEmptyMessage(userHasNotBeenAuthorized);

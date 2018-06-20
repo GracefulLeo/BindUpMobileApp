@@ -1,5 +1,7 @@
 package com.bindup.vcard.vcardapp.data.storage.model;
 
+import android.support.annotation.NonNull;
+
 import com.bindup.vcard.vcardapp.utils.Const.CardFields;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -17,8 +19,8 @@ public class Change {
     @DatabaseField
     private String newValue;
 
-    public Change() {
-    }
+//    public Change() {
+//    }
 
     public Change(CardFields field, String previousValue, String newValue) {
         this.field = field;
