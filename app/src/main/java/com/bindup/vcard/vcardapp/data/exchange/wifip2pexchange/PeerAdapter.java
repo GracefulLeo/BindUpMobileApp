@@ -19,31 +19,15 @@ import com.bindup.vcard.vcardapp.ui.Fragments.ShareFragment;
 import java.util.Collection;
 
 public class PeerAdapter extends ArrayAdapter<WifiP2pDevice> implements WifiP2pManager.PeerListListener, AdapterView.OnItemClickListener {
-    private static PeerAdapter instance;
-    private static Object lock = new Object();
     private int res;
     private ShareFragment fragment;
 
-    public PeerAdapter(ShareFragment shareFragment, int res) throws Exception {
+    public PeerAdapter(ShareFragment shareFragment, int res) {
         super(shareFragment.getActivity(), res);
-        if (instance == null) {
-            this.fragment = shareFragment;
-            this.res = res;
-            instance = this;
-        } else {
-            throw new Exception("Instance of PeerAdapter is already exist");
-        }
+        this.fragment = shareFragment;
+        this.res = res;
     }
 
-    public static PeerAdapter getInstance() {
-        if (instance != null) {
-            synchronized (PeerAdapter.class) {
-                return instance;
-            }
-        } else {
-            return null;
-        }
-    }
 
     @NonNull
     @Override
@@ -51,20 +35,13 @@ public class PeerAdapter extends ArrayAdapter<WifiP2pDevice> implements WifiP2pM
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(res, null);
         }
-//        if (!super.isEmpty()) {
-            if (super.isEnabled(position)) {
-                ((TextView) convertView.findViewById(android.R.id.text1)).setText(super.getItem(position).deviceName);
-            }
-//        }
+        if (super.isEnabled(position)) {
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(super.getItem(position).deviceName);
+        }
         return convertView;
     }
 
-    public void destroy() {
-        super.clear();
-        instance = null;
-    }
-
-    public void updateAdapter(Collection<WifiP2pDevice> devices) {
+    void updateAdapter(Collection<WifiP2pDevice> devices) {
         if (!super.isEmpty()) {
             super.clear();
         }

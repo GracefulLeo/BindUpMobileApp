@@ -55,7 +55,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
 
     //widgets
     private ListView listViewPeers;
-    private ArrayAdapter arrayAdapter;
+    private PeerAdapter arrayAdapter;
 
     //vars
     private Card mMyVcard;
@@ -124,18 +124,21 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     }
 
     private void startShare() {
+        Log.d(TAG, "startShare");
         listViewPeers = getActivity().findViewById(R.id.share_list_view);
-        try {
+//        try {
             arrayAdapter = new PeerAdapter(this, android.R.layout.simple_list_item_1);
-        } catch (Exception e) {
-            arrayAdapter = PeerAdapter.getInstance();
-        }
+//        } catch (Exception e) {
+//            arrayAdapter = PeerAdapter.getInstance();
+//            arrayAdapter.reset(this, android.R.layout.simple_list_item_1);
+//        }
         listViewPeers.setAdapter(arrayAdapter);
         listViewPeers.setOnItemClickListener((AdapterView.OnItemClickListener) arrayAdapter);
         initDiscover();
     }
 
     public void initDiscover() {
+        Log.d(TAG, "initDiscover");
         startWifi();
         if (!wasWifiEnabled) {
             initBlock();
@@ -144,25 +147,29 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
+                Log.d(TAG, "discoverPeers onSuccess");
             }
             @Override
             public void onFailure(int reasonCode) {
+                Log.d(TAG, "discoverPeers onFailure " + reasonCode);
                 initDiscover();
             }
         });
     }
 
     public void connect(WifiP2pConfig config) {
+        Log.d(TAG, "connect start");
         manager.connect(channel, config, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
+                Log.d(TAG, "onSuccess");
             }
 
             @Override
             public void onFailure(int reason) {
+                Log.d(TAG, "onFailure " + reason);
             }
         });
-        Log.i(TAG, "connect");
     }
 
     public void setName(String name) {
@@ -170,6 +177,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     }
 
     private void setNewDeviceName(final String name) {
+        Log.d(TAG, "setNewDeviceName" + name);
         try {
             WifiP2pManager manager1 = (WifiP2pManager) App.getContext().getApplicationContext()
                     .getSystemService(Context.WIFI_P2P_SERVICE);
@@ -191,6 +199,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     }
 
     private void initBlock() {
+        Log.d(TAG, "initBlock");
         blockIntentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         blockIntentFilter.addAction(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION);
         blockIntentFilter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
@@ -205,6 +214,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     }
 
     private void startWifi() {
+        Log.d(TAG,"startWifi");
         WifiManager wManager = (WifiManager) App.getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (!wManager.isWifiEnabled()) {
             wManager.setWifiEnabled(true);
@@ -216,19 +226,22 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
 
     @Override
     public void onPause() {
-        super.onPause();
+        Log.d(TAG,"onPause");
         getActivity().unregisterReceiver(receiver);
+        super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume");
         receiver = new WiFiDirectBroadcastReceiver(/*manager, channel,this*/);
         getActivity().registerReceiver(receiver, intentFilter);
     }
 
     @Override
     public void onDestroy() {
+        Log.d(TAG,"onDestroy");
         manager.stopPeerDiscovery(channel, new WifiP2pManager.ActionListener() {
 
             @Override
@@ -258,7 +271,10 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
 
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo info) {
+        Log.d(TAG,"onConnectionInfoAvailable");
+        Log.d(TAG, String.valueOf(info.groupFormed));
         if (info.groupFormed) {
+            Log.d(TAG, String.valueOf(info.isGroupOwner));
             if (info.isGroupOwner) {
                 send();
             } else {
@@ -269,6 +285,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     }
 
     private void send(InetAddress address) {
+        Log.d(TAG,"send as client");
         if (!wasWifiEnabled) {
             getActivity().unregisterReceiver(stopReceiver);
         }
@@ -297,8 +314,8 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     }
 
     private void send() {
+        Log.d(TAG,"send as server");
         if (!wasWifiEnabled) {
-//            handler.sendEmptyMessage(3);
             getActivity().unregisterReceiver(stopReceiver);
         }
         ServerThread serverThread = new ServerThread(port, mMyVcard);
@@ -334,6 +351,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     }
 
     private void kill() {
+        Log.d(TAG, "kill");
         Toast toast = Toast.makeText(getActivity(), "Card is successfully shared", Toast.LENGTH_LONG);
         toast.show();
         // Inflating ContactFragment via interface here...
@@ -341,13 +359,18 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     }
 
     private void finishWifi() {
+        Log.d(TAG, "finishWifi");
         returnName();
         manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
             @Override
-            public void onSuccess() { }
+            public void onSuccess() {
+                Log.d(TAG, "removeGroup onSuccess");
+            }
 
             @Override
-            public void onFailure(int reason) { }
+            public void onFailure(int reason) {
+                Log.d(TAG, "removeGroup onFailure " + reason);
+            }
         });
         if (!wasWifiEnabled) {
             WifiManager wManager = (WifiManager) App.getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -361,8 +384,8 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
     }
 
     public void requestConnectionInfo() {
-        // we are connected with the other device, request connection
-        // info to find group owner
+        // we are connected with the other device
+        // request connection info to find group owner
         if (manager != null) {
             manager.requestConnectionInfo(channel, this);
         }
@@ -420,43 +443,37 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
 
     private class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
-//        private WifiP2pManager manager;
-//        private WifiP2pManager.Channel channel;
-//        private ShareFragment fragment;
-
-        public WiFiDirectBroadcastReceiver(/*WifiP2pManager manager, WifiP2pManager.Channel channel, ShareFragment shareFragment*/) {
+        public WiFiDirectBroadcastReceiver() {
             super();
-//            this.manager = manager;
-//            this.channel = channel;
-//            this.fragment = shareFragment;
         }
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             switch (action) {
-                case WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION:
-                    int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
-                    if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                        //Wifi P2P is enabled
-                    } else {
-                        //Wifi P2P is disabled
-                    }
-                    break;
+//                case WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION:
+//                    int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
+//                    if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
+//                        Wifi P2P is enabled
+//                    } else {
+//                        Wifi P2P is disabled
+//                    }
+//                    break;
                 case WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION:
+                    Log.d(TAG, "Receiver WIFI_P2P_PEERS_CHANGED_ACTION");
                     // request available peers from the wifi p2p manager. This is an
                     // asynchronous call and the calling activity is notified with a
                     // callback on PeerListListener.onPeersAvailable()
                     if (manager != null) {
-                        manager.requestPeers(channel, PeerAdapter.getInstance());
+                        manager.requestPeers(channel, arrayAdapter) ;
                     }
                     break;
                 case WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION:
+                    Log.d(TAG, "Receiver WIFI_P2P_CONNECTION_CHANGED_ACTION");
                     if (manager == null) {
                         return;
                     }
-                    NetworkInfo networkInfo = (NetworkInfo) intent
-                            .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+                    NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
                     if (networkInfo.isConnected()) {
                         requestConnectionInfo();
                     } else {
@@ -464,6 +481,7 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
                     }
                     break;
                 case WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION:
+                    Log.d(TAG, "Receiver WIFI_P2P_THIS_DEVICE_CHANGED_ACTION");
                     WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
                     setDeviceName(device.deviceName);
                     break;
