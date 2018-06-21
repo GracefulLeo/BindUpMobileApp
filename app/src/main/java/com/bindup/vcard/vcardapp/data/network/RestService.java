@@ -17,9 +17,11 @@ import com.bindup.vcard.vcardapp.data.network.model.res.GetCardRes;
 import com.bindup.vcard.vcardapp.data.network.model.res.GetFileRes;
 import com.bindup.vcard.vcardapp.data.network.model.res.GetGroupRes;
 import com.bindup.vcard.vcardapp.data.network.model.res.GetUserRes;
+import com.bindup.vcard.vcardapp.data.network.model.res.HistoryRes;
 import com.bindup.vcard.vcardapp.data.network.model.res.TokenRes;
 import com.bindup.vcard.vcardapp.data.network.model.res.UploadLogoRes;
 import com.bindup.vcard.vcardapp.data.network.model.res.LoginRes;
+import com.bindup.vcard.vcardapp.data.storage.model.History;
 
 import java.util.List;
 
@@ -62,6 +64,10 @@ public interface RestService {
     @PUT("entity_vcard/{nid}")
     Call<ResponseBody> updateCard(@Header("Cookie") String cookie, @Header("X-CSRF-TOKEN") String token, @Path("nid") String cardId,
                                   @Body UpdateCardReq req);
+
+    Call<ResponseBody> addHistory();//TODO: Complete method
+
+    Call<HistoryRes> downloadHistory();//TODO: Complete method
 
     @Headers("Content-Type: application/json")
     @DELETE("entity_vcard/{nid}")

@@ -4,16 +4,15 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @DatabaseTable(tableName = "PHONE")
-public class Phone implements Serializable{
+public class Phone implements Serializable {
 
     @DatabaseField(generatedId = true)
     private long id;
-
     @DatabaseField(foreign = true)
     private transient Card card;
-
     @DatabaseField
     private String phone;
 
@@ -21,15 +20,10 @@ public class Phone implements Serializable{
     }
 
     public Phone(String phone) {
-        if (phone!=null && !phone.isEmpty()) {
+        if (phone != null && !phone.trim().isEmpty()) {
             this.phone = phone;
         }
     }
-
-//    public Phone(Card card, String phone) {
-//        this.card = card;
-//        this.phone = phone;
-//    }
 
     //region==================================Setters=============================
 
@@ -63,12 +57,25 @@ public class Phone implements Serializable{
 
     //endregion===============================Getters=============================
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        return Objects.equals(getPhone(), ((Phone) o).getPhone());
+    }
 
     @Override
-    public String toString() {
-        return "Phone{" +
-                "id=" + id +
-                ", phone='" + phone + '\'' +
-                '}';
+    public int hashCode() {
+
+        return Objects.hash(getPhone());
     }
+
+
+//    @Override
+//    public String toString() {
+//        return "Phone{" +
+//                "id=" + id +
+//                ", phone='" + phone + '\'' +
+//                '}';
+//    }
 }

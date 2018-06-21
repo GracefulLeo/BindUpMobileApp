@@ -1,6 +1,5 @@
 package com.bindup.vcard.vcardapp.data.network.model.req;
 
-import com.bindup.vcard.vcardapp.data.storage.CardCompare;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
 import com.bindup.vcard.vcardapp.data.storage.model.Email;
 import com.bindup.vcard.vcardapp.data.storage.model.Phone;

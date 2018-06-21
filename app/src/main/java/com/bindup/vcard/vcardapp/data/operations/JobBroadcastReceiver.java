@@ -43,7 +43,7 @@ public class JobBroadcastReceiver extends BroadcastReceiver {
             case ACTION_PERFORM_DELETE_CARD:
                 Log.i(TAG, "ACTION_PERFORM_DELETE_CARD");
                 bundle.putString(ACTION, ACTION_DELETE_CARD);
-                bundle.putString(CARD_REMOTE_ID, intent.getStringExtra(CARD_REMOTE_ID));
+                bundle.putLong(CARD_ID, intent.getLongExtra(CARD_ID, 0));
                 exerciseJobBuilder.setExtras(bundle);
                 jobScheduler.schedule(exerciseJobBuilder.build());
                 break;
@@ -78,7 +78,7 @@ public class JobBroadcastReceiver extends BroadcastReceiver {
             case ACTION_PERFORM_UPDATE_GROUP_CONTACTS:
                 Log.i(TAG, "ACTION_PERFORM_UPDATE_GROUP_CONTACTS");
                 bundle.putString(ACTION, ACTION_UPDATE_GROUP_CONTACTS);
-                bundle.putLong(GROUP_ID, intent.getLongExtra(GROUP_ID,0));
+                bundle.putLong(GROUP_ID, intent.getLongExtra(GROUP_ID, 0));
                 exerciseJobBuilder.setExtras(bundle);
                 jobScheduler.schedule(exerciseJobBuilder.build());
                 break;
@@ -102,6 +102,20 @@ public class JobBroadcastReceiver extends BroadcastReceiver {
                 Log.i(TAG, "ACTION_PERFORM_DELETE_GROUP");
                 bundle.putString(ACTION, ACTION_DELETE_GROUP);
                 bundle.putString(GROUP_REMOTE_ID, intent.getStringExtra(GROUP_REMOTE_ID));
+                exerciseJobBuilder.setExtras(bundle);
+                jobScheduler.schedule(exerciseJobBuilder.build());
+                break;
+            case ACTION_PERFORM_UPDATE_CONTACT_COMMENT:
+                Log.i(TAG, "ACTION_PERFORM_UPDATE_CONTACT_COMMENT");
+                bundle.putString(ACTION, ACTION_UPDATE_CONTACT_COMMENT);
+                bundle.putLong(CONTACT_COMMENT_ID, intent.getLongExtra(CONTACT_COMMENT_ID, 0));
+                exerciseJobBuilder.setExtras(bundle);
+                jobScheduler.schedule(exerciseJobBuilder.build());
+                break;
+            case ACTION_PERFORM_ADD_HISTORY:
+                Log.i(TAG, "ACTION_PERFORM_ADD_HISTORY");
+                bundle.putString(ACTION, ACTION_ADD_HISTORY);
+                bundle.putLong(HISTORY_ID, intent.getLongExtra(HISTORY_ID, 0));
                 exerciseJobBuilder.setExtras(bundle);
                 jobScheduler.schedule(exerciseJobBuilder.build());
                 break;

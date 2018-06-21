@@ -9,10 +9,11 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
+import java.util.Objects;
 
 @DatabaseTable(tableName = "LOGO")
 //Entity for DB
-public class Logo implements Serializable{
+public class Logo implements Serializable {
 
     @DatabaseField(generatedId = true)
     private Long id;
@@ -33,7 +34,7 @@ public class Logo implements Serializable{
         if (filename != null && filename.length() != 0) {
             this.filename = filename;
         } else {
-            Long tsLong = System.currentTimeMillis()/1000;
+            Long tsLong = System.currentTimeMillis() / 1000;
             this.filename = "photo-" + tsLong.toString() + ".png";
         }
 
@@ -100,7 +101,19 @@ public class Logo implements Serializable{
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
-//    @Override
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        return Objects.equals(getLogo(), ((Logo) o).getLogo());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getLogo());
+    }
+
+    //    @Override
 //    public String toString() {
 //        return "Logo{" +
 //                "id=" + id +

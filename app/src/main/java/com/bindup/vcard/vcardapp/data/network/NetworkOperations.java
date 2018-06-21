@@ -28,8 +28,10 @@ import com.bindup.vcard.vcardapp.data.network.model.res.LoginRes;
 import com.bindup.vcard.vcardapp.data.network.model.res.UploadLogoRes;
 import com.bindup.vcard.vcardapp.data.storage.model.Base;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
+import com.bindup.vcard.vcardapp.data.storage.model.Comment;
 import com.bindup.vcard.vcardapp.data.storage.model.Email;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
+import com.bindup.vcard.vcardapp.data.storage.model.History;
 import com.bindup.vcard.vcardapp.data.storage.model.Logo;
 import com.bindup.vcard.vcardapp.data.storage.model.Phone;
 import com.bindup.vcard.vcardapp.data.storage.model.SocialLink;
@@ -96,7 +98,7 @@ public class NetworkOperations {
                     //Gets session
                     mDataManager.getPreferenceManager().saveCookie(response.headers().get("Set-Cookie"));
                     //Gets token
-                    mDataManager.getPreferenceManager().saveToken(response.body().getToken());
+                    mDataManager.getPreferenceManager().saveXCSRFToken(response.body().getToken());
                     //Gets UserRes Id
                     mDataManager.getPreferenceManager().saveUserID(response.body().getUser().getUid());
                     //Gets all user's goods from server
@@ -287,8 +289,13 @@ public class NetworkOperations {
         return cards;
     }
 
-    public static List<Group> getMyGroups() {
-        Log.i(TAG, "getMyGroups start");
+    //TODO: Complete method
+    public static List<History> downloadHistories() {
+        return null;
+    }
+
+    public static List<Group> dowloadMyGroups() {
+        Log.i(TAG, "dowloadMyGroups start");
         Call<GetUserRes> call = mDataManager.getUser();
         List<Group> groups = new ArrayList<>();
         Response<GetUserRes> response = null;
@@ -429,9 +436,14 @@ public class NetworkOperations {
         return false;
     }
 
-    public static boolean deleteCard(final String remoteId) {
+    //TODO: complete method
+    public static boolean addHistory(History history) {
+        return false;
+    }
+
+    public static boolean deleteCard(final Card card) {
         Log.i(TAG, "deleteCard start");
-        Call<ResponseBody> call1 = mDataManager.deleteCard(remoteId);
+        Call<ResponseBody> call1 = mDataManager.deleteCard(card.getRemoteId());
         Response<ResponseBody> responseBody = null;
         try {
             responseBody = call1.execute();
@@ -467,7 +479,7 @@ public class NetworkOperations {
                                 e.printStackTrace();
                             }
                             for (int i = 0; i < existedCards.size(); i++) {
-                                if (existedCards.get(i).getTargetId().equals(remoteId)) {
+                                if (existedCards.get(i).getTargetId().equals(card.getRemoteId())) {
                                     existedCards.remove(i);
                                     break;
                                 }
@@ -1011,5 +1023,9 @@ public class NetworkOperations {
             Log.e(TAG, "Null response");
         }
         return false;
+    }
+
+    public static boolean updateContactComment(Comment comment) {
+        return false;//TODO: finish method
     }
 }

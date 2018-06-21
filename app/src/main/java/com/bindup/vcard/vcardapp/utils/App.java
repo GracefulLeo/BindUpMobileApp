@@ -10,9 +10,11 @@ import android.preference.PreferenceManager;
 import com.bindup.vcard.vcardapp.data.storage.DatabaseHelper;
 import com.bindup.vcard.vcardapp.data.storage.model.Base;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
+import com.bindup.vcard.vcardapp.data.storage.model.Comment;
 import com.bindup.vcard.vcardapp.data.storage.model.Email;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
 import com.bindup.vcard.vcardapp.data.storage.model.GroupCard;
+import com.bindup.vcard.vcardapp.data.storage.model.History;
 import com.bindup.vcard.vcardapp.data.storage.model.Logo;
 import com.bindup.vcard.vcardapp.data.storage.model.Phone;
 import com.bindup.vcard.vcardapp.data.storage.model.SocialLink;
@@ -34,6 +36,8 @@ public class App extends Application {
     private static Dao<Base, Long> baseDao;
     private static Dao<Group, Long> groupDao;
     private static Dao<GroupCard, Long> groupCardDao;
+    private static Dao<Comment, Long> commentDao;
+    private static Dao<History, Long> historyDao;
     //endregion====================BD declaration=======================
 
     @Override
@@ -56,6 +60,8 @@ public class App extends Application {
         baseDao = helper.getBaseDao();
         groupDao = helper.getGroupDao();
         groupCardDao = helper.getGroupCardDao();
+        commentDao = helper.getCommentDao();
+        historyDao = helper.getHistoryDao();
         //endregion====================BD init=======================
     }
 
@@ -123,5 +129,14 @@ public class App extends Application {
     public static Dao<GroupCard, Long> getGroupCardDao() {
         return groupCardDao;
     }
+
+    public static Dao<Comment, Long> getCommentDao() {
+        return commentDao;
+    }
+
+    public static Dao<History, Long> getHistoryDao() {
+        return historyDao;
+    }
+
     //endregion====================BD=======================
 }

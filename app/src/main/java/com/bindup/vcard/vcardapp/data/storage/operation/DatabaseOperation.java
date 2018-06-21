@@ -6,10 +6,12 @@ import android.support.annotation.Nullable;
 
 import com.bindup.vcard.vcardapp.data.managers.DataManager;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
+import com.bindup.vcard.vcardapp.data.storage.model.Comment;
 import com.bindup.vcard.vcardapp.data.storage.model.Email;
 import com.bindup.vcard.vcardapp.data.storage.model.Base;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
 import com.bindup.vcard.vcardapp.data.storage.model.GroupCard;
+import com.bindup.vcard.vcardapp.data.storage.model.History;
 import com.bindup.vcard.vcardapp.data.storage.model.Logo;
 import com.bindup.vcard.vcardapp.data.storage.model.Phone;
 import com.bindup.vcard.vcardapp.data.storage.model.SocialLink;
@@ -71,6 +73,10 @@ public class DatabaseOperation {
         DATA_MANAGER.addSocialLinks(card.getSocialLinks());
     }
 
+    public static List<Card> getCardList() {
+        return DATA_MANAGER.getCardList();
+    }
+
     public static void updateCard(Card card) {
         if (card.getLogo() != null && card.getLogo().getId() == null) {
             DATA_MANAGER.addLogo(card.getLogo());
@@ -79,6 +85,16 @@ public class DatabaseOperation {
             DATA_MANAGER.addBase64(card.getBase());
         }
         DATA_MANAGER.updateCard(card);
+    }
+
+    public static void saveHistory(History history) {
+        if (history != null && !history.getChanges().isEmpty()) {
+            DATA_MANAGER.addHistory(history);
+        }
+    }
+
+    public static History getHistory(Long historyId) {
+        return DATA_MANAGER.getHistory(historyId);
     }
 
     public static void createGroup(Group group, @Nullable List<Card> contacts) {
@@ -194,5 +210,21 @@ public class DatabaseOperation {
 
     public static Group getGroupByRemoteId(String remoteId) {
         return DATA_MANAGER.getGroupByRemoteId(remoteId);
+    }
+
+    public static void updateContactComment(Comment comment) {
+        if (comment.getContact().getComment() == null) {
+            comment.getContact().setComment(comment);
+            DATA_MANAGER.updateCard(comment.getContact());
+            DATA_MANAGER.addComment(comment);
+        } else {
+            comment.getContact().getComment().setComment(comment.getComment());
+            DATA_MANAGER.updateComment(comment.getContact().getComment());
+        }
+
+    }
+
+    public static Comment getComment(Long commentId) {
+        return DATA_MANAGER.getComment(commentId);
     }
 }

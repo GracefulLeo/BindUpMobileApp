@@ -1,0 +1,33 @@
+13.06.18 13:00
+E/AndroidRuntime: FATAL EXCEPTION: main
+                  Process: com.bindup.vcard.vcardapp, PID: 19843
+                  java.lang.RuntimeException: Unable to start activity ComponentInfo{com.bindup.vcard.vcardapp/com.bindup.vcard.vcardapp.ui.Activities.MainActivity}: java.lang.NullPointerException: Attempt to invoke interface method 'java.util.List com.j256.ormlite.dao.Dao.queryForAll()' on a null object reference
+                      at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2724)
+                      at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2789)
+                      at android.app.ActivityThread.-wrap12(ActivityThread.java)
+                      at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1527)
+                      at android.os.Handler.dispatchMessage(Handler.java:110)
+                      at android.os.Looper.loop(Looper.java:203)
+                      at android.app.ActivityThread.main(ActivityThread.java:6251)
+                      at java.lang.reflect.Method.invoke(Native Method)
+                      at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:1063)
+                      at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:924)
+                   Caused by: java.lang.NullPointerException: Attempt to invoke interface method 'java.util.List com.j256.ormlite.dao.Dao.queryForAll()' on a null object reference
+                      at com.bindup.vcard.vcardapp.data.managers.DataManager.getCardList(DataManager.java:321)
+                      at com.bindup.vcard.vcardapp.data.MainOperations.getCardList(MainOperations.java:403)
+                      at com.bindup.vcard.vcardapp.ui.Activities.MainActivity.firstCheck(MainActivity.java:336)
+                      at com.bindup.vcard.vcardapp.ui.Activities.MainActivity.isFirstLogin(MainActivity.java:376)
+                      at com.bindup.vcard.vcardapp.ui.Activities.MainActivity.onCreate(MainActivity.java:322)
+                      at android.app.Activity.performCreate(Activity.java:6681)
+                      at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1118)
+                      at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2677)
+                      at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2789) 
+                      at android.app.ActivityThread.-wrap12(ActivityThread.java) 
+                      at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1527) 
+                      at android.os.Handler.dispatchMessage(Handler.java:110) 
+                      at android.os.Looper.loop(Looper.java:203) 
+                      at android.app.ActivityThread.main(ActivityThread.java:6251) 
+                      at java.lang.reflect.Method.invoke(Native Method) 
+                      at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:1063) 
+                      at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:924)
+

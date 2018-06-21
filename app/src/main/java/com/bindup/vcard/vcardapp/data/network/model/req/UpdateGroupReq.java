@@ -1,8 +1,6 @@
 package com.bindup.vcard.vcardapp.data.network.model.req;
 
 import com.bindup.vcard.vcardapp.data.network.model.SimpleUnd;
-import com.bindup.vcard.vcardapp.data.storage.GroupCompare;
-import com.bindup.vcard.vcardapp.data.storage.model.Card;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

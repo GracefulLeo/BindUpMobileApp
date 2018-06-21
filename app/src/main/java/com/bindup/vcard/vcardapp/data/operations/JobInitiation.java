@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
+import com.bindup.vcard.vcardapp.data.storage.model.History;
 import com.bindup.vcard.vcardapp.utils.App;
 
 import java.util.ArrayList;
@@ -32,10 +33,10 @@ public class JobInitiation {
         App.getContext().sendBroadcast(updateCardIntentForBroadcast);
     }
 
-    public static void deleteCard(String remoteId) {
+    public static void deleteCard(Long cardId) {
         Log.i(TAG, "Delete Card");
         Intent deleteCardIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
-        deleteCardIntentForBroadcast.putExtra(CARD_REMOTE_ID, remoteId);
+        deleteCardIntentForBroadcast.putExtra(CARD_ID, cardId);
         deleteCardIntentForBroadcast.setAction(ACTION_PERFORM_DELETE_CARD);
         App.getContext().sendBroadcast(deleteCardIntentForBroadcast);
     }
@@ -80,6 +81,7 @@ public class JobInitiation {
         App.getContext().sendBroadcast(createGroupIntentForBroadcast);
     }
 
+    //TODO: Play around the case if group just
     public static void addContactToGroup(String groupRemoteId, String contactRemoteId) {
         Log.i(TAG, "addContactToGroup");
         Intent createGroupIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
@@ -103,6 +105,22 @@ public class JobInitiation {
         Intent deleteCardIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
         deleteCardIntentForBroadcast.putExtra(GROUP_REMOTE_ID, groupRemoteId);
         deleteCardIntentForBroadcast.setAction(ACTION_PERFORM_DELETE_GROUP);
+        App.getContext().sendBroadcast(deleteCardIntentForBroadcast);
+    }
+
+    public static void updateContactComment(Long commentId) {
+        Log.i(TAG, "updateContactComment");
+        Intent deleteCardIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
+        deleteCardIntentForBroadcast.putExtra(CONTACT_COMMENT_ID, commentId);
+        deleteCardIntentForBroadcast.setAction(ACTION_PERFORM_UPDATE_CONTACT_COMMENT);
+        App.getContext().sendBroadcast(deleteCardIntentForBroadcast);
+    }
+
+    public static void addHistory(Long historyId) {
+        Log.i(TAG, "addHistory");
+        Intent deleteCardIntentForBroadcast = new Intent(App.getContext(), JobBroadcastReceiver.class);
+        deleteCardIntentForBroadcast.putExtra(HISTORY_ID, historyId);
+        deleteCardIntentForBroadcast.setAction(ACTION_PERFORM_ADD_HISTORY);
         App.getContext().sendBroadcast(deleteCardIntentForBroadcast);
     }
 }
