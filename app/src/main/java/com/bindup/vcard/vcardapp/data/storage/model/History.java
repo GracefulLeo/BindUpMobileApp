@@ -35,8 +35,8 @@ public class History {
     @ForeignCollectionField(eager = true)
     private Collection<Change> changes;
 
-//    public History() {
-//    }
+    public History() {
+    }
 
     public History(@NonNull String contactId/*, Collection<Change> changes*/) {
         this.contactId = contactId;

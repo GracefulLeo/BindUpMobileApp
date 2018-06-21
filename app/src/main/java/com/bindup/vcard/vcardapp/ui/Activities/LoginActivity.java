@@ -18,7 +18,7 @@ import com.bindup.vcard.vcardapp.R;
 import com.bindup.vcard.vcardapp.data.MainOperations;
 import com.bindup.vcard.vcardapp.utils.UIHandler;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     // constants
 
@@ -26,8 +26,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     // widgets
 
-    private ProgressBar mProgressBar;
-    private TextView mProgressBarMessage;
     private RelativeLayout mProgressBarContainer;
     private Button mLogin , mRegister;
     private EditText mEmailET, mPasswordEditText;
@@ -55,9 +53,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mRegister = findViewById(R.id.btn_registration);
         mEmailET = findViewById(R.id.email_enter_for_login);
         mPasswordEditText = findViewById(R.id.password_enter_for_login);
-        mProgressBar = findViewById(R.id.progress_bar_login);
         mProgressBarContainer = findViewById(R.id.progress_bar_login_container);
-        mProgressBarMessage = findViewById(R.id.progress_bar_login_text_view);
 
         mLogin.setOnClickListener(this);
         mRegister.setOnClickListener(this);
@@ -88,16 +84,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                     Log.d(TAG, "onCreate: Checking if this a first login....");
                     mainOperations.login(mEmailET.getText().toString(), mPasswordEditText.getText().toString());
-//                    Toast toast = Toast.makeText(getApplicationContext(),"You are succesfully authorized!", Toast.LENGTH_LONG);
-//                    toast.show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 Log.d(TAG, "onClick: clicked...");
-//                intent = new Intent(LoginActivity.this, MainActivity.class);
-//                startActivity(intent);
-//                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//                finish();
                 break;
 
         }
@@ -112,10 +102,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } else {
-            mEmailET.setFocusable(true);
-            mPasswordEditText.setFocusable(true);
             mProgressBarContainer.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            mEmailET.setFocusableInTouchMode(true);
+            mPasswordEditText.setFocusableInTouchMode(true);
+            mEmailET.setFocusable(true);
+            mPasswordEditText.setFocusable(true);
         }
     }
 }
