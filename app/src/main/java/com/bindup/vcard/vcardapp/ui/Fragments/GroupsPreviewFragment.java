@@ -49,6 +49,13 @@ public class GroupsPreviewFragment extends Fragment implements SwipeRefreshLayou
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.top_navigation_menu_groups_preview, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.contact_fragment, container, false);
@@ -62,13 +69,6 @@ public class GroupsPreviewFragment extends Fragment implements SwipeRefreshLayou
 
         getGroupContacts();
         return view;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.top_navigation_menu_contacts_and_groups, menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void getGroupContacts() {
@@ -98,4 +98,5 @@ public class GroupsPreviewFragment extends Fragment implements SwipeRefreshLayou
         mContactsRecyclerViewAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
     }
+
 }

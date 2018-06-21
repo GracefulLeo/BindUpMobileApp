@@ -237,13 +237,6 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
             @Override
             public void onFailure(int i) { }
         });
-        manager.clearLocalServices(channel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() { }
-
-            @Override
-            public void onFailure(int i) { }
-        });
         manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() { }
@@ -251,6 +244,15 @@ public class ShareFragment extends Fragment implements WifiP2pManager.Connection
             @Override
             public void onFailure(int i) { }
         });
+        manager.clearLocalServices(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() { }
+
+            @Override
+            public void onFailure(int i) { }
+        });
+        manager = null;
+        channel = null;
         super.onDestroy();
     }
 

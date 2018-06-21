@@ -32,7 +32,6 @@ public class GroupsSingleContactPreviewFragment extends Fragment {
 
     //vars
     private Card mMyVcard;
-    private IMainActivity mInterface;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

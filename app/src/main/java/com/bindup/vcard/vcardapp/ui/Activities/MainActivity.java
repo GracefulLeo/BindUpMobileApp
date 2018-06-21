@@ -1,5 +1,6 @@
 package com.bindup.vcard.vcardapp.ui.Activities;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -16,8 +17,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Checkable;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,6 +34,7 @@ import com.bindup.vcard.vcardapp.R;
 import com.bindup.vcard.vcardapp.data.MainOperations;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
+import com.bindup.vcard.vcardapp.data.storage.model.Logo;
 import com.bindup.vcard.vcardapp.ui.Fragments.AgreementFragment;
 import com.bindup.vcard.vcardapp.ui.Fragments.ContactsFragment;
 import com.bindup.vcard.vcardapp.ui.Fragments.ContactsPreviewFragment;
@@ -76,10 +84,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                 }
                                 Toast toast = Toast.makeText(getApplicationContext(),
-                                        "Contact " + mainOperations.getCard(args.getLong("card id")).getSurname() + " " + mainOperations.getCard(args.getLong("card id")).getName() + " " + mainOperations.getCard(args.getLong("card id")).getMidlename() + " has been succesfully deleted",
+                                        "Contact " + mainOperations.getCard(args.getLong("contact id")).getSurname() + " " + mainOperations.getCard(args.getLong("contact id")).getName() + " " + mainOperations.getCard(args.getLong("contact id")).getMidlename() + " has been succesfully deleted",
                                         Toast.LENGTH_LONG);
                                 toast.show();
-                                mainOperations.deleteContact(mainOperations.getCard(args.getLong("card id")));
+                                mainOperations.deleteContact(mainOperations.getCard(args.getLong("contact id")));
                                 dialog.dismiss();
                                 mFragmentTags.clear();
                                 enableViews(false);
@@ -97,6 +105,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         alertDialog = alertDialogBuilder.create();
                         alertDialog.show();
                         break;
+
+                    case R.id.contacts_preview_add_to_group_button:
+                        // Initiation of the adding selected contact to group
+                        addContactToGroupUsersSelector();
+                        break;
+
                     case R.id.edit_button_in_preview_fragment:
                         inflateMyVCardEditFragment();
                         break;
@@ -279,8 +293,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
+    private Card mContact;
     private List<Card> cards;
     private List<Group> groups;
+    private Group mGroup;
     private Bundle args = new Bundle();
     private ArrayList<String> mFragmentTags = new ArrayList<>();
     private ArrayList<FragmentTag> mFragments = new ArrayList<>();
@@ -411,12 +427,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void inflateViewContactProfileFragment(Card card) {
+        Log.d(TAG, "inflateViewContactProfileFragment: Contact preview fragment");
         if (mContactsPreviewFragment != null) {
             getSupportFragmentManager().beginTransaction().remove(mContactsPreviewFragment).commitAllowingStateLoss();
         }
         mContactsPreviewFragment = new ContactsPreviewFragment();
         args.clear();
-        args.putLong("card id", card.getId());
+        args.putLong("contact id", card.getId());
         mContactsPreviewFragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -434,11 +451,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mGroupsSingleContactPreviewFragment == null) {
             getSupportFragmentManager().beginTransaction().remove(mGroupsSingleContactPreviewFragment).commitAllowingStateLoss();
         }
-        Log.d(TAG, "Inflating: GroupsCreateFragment...");
+        Log.d(TAG, "Inflating: GroupsSingleContactPreview Fragment...");
         mGroupsSingleContactPreviewFragment = new GroupsSingleContactPreviewFragment();
 
         args.clear();
-        args.putLong("card id", card.getId());
+        args.putLong("contact id", card.getId());
         mGroupsSingleContactPreviewFragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -599,11 +616,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void inflateGroupPreviewFragment(Group group) {
+
+        if (mGroupsPreviewFragment != null){
+            mFragmentTags.remove(getString(R.string.tag_fragment_groups_preview));
+            mGroupsPreviewFragment = null;
+        }
+
         if (mGroupsPreviewFragment == null) {
             Log.d(TAG, "onNavigationItemSelected: Groups...");
             mGroupsPreviewFragment = new GroupsPreviewFragment();
 
-            Bundle args = new Bundle();
+            args.clear();
             args.putLong("group id", group.getId());
             mGroupsPreviewFragment.setArguments(args);
 
@@ -616,8 +639,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFragmentTags.remove(getString(R.string.tag_fragment_groups_preview));
             mFragmentTags.add(getString(R.string.tag_fragment_groups_preview));
         }
+
         setFragmentVisibility(getString(R.string.tag_fragment_groups_preview));
-        enableViews(false);
+        enableViews(true);
     }
 
     private void inflateMyVCardEditFragment() {
@@ -661,7 +685,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void inflateAgreementFragment() {
         if (mAgreementFragment == null) {
-            Log.d(TAG, "Inflating: CreateCardFragment...");
+            Log.d(TAG, "Inflating: Agreement...");
             mAgreementFragment = new AgreementFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.main_content_frame, mAgreementFragment, getString(R.string.tag_fragment_agreement));
@@ -833,8 +857,118 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public MainOperations getMainOperations() {
-        return mainOperations;
+    // Method for Alert Dialog for contact preview (select the users from list)
+
+    public void addContactToGroupUsersSelector() {
+        Bundle bundle = mContactsPreviewFragment.getArguments();
+        if (bundle != null) {
+            mContact = mainOperations.getCard(bundle.getLong("contact id"));
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        //@TODO Change harcoded phrase to string value ...
+        builder.setTitle("Select group to which you want add this contact");
+        ListView modeList = new ListView(MainActivity.this);
+        groups = mainOperations.getGroupList();
+        modeList.setAdapter(new MainActivity.MyAdapter());
+        builder.setView(modeList);
+        // dialogue creation...
+        builder.setNegativeButton(R.string.add_users_group_cancel_btn, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              dialog.dismiss();
+            }
+        });
+        final Dialog dialog = builder.create();
+        dialog.show();
+        modeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "onClick: clicked...");
+                try {
+                    mGroup = groups.get(position);
+                    mainOperations.addContactToGroup(mGroup, mContact);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Contact " + mContact.getSurname() + " " + mContact.getName() + " " + mContact.getMidlename() + " has been succesfully deleted",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+                dialog.dismiss();
+                inflateGroupPreviewFragment(mGroup);
+            }
+        });
+        // add users button....
+
     }
+
+    // Adapter for alert dialog, to work properly with collection representing
+    private class MyAdapter extends BaseAdapter implements Checkable {
+        @Override
+        public int getCount() {
+            return groups.size();
+        }
+
+        @Override
+        public String getItem(int position) {
+            return groups.get(position).getName();
+        }
+
+        //custom method
+        public Logo getLogo(int position) {
+            return groups.get(position).getLogo();
+        }
+
+        //custom method
+        public String getGroupName(int position) {
+            return groups.get(position).getName();
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return groups.get(position).hashCode();
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return super.getViewTypeCount();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup container) {
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.layout_share_list_item, container, false);
+            }
+            // Can add anything we want...
+            ((TextView) convertView.findViewById(R.id.share_contact_name))
+                    .setText(getItem(position));
+            ((TextView) convertView.findViewById(R.id.share_contact_surname))
+                    .setText(getGroupName(position));
+            if (groups.get(position).getLogo() != null) {
+                ((ImageView) convertView.findViewById(R.id.share_contact_image))
+                        .setImageBitmap(getLogo(position).getLogoBitmap());
+            }
+            return convertView;
+        }
+
+        @Override
+        public void setChecked(boolean checked) {
+
+        }
+
+        @Override
+        public boolean isChecked() {
+            return false;
+        }
+
+        @Override
+        public void toggle() {
+
+        }
+    }
+
 }
+
+
 

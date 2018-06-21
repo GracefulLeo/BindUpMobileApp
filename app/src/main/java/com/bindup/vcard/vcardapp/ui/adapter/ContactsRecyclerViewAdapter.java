@@ -66,11 +66,6 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
                 mInterface.inflateViewContactProfileFragment(mMyContacts.get(position));
             }
         });
-
-//        holder.mCompany.setText(mMyVcards.get(position).getCompany());
-//        holder.mPosition.setText(mMyVcards.get(position).getPosition());
-//final Card card = mFilteredUsers.get(position);
-
     }
 
     @Override
@@ -92,9 +87,6 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
         CircleImageView mCompanyLogo;
         TextView mName;
         TextView mSurname;
-        TextView mCompany;
-        TextView mPosition;
-        CardView mCardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -102,9 +94,7 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
             mCompanyLogo = itemView.findViewById(R.id.contact_image);
             mName = itemView.findViewById(R.id.contact_name);
             mSurname = itemView.findViewById(R.id.contact_surname);
-//            mCompany = itemView.findViewById(R.id.my_vcard_company);
-//            mPosition = itemView.findViewById(R.id.my_vcard_position);
-//            mCardView = itemView.findViewById(R.id.card_view);
+
         }
     }
 }

@@ -215,6 +215,8 @@
                             android:background="@null"
                             android:gravity="center_horizontal"
                             android:hint="Enter name of your card(visible only for you)"
+                            android:maxLines="1"
+                            android:inputType="text"
                             android:textColor="@color/Black"
                             android:textSize="16sp" />
 
@@ -236,6 +238,8 @@
                         android:background="@null"
                         android:gravity="center_horizontal"
                         android:hint="Enter your surname"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
                         android:textColor="@color/Black"
                         android:textSize="16sp" />
 
@@ -260,6 +264,8 @@
                             android:background="@null"
                             android:gravity="center_horizontal"
                             android:hint="Enter your name"
+                            android:inputType="textPersonName"
+                            android:maxLines="1"
                             android:textColor="@color/Black"
                             android:textSize="16sp" />
 
@@ -287,6 +293,8 @@
                             android:background="@null"
                             android:gravity="center_horizontal"
                             android:hint="Enter your middle name"
+                            android:inputType="textPersonName"
+                            android:maxLines="1"
                             android:textColor="@color/Black"
                             android:textSize="16sp" />
 
@@ -314,6 +322,8 @@
                             android:background="@null"
                             android:gravity="center_horizontal"
                             android:hint="Enter your company name"
+                            android:inputType="textAutoComplete"
+                            android:maxLines="1"
                             android:textColor="@color/Black"
                             android:textSize="16sp" />
 
@@ -340,6 +350,8 @@
                             android:background="@null"
                             android:gravity="center_horizontal"
                             android:hint="Enter your company adress"
+                            android:inputType="textPostalAddress"
+                            android:maxLines="1"
                             android:textColor="@color/Black"
                             android:textSize="16sp" />
 
@@ -366,6 +378,8 @@
                             android:background="@null"
                             android:gravity="center_horizontal"
                             android:hint="Enter your in company position"
+                            android:inputType="textAutoComplete"
+                            android:maxLines="1"
                             android:textColor="@color/Black"
                             android:textSize="16sp" />
 
@@ -392,6 +406,8 @@
                             android:background="@null"
                             android:gravity="center_horizontal"
                             android:hint="Enter your company web-site"
+                            android:inputType="textUri"
+                            android:maxLines="1"
                             android:textColor="@color/Black"
                             android:textSize="16sp" />
 
@@ -418,6 +434,8 @@
                             android:background="@null"
                             android:gravity="center_horizontal"
                             android:hint="Enter your phone number"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
                             android:textColor="@color/Black"
                             android:textSize="16sp" />
 
@@ -444,6 +462,8 @@
                             android:background="@null"
                             android:gravity="center_horizontal"
                             android:hint="Enter your email"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
                             android:textColor="@color/Black"
                             android:textSize="16sp" />
 

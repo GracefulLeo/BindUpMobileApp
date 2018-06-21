@@ -1,7 +1,5 @@
 package com.bindup.vcard.vcardapp.ui.Fragments;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,19 +7,13 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.Checkable;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,7 +23,6 @@ import com.bindup.vcard.vcardapp.data.MainOperations;
 import com.bindup.vcard.vcardapp.data.storage.model.Card;
 import com.bindup.vcard.vcardapp.data.storage.model.Email;
 import com.bindup.vcard.vcardapp.data.storage.model.Group;
-import com.bindup.vcard.vcardapp.data.storage.model.Logo;
 import com.bindup.vcard.vcardapp.data.storage.model.Phone;
 import com.bindup.vcard.vcardapp.ui.interfaces.IMainActivity;
 
@@ -52,12 +43,9 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
     private RelativeLayout mMiddleNameContainer, mCompanyContainer, mAdressContainer, mPositionContainer, mWebSiteContainer, mPhoneContainer, mEmailContainer;
 
     //vars
-    private Group mGroup;
-    private MainOperations mainOperations;
-    private List<Group> selectedGroups;
-    private List<Group> mGroups;
+
     private Card mMyVcard;
-    private IMainActivity mInterface;
+
 
     //TODO add delete button here
 
@@ -66,7 +54,7 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            mMyVcard = new MainOperations(new Handler()).getCard(bundle.getLong("card id"));
+            mMyVcard = new MainOperations(new Handler()).getCard(bundle.getLong("contact id"));
         }
         Log.d(TAG, "onCreate: got incoming bundle: " + mMyVcard.getName());
     }
@@ -226,7 +214,6 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
                     .load(mMyVcard.getLogo().getLogoBitmap())
                     .into(mCompanyLogoImage);
         }
-
     }
 
     @Override
@@ -240,105 +227,7 @@ public class ContactsPreviewFragment extends Fragment implements View.OnClickLis
                 break;
             case R.id.fab_email_contacts_preview:
                 sendEmail(mEmailText.getText().toString());
+                break;
         }
     }
-
-    public void usersSelector() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //@TODO Change harcoded phrase to string value ...
-        builder.setTitle("Select group to which you want add this contact");
-        ListView modeList = new ListView(getActivity());
-        selectedGroups = new MainOperations(new Handler()).getGroupList();
-        modeList.setAdapter(new ContactsPreviewFragment.MyAdapter());
-        builder.setView(modeList);
-        // dialogue creation...
-        builder.setPositiveButton(R.string.create_groups_add_user_btn, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    mainOperations.addContactToGroup(mGroup, mMyVcard);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        final Dialog dialog = builder.create();
-        dialog.show();
-        modeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onClick: clicked...");
-                selectedGroups.add(mGroups.get(position));
-                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            }
-        });
-        // add users button....
-
-    }
-
-    // Adapter for alert dialog, to work properly with collection representing
-    private class MyAdapter extends BaseAdapter implements Checkable {
-        @Override
-        public int getCount() {
-            return mGroups.size();
-        }
-
-        @Override
-        public String getItem(int position) {
-            return mGroups.get(position).getName();
-        }
-
-        //custom method
-        public Logo getLogo(int position) {
-            return mGroups.get(position).getLogo();
-        }
-
-        //custom method
-        public String getGroupName(int position) {
-            return mGroups.get(position).getName();
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return mGroups.get(position).hashCode();
-        }
-
-        @Override
-        public int getViewTypeCount() {
-            return super.getViewTypeCount();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup container) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.layout_share_list_item, container, false);
-            }
-            // Can add anything we want...
-            ((TextView) convertView.findViewById(R.id.share_contact_name))
-                    .setText(getItem(position));
-            ((TextView) convertView.findViewById(R.id.share_contact_surname))
-                    .setText(getGroupName(position));
-            if (mGroups.get(position).getLogo() != null) {
-                ((ImageView) convertView.findViewById(R.id.share_contact_image))
-                        .setImageBitmap(getLogo(position).getLogoBitmap());
-            }
-            return convertView;
-        }
-
-        @Override
-        public void setChecked(boolean checked) {
-
-        }
-
-        @Override
-        public boolean isChecked() {
-            return false;
-        }
-
-        @Override
-        public void toggle() {
-
-        }
-    }
-
 }

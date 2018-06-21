@@ -22,7 +22,7 @@
     <string name="surname">Surname</string>
     <string name="android_studio_android_com">android.studio@android.com</string>
     <string name="myvcard_first_appearance">Create your first VCard by tapping plus</string>
-    <string name="edit">edit</string>
+    <string name="edit">Edit</string>
     <string name="delete_message" > Are you sure you want delete this VCard? This action can not be undone</string>
     <string name="groups_first_appearance">Create your first group by tapping plus</string>
 
@@ -99,6 +99,8 @@
     <string name="menu_item_agreement">Agreement</string>
     <string name="tag_fragment_agreement">Agreement Fragment</string>
     <string name="toolbar_name_agreement">Agreement</string>
+    <string name="add_users_group_cancel_btn">Cancel</string>
+    <string name="delete_contact_from_group">Delete contact from group</string>
     <!--<string name="menu_item_History">History</string>-->
     <!--<string name="menu_item_LogOut">LogOut</string>-->
 </resources>

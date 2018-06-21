@@ -72,6 +72,7 @@ public class GroupsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 }
             }
         });
+        mFab.show();
         setHasOptionsMenu(true);
         getGroups();
         return view;
@@ -116,5 +117,11 @@ public class GroupsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         Log.d(TAG, "onItemsLoadComplete: complete...");
         mGroupsRecyclerViewAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onResume() {
+        mFab.show();
+        super.onResume();
     }
 }
