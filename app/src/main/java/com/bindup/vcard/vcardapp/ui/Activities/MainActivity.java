@@ -664,6 +664,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void inflateShareFragment() {
         if (mShareFragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(mShareFragment).commit();//TODO: transfer to finishing share fragment
             mShareFragment = null;
             mFragmentTags.remove(getString(R.string.tag_fragment_share));
         }

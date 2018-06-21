@@ -19,8 +19,8 @@ public class Change {
     @DatabaseField
     private String newValue;
 
-//    public Change() {
-//    }
+    public Change() {
+    }
 
     public Change(CardFields field, String previousValue, String newValue) {
         this.field = field;
